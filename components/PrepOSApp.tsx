@@ -72,7 +72,7 @@ export default function PrepOSApp() {
     <main className="shell">
       <header className="topbar">
         <div className="brand">
-          <div className="brand-mark">P</div>
+          <img className="brand-mark" src="favicon-48.png" alt="PrepOS logo" width="36" height="36" />
           <div>
             <h1>PrepOS MVP1</h1>
             <p>Adaptive PM interview readiness system</p>
@@ -243,6 +243,7 @@ export default function PrepOSApp() {
                   <span className="tag warn">difficulty {activeItem.question.difficulty}/5</span>
                   <span className="tag">{activeItem.question.sourceType}</span>
                 </div>
+                <QuestionSource question={activeItem.question} />
               </div>
 
               <div className="field" style={{ padding: 0 }}>
@@ -290,6 +291,36 @@ export default function PrepOSApp() {
         questions to the bank.
       </p>
     </main>
+  );
+}
+
+function QuestionSource({ question }: { question: PracticePlanItem["question"] }) {
+  const sourceLabel =
+    question.sourceType === "original"
+      ? "PrepOS original seed prompt"
+      : question.sourceType === "synthetic"
+        ? "AI-assisted prompt, human reviewed"
+        : question.sourceType === "public_video"
+          ? "Public video source"
+          : question.sourceType === "community"
+            ? "Community submission with consent"
+            : "Public source";
+
+  return (
+    <div className="source-box">
+      <strong>Question source</strong>
+      <p>
+        {sourceLabel}. Reviewer: {question.reviewer}. Company claim:{" "}
+        {question.companyClaim ? question.companyClaim : "none; this is not presented as a real company question"}.
+      </p>
+      {question.sourceUrl ? (
+        <a href={question.sourceUrl} target="_blank" rel="noreferrer">
+          View source
+        </a>
+      ) : (
+        <span>No external citation; authored for PrepOS practice.</span>
+      )}
+    </div>
   );
 }
 

@@ -69,15 +69,13 @@ button {
 }
 
 .brand-mark {
-  display: grid;
+  display: block;
   width: 36px;
   height: 36px;
-  place-items: center;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel-strong);
-  color: var(--green);
-  font-weight: 800;
+  object-fit: cover;
 }
 
 .brand h1 {
@@ -362,6 +360,34 @@ button {
 .coach-note strong {
   display: block;
   margin-bottom: 6px;
+}
+
+.source-box {
+  margin-top: 14px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+.source-box strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.84rem;
+}
+
+.source-box p,
+.source-box span,
+.source-box a {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.source-box a {
+  display: inline-flex;
+  margin-top: 6px;
+  color: var(--blue);
+  font-weight: 700;
 }
 
 .answer {
