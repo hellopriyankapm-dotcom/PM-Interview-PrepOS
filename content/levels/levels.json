@@ -1,0 +1,32 @@
+{
+  "apm": {
+    "label": "APM / Entry PM",
+    "threshold": 3,
+    "bar": "Clear structure, user curiosity, basic metrics, coachability."
+  },
+  "pm": {
+    "label": "PM / IC4",
+    "threshold": 3.4,
+    "bar": "Independent judgment, clean trade-offs, practical execution."
+  },
+  "senior": {
+    "label": "Senior PM / IC5",
+    "threshold": 3.8,
+    "bar": "Ambiguity handling, stakeholder influence, metrics depth."
+  },
+  "staff": {
+    "label": "Staff / Group PM",
+    "threshold": 4.2,
+    "bar": "Org-level trade-offs, durable strategy, executive communication."
+  },
+  "ai-pm": {
+    "label": "AI PM",
+    "threshold": 3.9,
+    "bar": "PM fundamentals plus evals, model limits, trust, privacy, cost, and fallback design."
+  },
+  "pm-t": {
+    "label": "PM-T",
+    "threshold": 3.8,
+    "bar": "Product judgment plus APIs, data flow, reliability, and engineering trade-offs."
+  }
+}

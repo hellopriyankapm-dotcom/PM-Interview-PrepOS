@@ -1,0 +1,80 @@
+[
+  {
+    "id": "ps-activation-001",
+    "title": "Improve activation for a new personal finance app",
+    "prompt": "A personal finance app has strong signups but only 28% of new users connect a bank account in the first week. What would you do?",
+    "roundType": "product_sense",
+    "targetLevels": ["apm", "pm", "senior"],
+    "concepts": ["product_sense.user_segmentation", "product_sense.pain_point_prioritization", "product_sense.success_metrics"],
+    "difficulty": 2,
+    "sourceType": "original",
+    "sourceUrl": null,
+    "companyClaim": null,
+    "reviewer": "PrepOS seed"
+  },
+  {
+    "id": "exec-northstar-001",
+    "title": "Choose metrics for a creator marketplace",
+    "prompt": "You own a creator marketplace where brands hire creators for short campaigns. Define the North Star metric, guardrail metrics, and the first dashboard you would build.",
+    "roundType": "execution",
+    "targetLevels": ["pm", "senior", "staff"],
+    "concepts": ["execution.north_star_metrics", "execution.input_output_metrics", "execution.counter_metrics"],
+    "difficulty": 3,
+    "sourceType": "original",
+    "sourceUrl": null,
+    "companyClaim": null,
+    "reviewer": "PrepOS seed"
+  },
+  {
+    "id": "ai-evals-001",
+    "title": "Design evals for an AI support assistant",
+    "prompt": "Your company wants to launch an AI support assistant that can answer billing questions. How would you decide whether it is safe and useful enough to launch?",
+    "roundType": "ai_product_judgment",
+    "targetLevels": ["senior", "staff", "ai-pm"],
+    "concepts": ["ai_product_judgment.eval_design", "ai_product_judgment.hallucination_mitigation", "ai_product_judgment.human_fallback_design"],
+    "difficulty": 4,
+    "sourceType": "original",
+    "sourceUrl": null,
+    "companyClaim": null,
+    "reviewer": "PrepOS seed"
+  },
+  {
+    "id": "behavioral-conflict-001",
+    "title": "Tell me about a disagreement with engineering",
+    "prompt": "Tell me about a time you disagreed with engineering or design on what to build. What happened and what did you learn?",
+    "roundType": "behavioral",
+    "targetLevels": ["apm", "pm", "senior", "staff", "ai-pm", "pm-t"],
+    "concepts": ["behavioral.star_arc_structure", "behavioral.conflict_handling", "behavioral.measurable_impact"],
+    "difficulty": 2,
+    "sourceType": "original",
+    "sourceUrl": null,
+    "companyClaim": null,
+    "reviewer": "PrepOS seed"
+  },
+  {
+    "id": "strategy-ai-001",
+    "title": "Should a B2B SaaS product add an AI copilot?",
+    "prompt": "A mature B2B SaaS product wants to add an AI copilot because competitors are doing it. How would you decide whether to invest?",
+    "roundType": "strategy",
+    "targetLevels": ["senior", "staff", "ai-pm"],
+    "concepts": ["strategy.market_timing", "strategy.durable_advantage", "ai_product_judgment.cost_latency_tradeoffs"],
+    "difficulty": 4,
+    "sourceType": "original",
+    "sourceUrl": null,
+    "companyClaim": null,
+    "reviewer": "PrepOS seed"
+  },
+  {
+    "id": "tech-api-001",
+    "title": "Plan a partner API launch",
+    "prompt": "Your product needs to expose a partner API for enterprise customers. What would you align on with engineering before launch?",
+    "roundType": "technical_collaboration",
+    "targetLevels": ["pm", "senior", "staff", "pm-t"],
+    "concepts": ["technical_collaboration.api_contracts", "technical_collaboration.reliability_tradeoffs", "technical_collaboration.engineering_alignment"],
+    "difficulty": 3,
+    "sourceType": "original",
+    "sourceUrl": null,
+    "companyClaim": null,
+    "reviewer": "PrepOS seed"
+  }
+]

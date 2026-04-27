@@ -1,0 +1,17 @@
+[
+  {
+    "id": "video-ai-evals-demo-001",
+    "title": "Assess an AI meeting summarizer before launch",
+    "prompt": "A team wants to ship an AI meeting summarizer to enterprise customers. What would you evaluate before launch?",
+    "roundType": "ai_product_judgment",
+    "targetLevels": ["ai-pm", "senior"],
+    "concepts": ["ai_product_judgment.eval_design", "ai_product_judgment.hallucination_mitigation", "ai_product_judgment.human_fallback_design"],
+    "difficulty": 3,
+    "sourceType": "public_video",
+    "sourceUrl": "https://example.com/public-video-placeholder",
+    "companyClaim": null,
+    "consent": true,
+    "reviewStatus": "pending",
+    "reviewer": "Needs human review"
+  }
+]

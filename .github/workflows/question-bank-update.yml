@@ -1,0 +1,41 @@
+name: Question bank update
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  validate-and-update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate existing content
+        run: node scripts/validate-content.mjs
+
+      - name: Publish approved source inbox items
+        run: node scripts/question-bank-update.mjs
+
+      - name: Validate updated content
+        run: node scripts/validate-content.mjs
+
+      - name: Create update pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: codex/question-bank-update
+          title: "Update trusted question bank"
+          commit-message: "Update trusted question bank"
+          body: |
+            Automated weekly update from approved source inbox items.
+
+            This workflow only publishes items that have consent, source metadata, and human review status.

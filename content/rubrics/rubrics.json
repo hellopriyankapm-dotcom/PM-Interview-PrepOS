@@ -1,0 +1,18 @@
+{
+  "default": [
+    "Structure",
+    "User insight",
+    "Metrics",
+    "Trade-offs",
+    "Communication",
+    "Target-level depth"
+  ],
+  "ai_product_judgment": [
+    "Launch goal",
+    "Eval design",
+    "Failure modes",
+    "Human fallback",
+    "Cost and latency",
+    "Trust and safety"
+  ]
+}

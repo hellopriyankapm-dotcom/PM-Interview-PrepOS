@@ -1,0 +1,20 @@
+[
+  { "id": "product_sense.user_segmentation", "label": "User segmentation", "roundType": "product_sense" },
+  { "id": "product_sense.pain_point_prioritization", "label": "Pain point prioritization", "roundType": "product_sense" },
+  { "id": "product_sense.success_metrics", "label": "Success metrics", "roundType": "product_sense" },
+  { "id": "execution.north_star_metrics", "label": "North Star metrics", "roundType": "execution" },
+  { "id": "execution.input_output_metrics", "label": "Input and output metrics", "roundType": "execution" },
+  { "id": "execution.counter_metrics", "label": "Counter-metrics", "roundType": "execution" },
+  { "id": "ai_product_judgment.eval_design", "label": "AI eval design", "roundType": "ai_product_judgment" },
+  { "id": "ai_product_judgment.hallucination_mitigation", "label": "Hallucination mitigation", "roundType": "ai_product_judgment" },
+  { "id": "ai_product_judgment.human_fallback_design", "label": "Human fallback design", "roundType": "ai_product_judgment" },
+  { "id": "ai_product_judgment.cost_latency_tradeoffs", "label": "AI cost and latency trade-offs", "roundType": "ai_product_judgment" },
+  { "id": "behavioral.star_arc_structure", "label": "STAR/ARC story structure", "roundType": "behavioral" },
+  { "id": "behavioral.conflict_handling", "label": "Conflict handling", "roundType": "behavioral" },
+  { "id": "behavioral.measurable_impact", "label": "Measurable impact", "roundType": "behavioral" },
+  { "id": "strategy.market_timing", "label": "Market timing", "roundType": "strategy" },
+  { "id": "strategy.durable_advantage", "label": "Durable advantage", "roundType": "strategy" },
+  { "id": "technical_collaboration.api_contracts", "label": "API contracts", "roundType": "technical_collaboration" },
+  { "id": "technical_collaboration.reliability_tradeoffs", "label": "Reliability trade-offs", "roundType": "technical_collaboration" },
+  { "id": "technical_collaboration.engineering_alignment", "label": "Engineering alignment", "roundType": "technical_collaboration" }
+]

@@ -1,0 +1,8 @@
+[
+  { "id": "product_sense", "label": "Product Sense", "requiredFor": ["apm", "pm", "senior", "staff", "ai-pm"] },
+  { "id": "execution", "label": "Execution and Metrics", "requiredFor": ["apm", "pm", "senior", "staff", "ai-pm", "pm-t"] },
+  { "id": "strategy", "label": "Strategy", "requiredFor": ["senior", "staff", "ai-pm"] },
+  { "id": "behavioral", "label": "Behavioral", "requiredFor": ["apm", "pm", "senior", "staff", "ai-pm", "pm-t"] },
+  { "id": "ai_product_judgment", "label": "AI Product Judgment", "requiredFor": ["ai-pm", "senior", "staff"] },
+  { "id": "technical_collaboration", "label": "Technical Collaboration", "requiredFor": ["pm-t", "senior", "staff"] }
+]

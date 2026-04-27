@@ -1,0 +1,26 @@
+[
+  {
+    "id": "general",
+    "label": "General PM loop",
+    "style": "Balanced product sense, execution, behavioral, and communication expectations.",
+    "sourceType": "original"
+  },
+  {
+    "id": "ai-lab",
+    "label": "AI lab style",
+    "style": "Raises the bar on eval design, model limitations, safety, privacy, reliability, and launch judgment.",
+    "sourceType": "synthetic"
+  },
+  {
+    "id": "faang",
+    "label": "Large tech style",
+    "style": "Emphasizes structured product thinking, metrics, scale, stakeholder clarity, and crisp communication.",
+    "sourceType": "synthetic"
+  },
+  {
+    "id": "startup",
+    "label": "Startup style",
+    "style": "Emphasizes speed, customer discovery, prioritization, resource constraints, and practical launch judgment.",
+    "sourceType": "synthetic"
+  }
+]
