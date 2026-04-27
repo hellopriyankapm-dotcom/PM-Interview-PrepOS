@@ -29,6 +29,10 @@ Do not claim fake traction. Do not claim a question was asked at a company unles
 
 ## Run MVP1
 
+Live site:
+
+https://hellopriyankapm-dotcom.github.io/PM-Interview-PrepOS/
+
 ```bash
 npm install
 npm run dev
@@ -43,6 +47,8 @@ npm run validate:content
 npm run build
 npm audit --audit-level=moderate
 ```
+
+GitHub Pages deploys automatically from `main` using `.github/workflows/deploy-pages.yml`.
 
 ## Why This Should Exist
 
