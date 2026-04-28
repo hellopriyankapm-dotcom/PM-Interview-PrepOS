@@ -103,6 +103,88 @@ for (const [conceptId, count] of Object.entries(conceptHits)) {
   }
 }
 
+// ---- Resources validation -------------------------------------------------
+
+const requiredResourceFields = [
+  "id",
+  "title",
+  "url",
+  "source",
+  "type",
+  "appliesTo",
+  "reviewer",
+  "addedOn"
+];
+const allowedResourceTypes = new Set(["video", "article", "framework", "course"]);
+const allowedCategories = new Set([
+  "all",
+  "product_sense",
+  "execution_metrics",
+  "analytics_experimentation",
+  "strategy",
+  "behavioral_leadership",
+  "ai_product_judgment",
+  "technical_collaboration",
+  "estimation_prioritization"
+]);
+
+let resources = [];
+try {
+  resources = JSON.parse(
+    await readFile(new URL("../content/resources/resources.json", import.meta.url), "utf8")
+  );
+} catch {
+  // resources file is optional
+}
+
+const seenResourceIds = new Set();
+const questionIds = new Set(questions.map((question) => question.id));
+
+for (const resource of resources) {
+  for (const field of requiredResourceFields) {
+    if (!(field in resource)) failures.push(`resource ${resource.id ?? "unknown"} missing ${field}`);
+  }
+  if (resource.id && seenResourceIds.has(resource.id)) {
+    failures.push(`resource ${resource.id} is a duplicate id`);
+  }
+  if (resource.id) seenResourceIds.add(resource.id);
+  if (typeof resource.url !== "string" || !resource.url.startsWith("https://")) {
+    failures.push(`resource ${resource.id} url must start with https://`);
+  }
+  if (resource.type && !allowedResourceTypes.has(resource.type)) {
+    failures.push(`resource ${resource.id} has unsupported type ${resource.type}`);
+  }
+  if (!resource.reviewer || resource.reviewer === "AI") {
+    failures.push(`resource ${resource.id} needs a human reviewer label`);
+  }
+  if (!resource.source || typeof resource.source !== "string") {
+    failures.push(`resource ${resource.id} needs a non-empty source attribution`);
+  }
+  if (!resource.appliesTo || typeof resource.appliesTo !== "object") {
+    failures.push(`resource ${resource.id} needs an appliesTo object`);
+    continue;
+  }
+  const { questionIds: qIds, concepts: cIds, categories: catIds } = resource.appliesTo;
+  if (
+    (!Array.isArray(qIds) || qIds.length === 0) &&
+    (!Array.isArray(cIds) || cIds.length === 0) &&
+    (!Array.isArray(catIds) || catIds.length === 0)
+  ) {
+    failures.push(`resource ${resource.id} needs at least one of appliesTo.questionIds / concepts / categories`);
+  }
+  for (const qid of qIds ?? []) {
+    if (!questionIds.has(qid)) failures.push(`resource ${resource.id} references unknown question ${qid}`);
+  }
+  for (const cid of cIds ?? []) {
+    if (!conceptIds.has(cid)) failures.push(`resource ${resource.id} references unknown concept ${cid}`);
+  }
+  for (const cat of catIds ?? []) {
+    if (!allowedCategories.has(cat)) failures.push(`resource ${resource.id} references unknown category ${cat}`);
+  }
+}
+
+// ---- Reporting ------------------------------------------------------------
+
 if (failures.length) {
   console.error("Content validation failed:");
   for (const failure of failures) console.error(`- ${failure}`);
@@ -114,4 +196,6 @@ if (warnings.length) {
   for (const warning of warnings) console.warn(`- ${warning}`);
 }
 
-console.log(`Validated ${questions.length} questions with trusted source metadata.`);
+console.log(
+  `Validated ${questions.length} questions and ${resources.length} resources with trusted source metadata.`
+);

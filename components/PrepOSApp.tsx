@@ -5,10 +5,13 @@ import {
   Brain,
   CheckCircle2,
   ClipboardList,
+  ExternalLink,
+  Lightbulb,
   Maximize2,
   Minimize2,
   RefreshCw,
   Send,
+  Sparkles,
   SlidersHorizontal,
   Target,
   Timer,
@@ -21,6 +24,7 @@ import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { buildPracticeQueue, readiness } from "@/lib/adaptive/engine";
 import { createInitialConceptStates, levelProfiles, targetLevelOptions } from "@/lib/content";
+import { findResourcesForQuestion } from "@/lib/resources";
 import { coachCopy, explanationDepthForMode } from "@/lib/scaffolding/scaffolding";
 import { evaluateAnswer } from "@/lib/scoring/rubrics";
 import type {
@@ -28,6 +32,7 @@ import type {
   ConceptState,
   Evaluation,
   PracticePlanItem,
+  Resource,
   ScaffoldingMode
 } from "@/lib/types";
 
@@ -71,6 +76,7 @@ export default function PrepOSApp() {
   const [modeOverride, setModeOverride] = useState<ScaffoldingMode | null>(null);
   const [focusMode, setFocusMode] = useState(false);
   const [timerStart, setTimerStart] = useState<number | null>(null);
+  const [helpPanel, setHelpPanel] = useState<"none" | "resources" | "coach">("none");
   const queue = useMemo(
     () => buildPracticeQueue(calibration, concepts, completedQuestionIds, queueExpanded ? 24 : 8),
     [calibration, concepts, completedQuestionIds, queueExpanded]
@@ -79,6 +85,11 @@ export default function PrepOSApp() {
   const activeItem = queue.find((item) => item.question.id === selectedId) ?? queue[0];
   const effectiveMode: ScaffoldingMode | null = activeItem ? (modeOverride ?? activeItem.mode) : null;
   const effectiveDepth = effectiveMode ? explanationDepthForMode(effectiveMode) : "high";
+  const helpAvailable = effectiveMode !== null && effectiveMode !== "interview_mode";
+  const matchedResources = useMemo<Resource[]>(
+    () => (activeItem ? findResourcesForQuestion(activeItem.question) : []),
+    [activeItem]
+  );
   const [answer, setAnswer] = useState("");
   const [lastEvaluation, setLastEvaluation] = useState<Evaluation | null>(null);
   const ready = readiness(concepts, calibration);
@@ -124,6 +135,14 @@ export default function PrepOSApp() {
   }, [focusMode, activeItem]);
 
   useEffect(() => {
+    if (!helpAvailable) setHelpPanel("none");
+  }, [helpAvailable]);
+
+  useEffect(() => {
+    setHelpPanel("none");
+  }, [activeItem?.question.id]);
+
+  useEffect(() => {
     function onKey(event: KeyboardEvent) {
       const target = event.target as HTMLElement | null;
       const isEditable =
@@ -163,6 +182,7 @@ export default function PrepOSApp() {
     setQueueExpanded(false);
     setFocusMode(false);
     setTimerStart(null);
+    setHelpPanel("none");
   }
 
   return (
@@ -425,6 +445,37 @@ export default function PrepOSApp() {
                 )}
               </div>
 
+              {helpAvailable ? (
+                <div className="help-bar">
+                  <button
+                    type="button"
+                    className={`help-toggle ${helpPanel === "resources" ? "active" : ""}`}
+                    onClick={() => setHelpPanel(helpPanel === "resources" ? "none" : "resources")}
+                    aria-expanded={helpPanel === "resources"}
+                  >
+                    <Lightbulb size={15} /> Show resources
+                    {matchedResources.length > 0 ? (
+                      <span className="help-count">{matchedResources.length}</span>
+                    ) : null}
+                  </button>
+                  <button
+                    type="button"
+                    className={`help-toggle ${helpPanel === "coach" ? "active" : ""}`}
+                    onClick={() => setHelpPanel(helpPanel === "coach" ? "none" : "coach")}
+                    aria-expanded={helpPanel === "coach"}
+                  >
+                    <Sparkles size={15} /> AI coach
+                    <span className="help-count soon">soon</span>
+                  </button>
+                </div>
+              ) : null}
+
+              {helpAvailable && helpPanel === "resources" ? (
+                <ResourcePanel resources={matchedResources} />
+              ) : null}
+
+              {helpAvailable && helpPanel === "coach" ? <ComingSoonCoachPanel /> : null}
+
               <div className="prompt-box">
                 <h3>{activeItem.question.title}</h3>
                 <p>{activeItem.question.prompt}</p>
@@ -648,6 +699,56 @@ function Scorecard({ evaluation }: { evaluation: Evaluation }) {
         </ul>
         <p>{evaluation.nextAction}</p>
       </div>
+    </div>
+  );
+}
+
+function ResourcePanel({ resources }: { resources: Resource[] }) {
+  if (resources.length === 0) {
+    return (
+      <div className="help-panel">
+        <p className="help-empty">
+          No curated resources matched this prompt yet. Try the AI coach (coming soon) or browse the
+          PrepOS reading list on GitHub.
+        </p>
+      </div>
+    );
+  }
+  return (
+    <div className="help-panel">
+      <span className="help-panel-eyebrow">Curated by PrepOS · click through to read</span>
+      <ul className="help-resource-list">
+        {resources.map((resource) => (
+          <li key={resource.id}>
+            <a className="help-resource" href={resource.url} target="_blank" rel="noreferrer">
+              <span className="help-resource-type">{resource.type}</span>
+              <span className="help-resource-body">
+                <strong>{resource.title}</strong>
+                {resource.description ? <span>{resource.description}</span> : null}
+                <em>
+                  {resource.source}
+                  {resource.duration ? ` · ${resource.duration}` : ""}
+                </em>
+              </span>
+              <ExternalLink size={15} />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function ComingSoonCoachPanel() {
+  return (
+    <div className="help-panel coach">
+      <span className="help-panel-eyebrow">AI coach · coming soon</span>
+      <p>
+        Senior-PM-coach assistance is on the roadmap. It will run with your own Anthropic API key
+        (stored locally in your browser, never sent to PrepOS) and return a concise framework, two
+        analogous examples, and one trap to avoid for the active question.
+      </p>
+      <p className="help-panel-note">No account, no PrepOS infra, no tracking — same local-first promise.</p>
     </div>
   );
 }

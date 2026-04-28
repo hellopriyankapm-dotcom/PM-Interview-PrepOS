@@ -88,3 +88,22 @@ export type PracticePlanItem = {
   reason: string;
   priority: number;
 };
+
+export type ResourceType = "video" | "article" | "framework" | "course";
+
+export type Resource = {
+  id: string;
+  title: string;
+  url: string;
+  source: string;
+  type: ResourceType;
+  duration?: string;
+  description?: string;
+  appliesTo: {
+    questionIds?: string[];
+    concepts?: string[];
+    categories?: PracticeCategory[];
+  };
+  reviewer: string;
+  addedOn: string;
+};

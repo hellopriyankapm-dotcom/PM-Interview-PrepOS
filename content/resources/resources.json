@@ -1,0 +1,246 @@
+[
+  {
+    "id": "res-exp-study-plan",
+    "title": "The Ultimate PM Interview Study Plan",
+    "url": "https://www.tryexponent.com/blog/the-ultimate-pm-interview-study-plan",
+    "source": "Exponent",
+    "type": "article",
+    "duration": "20 min read",
+    "description": "Comprehensive multi-week study plan covering product sense, execution, behavioral, and strategy.",
+    "appliesTo": {
+      "categories": ["product_sense", "execution_metrics", "strategy", "behavioral_leadership"]
+    },
+    "reviewer": "PrepOS seed",
+    "addedOn": "2026-04-28"
+  },
+  {
+    "id": "res-exp-decode-isnt-enough",
+    "title": "Why Decode and Conquer is no longer enough",
+    "url": "https://www.tryexponent.com/blog/why-decode-and-conquer-is-no-longer-enough-to-prepare-you-for-product-manager-interviews",
+    "source": "Exponent",
+    "type": "article",
+    "description": "Deep dive on modern product-sense expectations beyond classic frameworks.",
+    "appliesTo": {
+      "categories": ["product_sense", "strategy"]
+    },
+    "reviewer": "PrepOS seed",
+    "addedOn": "2026-04-28"
+  },
+  {
+    "id": "res-exp-pm-page",
+    "title": "Exponent PM Interview Prep landing page",
+    "url": "https://www.tryexponent.com/pm",
+    "source": "Exponent",
+    "type": "course",
+    "description": "Curriculum overview with sample questions, peer mocks, and AI mocks.",
+    "appliesTo": {
+      "categories": [
+        "product_sense",
+        "execution_metrics",
+        "behavioral_leadership",
+        "ai_product_judgment",
+        "technical_collaboration",
+        "estimation_prioritization",
+        "analytics_experimentation",
+        "strategy"
+      ]
+    },
+    "reviewer": "PrepOS seed",
+    "addedOn": "2026-04-28"
+  },
+  {
+    "id": "res-exp-product-design",
+    "title": "Product Design Questions Course",
+    "url": "https://www.tryexponent.com/courses/pm-product-design",
+    "source": "Exponent",
+    "type": "course",
+    "description": "Course on structuring answers to product design and product sense prompts.",
+    "appliesTo": {
+      "categories": ["product_sense"],
+      "concepts": [
+        "product_sense.user_segmentation",
+        "product_sense.pain_point_prioritization",
+        "product_sense.success_metrics"
+      ]
+    },
+    "reviewer": "PrepOS seed",
+    "addedOn": "2026-04-28"
+  },
+  {
+    "id": "res-exp-ai-mock",
+    "title": "AI Mock Interviews",
+    "url": "https://www.tryexponent.com/practice/ai-mock-interviews",
+    "source": "Exponent",
+    "type": "course",
+    "description": "AI-driven practice with rubric-based feedback. Useful complement when you want timed reps with a different evaluator.",
+    "appliesTo": {
+      "categories": ["behavioral_leadership", "ai_product_judgment", "product_sense"]
+    },
+    "reviewer": "PrepOS seed",
+    "addedOn": "2026-04-28"
+  },
+  {
+    "id": "res-exp-microsoft-ai-pm",
+    "title": "Microsoft AI Product Manager Interview Guide",
+    "url": "https://www.tryexponent.com/guides/microsoft-ai-product-manager-interview",
+    "source": "Exponent",
+    "type": "article",
+    "duration": "15 min read",
+    "description": "AI PM interview structure and example prompts, applicable across AI PM loops.",
+    "appliesTo": {
+      "categories": ["ai_product_judgment", "behavioral_leadership"],
+      "concepts": [
+        "ai_product_judgment.eval_design",
+        "ai_product_judgment.hallucination_mitigation",
+        "ai_product_judgment.human_fallback_design",
+        "ai_product_judgment.cost_latency_tradeoffs"
+      ]
+    },
+    "reviewer": "PrepOS seed",
+    "addedOn": "2026-04-28"
+  },
+  {
+    "id": "res-exp-questions",
+    "title": "PM Interview Question Library",
+    "url": "https://www.tryexponent.com/questions?role=pm",
+    "source": "Exponent",
+    "type": "article",
+    "description": "Verified PM interview questions and answers across multiple companies and rounds.",
+    "appliesTo": {
+      "categories": [
+        "product_sense",
+        "execution_metrics",
+        "behavioral_leadership",
+        "strategy",
+        "estimation_prioritization"
+      ]
+    },
+    "reviewer": "PrepOS seed",
+    "addedOn": "2026-04-28"
+  },
+  {
+    "id": "res-igotanoffer-pm-prep",
+    "title": "Product Manager Interview Prep — 5 steps to a FAANG+ offer",
+    "url": "https://igotanoffer.com/blogs/product-manager/pm-interview-prep",
+    "source": "IGotAnOffer",
+    "type": "article",
+    "duration": "25 min read",
+    "description": "Five-step prep methodology with examples from Google, Meta, Amazon loops.",
+    "appliesTo": {
+      "categories": [
+        "product_sense",
+        "execution_metrics",
+        "behavioral_leadership",
+        "strategy"
+      ]
+    },
+    "reviewer": "PrepOS seed",
+    "addedOn": "2026-04-28"
+  },
+  {
+    "id": "res-stellarpeers-home",
+    "title": "StellarPeers — proprietary PM frameworks",
+    "url": "https://stellarpeers.com/",
+    "source": "StellarPeers",
+    "type": "framework",
+    "description": "60+ proprietary frameworks for product sense, execution, behavioral, and strategy questions.",
+    "appliesTo": {
+      "categories": [
+        "product_sense",
+        "execution_metrics",
+        "behavioral_leadership",
+        "strategy"
+      ]
+    },
+    "reviewer": "PrepOS seed",
+    "addedOn": "2026-04-28"
+  },
+  {
+    "id": "res-stellarpeers-meta",
+    "title": "Meta PM Interview Process",
+    "url": "https://stellarpeers.com/meta-product-manager-interview-process/",
+    "source": "StellarPeers",
+    "type": "article",
+    "description": "Round-by-round breakdown of the Meta PM loop with example questions and rubrics.",
+    "appliesTo": {
+      "categories": ["product_sense", "behavioral_leadership", "strategy", "execution_metrics"]
+    },
+    "reviewer": "PrepOS seed",
+    "addedOn": "2026-04-28"
+  },
+  {
+    "id": "res-stellarpeers-google",
+    "title": "The Ultimate Google PM Interview Questions Guide",
+    "url": "https://stellarpeers.com/google-pm-interview-prep/",
+    "source": "StellarPeers",
+    "type": "article",
+    "description": "Google-specific PM prep across product, analytical, behavioral, and strategy rounds.",
+    "appliesTo": {
+      "categories": ["product_sense", "execution_metrics", "behavioral_leadership", "strategy"]
+    },
+    "reviewer": "PrepOS seed",
+    "addedOn": "2026-04-28"
+  },
+  {
+    "id": "res-stellarpeers-faang-prep",
+    "title": "PM Interview Prep — Meta, Google, Amazon",
+    "url": "https://stellarpeers.com/product-manager-interview-prep-meta-google-amazon/",
+    "source": "StellarPeers",
+    "type": "article",
+    "description": "Cross-company guide comparing rubrics and expectations across the FAANG-style PM loops.",
+    "appliesTo": {
+      "categories": ["product_sense", "behavioral_leadership", "strategy"]
+    },
+    "reviewer": "PrepOS seed",
+    "addedOn": "2026-04-28"
+  },
+  {
+    "id": "res-stellarpeers-coaching",
+    "title": "PM Interview Coaching",
+    "url": "https://stellarpeers.com/coaching/pm-interview-coaching/",
+    "source": "StellarPeers",
+    "type": "course",
+    "description": "Structured PM interview coaching pages with framework summaries.",
+    "appliesTo": {
+      "categories": ["product_sense", "execution_metrics", "behavioral_leadership"]
+    },
+    "reviewer": "PrepOS seed",
+    "addedOn": "2026-04-28"
+  },
+  {
+    "id": "res-pmexercises",
+    "title": "PMExercises — PM Interview Practice",
+    "url": "https://www.productmanagementexercises.com/",
+    "source": "PMExercises",
+    "type": "article",
+    "description": "Question bank with expert answers and breakdowns. Useful for seeing structured answers next to your own.",
+    "appliesTo": {
+      "categories": [
+        "product_sense",
+        "execution_metrics",
+        "estimation_prioritization",
+        "behavioral_leadership"
+      ]
+    },
+    "reviewer": "PrepOS seed",
+    "addedOn": "2026-04-28"
+  },
+  {
+    "id": "res-thepminterview",
+    "title": "The PM Interview — questions hub",
+    "url": "https://thepminterview.com/",
+    "source": "The PM Interview",
+    "type": "article",
+    "description": "Browse PM interview questions by company and round.",
+    "appliesTo": {
+      "categories": [
+        "product_sense",
+        "execution_metrics",
+        "behavioral_leadership",
+        "strategy"
+      ]
+    },
+    "reviewer": "PrepOS seed",
+    "addedOn": "2026-04-28"
+  }
+]
