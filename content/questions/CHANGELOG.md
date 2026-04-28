@@ -1,5 +1,33 @@
 # Question Bank Changelog
 
+## 2026-04-28 — PR D: bank reaches 250
+
+Added 48 prompts (16 AI product judgment + 16 technical collaboration
++ 16 strategy) and cleared the standing concept-coverage warning.
+
+AI judgment (16): evals (search, generated UI), trust patterns,
+fallbacks (image gen, agent undo), cost (router, caching, quality cuts),
+hallucination (legal cites, uncertainty UX, label vs watermark),
+synthetic data, beta + sunset, moderation edge cases, 200M-user onboarding.
+
+Technical collaboration (16): 6 api_contracts (versioning, breaking
+changes, GraphQL vs REST, internal vs partner, webhooks, pagination),
+5 engineering alignment, 5 reliability/data/platform.
+
+Strategy (16): acquire vs build community, open-source decision,
+feature-to-platform, international sequencing, vertical variant,
+unbundle, loyalty, monetize free distribution, build ecosystem,
+defend against OS clone, positioning pivot, disrupt incumbent,
+PLG vs sales-led, prosumer-to-enterprise, declining product line,
+distribution partnership.
+
+Concept fix: technical_collaboration.api_contracts 2 → 8 (validator
+warning that has been outstanding since PR A is now resolved).
+
+Final bank: **250 questions, 0 warnings, 0 near-duplicates.**
+Difficulty: D2 29 / D3 97 / D4 106 / D5 18.
+Every concept now has ≥ 8 questions.
+
 ## 2026-04-28 — PR C: bank expansion to 202
 
 Added 45 behavioral-leadership and estimation-prioritization prompts.
