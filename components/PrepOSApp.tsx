@@ -74,8 +74,8 @@ export default function PrepOSApp() {
         <div className="brand">
           <img className="brand-mark" src="favicon-48.png" alt="PrepOS logo" width="36" height="36" />
           <div>
-            <h1>PrepOS MVP1</h1>
-            <p>Adaptive PM interview readiness system</p>
+            <h1>PrepOS</h1>
+            <p>Adaptive PM interview prep</p>
           </div>
         </div>
         <div className="status-strip" aria-label="PrepOS status">
@@ -178,6 +178,19 @@ export default function PrepOSApp() {
         </aside>
 
         <section className="workspace">
+          <section className="workspace-head">
+            <div>
+              <span className="eyebrow">Today&apos;s focus</span>
+              <h2>{activeItem ? activeItem.question.title : "Calibrate your prep plan"}</h2>
+              <p>{levelProfiles[calibration.targetLevel].bar}</p>
+            </div>
+            <div className="focus-card">
+              <span>Current mode</span>
+              <strong>{activeItem ? prettyMode(activeItem.mode) : "Calibration"}</strong>
+              <p>{activeItem ? `${activeItem.explanationDepth} explanation depth` : "Set your target to start."}</p>
+            </div>
+          </section>
+
           <div className="grid">
             <MetricCard
               icon={<Activity size={18} />}
@@ -199,32 +212,14 @@ export default function PrepOSApp() {
             />
           </div>
 
-          <section className="panel section">
-            <h2>Next best drills</h2>
-            <p>{levelProfiles[calibration.targetLevel].bar}</p>
-            <div className="queue">
-              {queue.map((item) => (
-                <QueueItem
-                  item={item}
-                  key={item.question.id}
-                  active={activeItem?.question.id === item.question.id}
-                  onSelect={() => {
-                    setSelectedId(item.question.id);
-                    setAnswer("");
-                    setLastEvaluation(null);
-                  }}
-                />
-              ))}
-            </div>
-          </section>
-
           {activeItem ? (
             <section className="panel section drill">
-              <div>
-                <h2>Drill room</h2>
-                <p>
-                  {prettyMode(activeItem.mode)} with {activeItem.explanationDepth} explanation depth.
-                </p>
+              <div className="section-title-row">
+                <div>
+                  <span className="eyebrow">Practice now</span>
+                  <h2>Drill room</h2>
+                </div>
+                <span className="mode-chip">{prettyMode(activeItem.mode)}</span>
               </div>
 
               <div className="coach-note">
@@ -246,7 +241,7 @@ export default function PrepOSApp() {
                 <QuestionSource question={activeItem.question} />
               </div>
 
-              <div className="field" style={{ padding: 0 }}>
+              <div className="field answer-field">
                 <label htmlFor="answer">Candidate answer</label>
                 <textarea
                   id="answer"
@@ -257,7 +252,7 @@ export default function PrepOSApp() {
                 />
               </div>
 
-              <div className="action-row" style={{ padding: 0 }}>
+              <div className="action-row flush">
                 <button className="btn primary" type="button" onClick={submitAnswer} disabled={answer.trim().length < 12}>
                   <Send size={16} /> Score answer
                 </button>
@@ -268,8 +263,37 @@ export default function PrepOSApp() {
           ) : null}
 
           <section className="panel section">
-            <h2>Concept mastery</h2>
-            <p>Concepts move from Teach to Interview Mode as the candidate proves understanding.</p>
+            <div className="section-title-row">
+              <div>
+                <span className="eyebrow">Adaptive queue</span>
+                <h2>Next best drills</h2>
+              </div>
+              <span className="mode-chip">{queue.length} ready</span>
+            </div>
+            <div className="queue">
+              {queue.map((item) => (
+                <QueueItem
+                  item={item}
+                  key={item.question.id}
+                  active={activeItem?.question.id === item.question.id}
+                  onSelect={() => {
+                    setSelectedId(item.question.id);
+                    setAnswer("");
+                    setLastEvaluation(null);
+                  }}
+                />
+              ))}
+            </div>
+          </section>
+
+          <section className="panel section">
+            <div className="section-title-row">
+              <div>
+                <span className="eyebrow">Learning memory</span>
+                <h2>Concept mastery</h2>
+              </div>
+              <span className="mode-chip">{ready.masteredCount}/{ready.totalConcepts} mastered</span>
+            </div>
             <div className="concepts">
               {concepts.slice(0, 8).map((concept) => (
                 <div className="concept" key={concept.conceptId}>
