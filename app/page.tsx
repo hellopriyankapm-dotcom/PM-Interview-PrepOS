@@ -118,6 +118,7 @@ export default function LandingPage() {
           <a href="#how">How it works</a>
           <a href="#features">Features</a>
           <a href="#scorecard">Scorecard</a>
+          <a href="#story">Story</a>
           <a href="#faq">FAQ</a>
         </nav>
         <div className="landing-nav-cta">
@@ -294,6 +295,51 @@ export default function LandingPage() {
               <p>Anchor the answer in a sharper user segment and pain point, then state the trade-off explicitly.</p>
             </div>
           </article>
+        </div>
+      </section>
+
+      <section id="story" className="section-block">
+        <div className="story-grid">
+          <div className="section-head left">
+            <span className="eyebrow">From the inside</span>
+            <h2>Built by a PM who used it to clear PM interviews.</h2>
+            <p>
+              PrepOS started as one PM&apos;s personal interview lab — the question bank, the rubric, and the
+              adaptive queue that closed real gaps inside real loops. It is open source so the next candidate
+              does not have to start from zero.
+            </p>
+            <p className="story-lead-quote">
+              &ldquo;The tool I wish I had the night before my onsite. Honest feedback, no marketing fluff,
+              and the next rep was always the right one.&rdquo;
+            </p>
+            <span className="story-lead-attr">— PrepOS founder, PM</span>
+          </div>
+          <div className="story-cards">
+            <article className="story-card">
+              <span className="story-card-eyebrow">Principle 01</span>
+              <h3>Honest by default</h3>
+              <p>
+                MVP1 ships with a transparent keyword-and-structure rubric. LLM scoring is on the roadmap and
+                will always be opt-in. No black-box numbers.
+              </p>
+            </article>
+            <article className="story-card">
+              <span className="story-card-eyebrow">Principle 02</span>
+              <h3>Source-aware questions</h3>
+              <p>
+                Every prompt names its reviewer and source type. No fabricated company claims, no scraped
+                content from sources that disallow it.
+              </p>
+            </article>
+            <article className="story-card">
+              <span className="story-card-eyebrow">Principle 03</span>
+              <h3>Local-first by design</h3>
+              <p>
+                Your answers, scores, and progress live in your browser. No account, no analytics, no
+                tracking — and the whole project is MIT-licensed on GitHub.
+              </p>
+            </article>
+          </div>
         </div>
       </section>
 
