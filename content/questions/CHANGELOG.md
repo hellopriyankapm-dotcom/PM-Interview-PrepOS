@@ -1,5 +1,27 @@
 # Question Bank Changelog
 
+## 2026-04-28 — PR C: bank expansion to 202
+
+Added 45 behavioral-leadership and estimation-prioritization prompts.
+
+Behavioral (28): 5 influence, 6 conflict-handling, 4 failure/learning,
+4 customer-voice, 4 organizational, 3 communication, 3 risk/judgment,
+3 leadership in ambiguity. Boosted under-covered concepts:
+behavioral.conflict_handling 4 → 16, behavioral.star_arc_structure 9 → 34.
+
+Estimation (17): 6 market sizing (NYC coffee, gym memberships, SF rides,
+airport flights, holiday SMS, TV ad revenue), 3 technical sizing
+(video bandwidth, AI compute cost, social-feed read volume), 6 priority
+calls (3 customers same ask, tech-debt vs deadline, board override,
+shared platform dependency, early-stage quarterly priority, backlog
+trim), 2 effort estimates (analytics dashboard, multi-region launch).
+
+Distribution shifts: D2 entry 17 → 28, APM-tagged 20 → 31, behavioral
+category 18 → 48, estimation category 9 → 26.
+
+Also removed two near-duplicate execution prompts identified by Jaccard
+audit (exec-diag-001, exec-power-002).
+
 ## 2026-04-28 — PR B: bank expansion to 159
 
 Added 45 execution / analytics / experimentation prompts:
