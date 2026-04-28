@@ -1,5 +1,23 @@
 # Question Bank Changelog
 
+## 2026-04-28 — PR B: bank expansion to 159
+
+Added 45 execution / analytics / experimentation prompts:
+- North Star choice: 6
+- Input metrics: 4
+- Funnel diagnosis: 3
+- A/B test design: 5
+- Experiment readouts: 4
+- Power / sample size: 2
+- Causal inference: 2
+- Cohort analysis: 3
+- Metric trade-offs: 4
+- Diagnose drops: 5
+- Dashboards / monitoring / attribution / instrumentation / segmentation: 7
+
+Distribution shifts: execution_metrics 25 → 69, D2 entry-level 8 → 17,
+APM-tagged 11 → 20, execution.north_star_metrics 5 → 14.
+
 ## 2026-04-28 — PR A: bank expansion to 115
 
 Added 45 product_sense prompts across archetypes:
