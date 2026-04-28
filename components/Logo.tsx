@@ -15,12 +15,19 @@ export function Logo({ size = 28, withWordmark = false, className }: LogoProps) 
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
       >
-        <rect x="1" y="1" width="30" height="30" rx="8" className="logo-bg" />
-        <path
-          d="M10 22V10h5.2c2.65 0 4.4 1.62 4.4 4.05 0 2.43-1.75 4.05-4.4 4.05H12.6V22H10Zm2.6-6.05h2.35c1.3 0 2.05-.75 2.05-2 0-1.25-.75-2-2.05-2H12.6v4Z"
-          className="logo-fg"
-        />
-        <circle cx="22.5" cy="11" r="2.2" className="logo-accent" />
+        <rect x="0" y="0" width="32" height="32" rx="7" className="logo-bg" />
+        <text
+          x="16"
+          y="22"
+          textAnchor="middle"
+          className="logo-mark"
+          fontFamily="Georgia, 'Times New Roman', serif"
+          fontWeight="700"
+          fontSize="16"
+          letterSpacing="-0.5"
+        >
+          PD
+        </text>
       </svg>
       {withWordmark ? <span className="logo-wordmark">PrepOS</span> : null}
     </span>

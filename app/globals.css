@@ -132,12 +132,8 @@ button {
   fill: var(--green);
 }
 
-.logo-fg {
+.logo-mark {
   fill: #ffffff;
-}
-
-.logo-accent {
-  fill: var(--gold);
 }
 
 [data-theme="dark"] .logo svg {
