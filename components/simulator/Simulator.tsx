@@ -1,6 +1,6 @@
 "use client";
 
-import { Mic, MicOff, Trash2, X } from "lucide-react";
+import { Mic, MicOff, Sparkles, Trash2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { SarahAvatar } from "@/components/simulator/Avatar";
 import {
@@ -12,8 +12,20 @@ import {
   saveKey,
   type ChatMessage
 } from "@/lib/simulator/anthropic";
+import {
+  forgetElevenKey,
+  hasElevenKey,
+  loadElevenKey,
+  saveElevenKey
+} from "@/lib/simulator/elevenlabs";
 import { SARAH, FEEDBACK_SYSTEM_PROMPT, buildInterviewSystemPrompt } from "@/lib/simulator/persona";
-import { createRecognition, isSpeechSupported, speak, stopSpeaking } from "@/lib/simulator/speech";
+import {
+  createRecognition,
+  isLifelikeVoiceAvailable,
+  isSpeechSupported,
+  speak,
+  stopSpeaking
+} from "@/lib/simulator/speech";
 import type { Calibration, Evaluation, Question, ScaffoldingMode, ScoreBreakdown } from "@/lib/types";
 
 type Phase =
@@ -44,6 +56,7 @@ type FeedbackResponse = {
 
 const MAX_FOLLOWUP_TURNS = 4;
 const MIN_USER_CHARS_PER_TURN = 12;
+const SILENCE_HANDOVER_MS = 2500;
 
 type Props = {
   question: Question;
@@ -57,6 +70,8 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
   const [phase, setPhase] = useState<Phase>("preflight");
   const [keyInput, setKeyInput] = useState(loadKey() ?? "");
   const [keyAccepted, setKeyAccepted] = useState(hasKey());
+  const [elevenKeyInput, setElevenKeyInput] = useState(loadElevenKey() ?? "");
+  const [elevenAccepted, setElevenAccepted] = useState(hasElevenKey());
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [avatarState, setAvatarState] = useState<AvatarState>("idle");
   const [interim, setInterim] = useState("");
@@ -73,9 +88,15 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
   const startedAtRef = useRef<number>(0);
   const speechSupported = useRef(isSpeechSupported());
   const phaseRef = useRef<Phase>("preflight");
+  const currentUserTurnRef = useRef<string>("");
+  const silenceTimerRef = useRef<number | null>(null);
+  const handingOverRef = useRef<boolean>(false);
   useEffect(() => {
     phaseRef.current = phase;
   }, [phase]);
+  useEffect(() => {
+    currentUserTurnRef.current = currentUserTurn;
+  }, [currentUserTurn]);
 
   // Timer
   useEffect(() => {
@@ -170,9 +191,32 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
     }
   }
 
+  function clearSilenceTimer() {
+    if (silenceTimerRef.current !== null) {
+      window.clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = null;
+    }
+  }
+
+  function scheduleAutoHandover() {
+    clearSilenceTimer();
+    silenceTimerRef.current = window.setTimeout(() => {
+      silenceTimerRef.current = null;
+      if (
+        phaseRef.current === "listening" &&
+        !handingOverRef.current &&
+        currentUserTurnRef.current.trim().length >= MIN_USER_CHARS_PER_TURN
+      ) {
+        handUserTurnToSarah();
+      }
+    }, SILENCE_HANDOVER_MS);
+  }
+
   function startListening() {
     setCurrentUserTurn("");
     setInterim("");
+    handingOverRef.current = false;
+    clearSilenceTimer();
     const recognition = createRecognition();
     if (!recognition) {
       setErrorMsg("Speech recognition not available in this browser.");
@@ -193,15 +237,23 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
       } else {
         setInterim(interimChunk);
       }
+      // Reset the silence countdown on every new transcript activity
+      scheduleAutoHandover();
+    };
+    recognition.onspeechstart = () => {
+      // User resumed talking — cancel pending auto-handover
+      clearSilenceTimer();
+    };
+    recognition.onspeechend = () => {
+      // Browser thinks the user paused — start the countdown
+      scheduleAutoHandover();
     };
     recognition.onerror = (event: any) => {
       if (event.error && event.error !== "no-speech") {
-        // Surface only if not a benign pause
         console.warn("Mic error:", event.error);
       }
     };
     recognition.onend = () => {
-      // Auto-restart if we're still in listening (browsers stop after long silence)
       if (phaseRef.current === "listening") {
         try {
           recognition.start();
@@ -220,6 +272,7 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
   }
 
   function stopListening() {
+    clearSilenceTimer();
     try {
       recognitionRef.current?.stop();
     } catch {
@@ -228,14 +281,14 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
     recognitionRef.current = null;
   }
 
-  // User clicks "Sarah's turn" — pass everything to Claude, get follow-up or wrapup
+  // User clicks "Sarah's turn" OR auto-triggered after silence — pass everything to Claude
   async function handUserTurnToSarah() {
-    if (currentUserTurn.trim().length < MIN_USER_CHARS_PER_TURN) {
-      // Prompt them to keep going rather than blocking silently
-      return;
-    }
+    const userText = currentUserTurnRef.current.trim();
+    if (userText.length < MIN_USER_CHARS_PER_TURN) return;
+    if (handingOverRef.current) return;
+    handingOverRef.current = true;
     stopListening();
-    const turnText = currentUserTurn.trim();
+    const turnText = userText;
     const nextHistory: ChatMessage[] = [...history, { role: "user", content: turnText }];
     setHistory(nextHistory);
     setCurrentUserTurn("");
@@ -433,6 +486,23 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
     setKeyInput("");
   }
 
+  function handleSaveElevenKey() {
+    const trimmed = elevenKeyInput.trim();
+    if (trimmed.length < 20) {
+      setErrorMsg("That doesn't look like an ElevenLabs key.");
+      return;
+    }
+    saveElevenKey(trimmed);
+    setElevenAccepted(true);
+    setErrorMsg(null);
+  }
+
+  function handleForgetElevenKey() {
+    forgetElevenKey();
+    setElevenAccepted(false);
+    setElevenKeyInput("");
+  }
+
   function handleClose() {
     stopSpeaking();
     stopListening();
@@ -451,6 +521,11 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
         <header className="sim-bar">
           <div className="sim-bar-left">
             <span className="sim-bar-pill">{SARAH.name} · {SARAH.styleTag}</span>
+            {isLifelikeVoiceAvailable() ? (
+              <span className="sim-voice-pill">
+                <Sparkles size={12} /> Lifelike voice
+              </span>
+            ) : null}
             {phase !== "preflight" && phase !== "done" && phase !== "error" ? (
               <span className="sim-turn-counter mono">
                 Turn {followupCount + 1}/{MAX_FOLLOWUP_TURNS + 1}
@@ -477,9 +552,14 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
             keyInput={keyInput}
             setKeyInput={setKeyInput}
             keyAccepted={keyAccepted}
+            elevenKeyInput={elevenKeyInput}
+            setElevenKeyInput={setElevenKeyInput}
+            elevenAccepted={elevenAccepted}
             errorMsg={errorMsg}
             onSaveKey={handleSaveKey}
             onForgetKey={handleForgetKey}
+            onSaveElevenKey={handleSaveElevenKey}
+            onForgetElevenKey={handleForgetElevenKey}
             onStart={startInterview}
             speechSupported={speechSupported.current}
             question={question}
@@ -520,21 +600,28 @@ function PreflightStep(props: {
   keyInput: string;
   setKeyInput: (next: string) => void;
   keyAccepted: boolean;
+  elevenKeyInput: string;
+  setElevenKeyInput: (next: string) => void;
+  elevenAccepted: boolean;
   errorMsg: string | null;
   onSaveKey: () => void;
   onForgetKey: () => void;
+  onSaveElevenKey: () => void;
+  onForgetElevenKey: () => void;
   onStart: () => void;
   speechSupported: boolean;
   question: Question;
 }) {
+  const lifelike = props.elevenAccepted;
   return (
     <div className="sim-step sim-preflight">
-      <span className="eyebrow">Voice mock · BYO key</span>
+      <span className="eyebrow">Voice mock · BYO keys</span>
       <h2>Run a real conversation with {SARAH.name}</h2>
       <p>
         {SARAH.name} reads the prompt, listens to your answer, asks <strong>up to {MAX_FOLLOWUP_TURNS} follow-ups
-        based on what you actually said</strong>, then scores you on the standard PrepOS rubric. Your key, audio, and
-        transcript stay in your browser.
+        based on what you actually said</strong>, then scores you on the standard PrepOS rubric. Pause for ~2.5s when
+        you&apos;re done speaking and she&apos;ll respond automatically. Your keys, audio, and transcript stay in your
+        browser.
       </p>
 
       {!props.speechSupported ? (
@@ -550,7 +637,7 @@ function PreflightStep(props: {
       </div>
 
       <div className="sim-key-row">
-        <label htmlFor="sim-key-input">Anthropic API key</label>
+        <label htmlFor="sim-key-input">Anthropic API key (required)</label>
         <input
           id="sim-key-input"
           type="password"
@@ -576,6 +663,41 @@ function PreflightStep(props: {
         </div>
       </div>
 
+      <div className="sim-key-row">
+        <label htmlFor="sim-eleven-input">
+          ElevenLabs API key <em>(optional — lifelike voice)</em>
+        </label>
+        <input
+          id="sim-eleven-input"
+          type="password"
+          placeholder="sk_…"
+          value={props.elevenKeyInput}
+          onChange={(event) => props.setElevenKeyInput(event.target.value)}
+          autoComplete="off"
+          spellCheck={false}
+        />
+        <div className="sim-key-actions">
+          {props.elevenAccepted ? (
+            <button type="button" className="btn" onClick={props.onForgetElevenKey}>
+              <Trash2 size={14} /> Forget key
+            </button>
+          ) : (
+            <button type="button" className="btn" onClick={props.onSaveElevenKey}>
+              Save key
+            </button>
+          )}
+          <span className={`sim-key-status ${lifelike ? "lifelike" : ""}`}>
+            {lifelike ? (
+              <>
+                <Sparkles size={12} /> Lifelike voice on (~$0.30 per interview)
+              </>
+            ) : (
+              "Without it, Sarah uses your browser's robotic TTS for free."
+            )}
+          </span>
+        </div>
+      </div>
+
       {props.errorMsg ? <div className="sim-warn">{props.errorMsg}</div> : null}
 
       <div className="sim-cta-row">
@@ -588,7 +710,9 @@ function PreflightStep(props: {
           <Mic size={16} /> Begin interview
         </button>
         <span className="sim-cost-hint">
-          ~$0.10–0.20 per interview against your Anthropic account · voice via your browser (free)
+          {lifelike
+            ? "~$0.10–0.20 Claude + ~$0.30 ElevenLabs per interview, billed to your accounts"
+            : "~$0.10–0.20 per interview against your Anthropic account"}
         </span>
       </div>
     </div>
@@ -649,8 +773,8 @@ function RunningStep(props: {
           </button>
           <span className="sim-listen-hint">
             {props.canHandTurn
-              ? "Click when you're ready for Sarah to respond"
-              : "Speak at least a sentence, then hand back to Sarah"}
+              ? "Pause for ~2.5s and Sarah responds automatically — or click to skip the wait"
+              : "Speak at least a sentence; Sarah will pick up when you pause"}
           </span>
         </div>
       ) : null}
