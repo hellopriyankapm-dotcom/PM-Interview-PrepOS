@@ -86,7 +86,7 @@ const faqs = [
   },
   {
     q: "How fresh is the question bank?",
-    a: "The bank is reviewed and updated weekly. Every prompt has a reviewer name, source type, and (if applicable) citation."
+    a: `The bank ships with ${questionCount} reviewed prompts and is updated weekly. Every prompt has a reviewer name, source type, and (if applicable) citation.`
   },
   {
     q: "Who is PrepOS for?",
