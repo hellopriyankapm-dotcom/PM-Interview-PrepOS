@@ -749,3 +749,109 @@ button {
     display: grid;
   }
 }
+
+/* ============================================================
+   Landing page
+   ============================================================ */
+
+.landing {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at 20% -10%, var(--hero-glow-1), transparent 38%),
+    radial-gradient(circle at 88% 0%, var(--hero-glow-2), transparent 32%),
+    radial-gradient(var(--grid-dot) 1px, transparent 1px);
+  background-size: auto, auto, 24px 24px;
+  background-position: 0 0, 0 0, 0 0;
+}
+
+.landing-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px clamp(18px, 4vw, 56px);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  backdrop-filter: blur(18px);
+}
+
+.landing-brand {
+  text-decoration: none;
+  color: inherit;
+}
+
+.landing-nav-links {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+}
+
+.landing-nav-links a {
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.landing-nav-links a:hover {
+  color: var(--ink);
+}
+
+.landing-nav-cta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-ghost,
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: transform 160ms ease, border-color 160ms ease,
+    box-shadow 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.btn-ghost {
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--ink);
+}
+
+.btn-ghost:hover {
+  transform: translateY(-1px);
+  border-color: var(--green);
+}
+
+.btn-primary {
+  border: 1px solid var(--green);
+  background: var(--green);
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(15, 95, 70, 0.18);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  background: var(--green-strong);
+  border-color: var(--green-strong);
+}
+
+.btn-primary.lg,
+.btn-ghost.lg {
+  padding: 13px 20px;
+  font-size: 1rem;
+}
