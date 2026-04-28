@@ -20,6 +20,7 @@
   --grid-dot: rgba(15, 95, 70, 0.09);
   --hero-glow-1: rgba(15, 95, 70, 0.09);
   --hero-glow-2: rgba(36, 95, 153, 0.07);
+  --on-green: #ffffff;
 }
 
 [data-theme="dark"] {
@@ -43,6 +44,7 @@
   --grid-dot: rgba(52, 211, 153, 0.12);
   --hero-glow-1: rgba(52, 211, 153, 0.12);
   --hero-glow-2: rgba(122, 184, 236, 0.08);
+  --on-green: #062d20;
 }
 
 * {
@@ -98,8 +100,8 @@ button {
   justify-content: space-between;
   gap: 24px;
   padding: 16px clamp(18px, 4vw, 56px);
-  border-bottom: 1px solid rgba(221, 228, 223, 0.78);
-  background: rgba(247, 248, 245, 0.84);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 78%, transparent);
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
   backdrop-filter: blur(18px);
 }
 
@@ -201,9 +203,9 @@ button {
 }
 
 .pill {
-  border: 1px solid rgba(221, 228, 223, 0.9);
-  background: rgba(255, 255, 255, 0.72);
-  color: #3f4f47;
+  border: 1px solid color-mix(in srgb, var(--line) 90%, transparent);
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  color: var(--ink);
   padding: 5px 11px;
   font-size: 0.82rem;
 }
@@ -225,7 +227,7 @@ button {
 .concept {
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.88);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
   box-shadow: var(--shadow);
 }
 
@@ -291,7 +293,7 @@ button {
 }
 
 .field label {
-  color: #51625a;
+  color: var(--muted);
   font-size: 0.74rem;
   font-weight: 760;
   letter-spacing: 0.03em;
@@ -304,7 +306,7 @@ button {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #ffffff;
+  background: var(--surface);
   color: var(--ink);
   outline: none;
   padding: 11px 12px;
@@ -368,7 +370,7 @@ button {
   min-height: 42px;
   border: 1px solid var(--line-strong);
   border-radius: 8px;
-  background: #ffffff;
+  background: var(--surface);
   color: var(--ink);
   padding: 9px 14px;
   font-weight: 760;
@@ -388,7 +390,7 @@ button {
 .btn.primary {
   border-color: var(--green);
   background: var(--green);
-  color: #ffffff;
+  color: var(--on-green);
 }
 
 .btn.primary:hover:not(:disabled) {
@@ -412,7 +414,11 @@ button {
   align-items: end;
   padding: 22px;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(240, 244, 238, 0.9)),
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--surface) 94%, transparent),
+      color-mix(in srgb, var(--surface-soft) 90%, transparent)
+    ),
     var(--surface);
 }
 
@@ -433,13 +439,13 @@ button {
 .focus-card {
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.72);
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
   padding: 14px;
 }
 
 .focus-card span,
 .metric span {
-  color: #51625a;
+  color: var(--muted);
   font-size: 0.76rem;
   font-weight: 800;
   letter-spacing: 0.04em;
@@ -499,7 +505,7 @@ button {
 }
 
 .mode-chip {
-  border: 1px solid rgba(15, 95, 70, 0.15);
+  border: 1px solid color-mix(in srgb, var(--green) 22%, transparent);
   background: var(--green-soft);
   color: var(--green);
   padding: 5px 10px;
@@ -592,11 +598,11 @@ button {
 }
 
 .coach-note {
-  border: 1px solid rgba(15, 95, 70, 0.16);
+  border: 1px solid color-mix(in srgb, var(--green) 22%, transparent);
   border-left: 4px solid var(--green);
   border-radius: 8px;
   background: var(--green-soft);
-  color: #243b31;
+  color: var(--ink);
   padding: 14px 16px;
   line-height: 1.5;
 }
@@ -652,7 +658,7 @@ button {
   height: 10px;
   overflow: hidden;
   border-radius: 999px;
-  background: #e9eee9;
+  background: color-mix(in srgb, var(--green) 14%, transparent);
 }
 
 .bar span {
@@ -836,7 +842,7 @@ button {
 .btn-primary {
   border: 1px solid var(--green);
   background: var(--green);
-  color: #ffffff;
+  color: var(--on-green);
   box-shadow: 0 10px 24px rgba(15, 95, 70, 0.18);
 }
 
