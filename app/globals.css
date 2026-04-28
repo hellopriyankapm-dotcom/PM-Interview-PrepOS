@@ -3201,3 +3201,34 @@ kbd {
 @media (prefers-reduced-motion: reduce) {
   .sim-msg-live { animation: none; }
 }
+
+.sim-voice-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--gold) 16%, transparent);
+  color: var(--gold);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.sim-key-row label em {
+  color: var(--muted);
+  font-style: normal;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.74rem;
+  margin-left: 6px;
+}
+
+.sim-key-status.lifelike {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--gold);
+  font-weight: 700;
+}

@@ -1,3 +1,5 @@
+import { hasElevenKey, speakElevenLabs, stopElevenLabs } from "@/lib/simulator/elevenlabs";
+
 type RecognitionLike = {
   start: () => void;
   stop: () => void;
@@ -8,6 +10,8 @@ type RecognitionLike = {
   onresult: ((event: any) => void) | null;
   onerror: ((event: any) => void) | null;
   onend: (() => void) | null;
+  onspeechstart?: (() => void) | null;
+  onspeechend?: (() => void) | null;
 };
 
 export function isSpeechSupported() {
@@ -20,7 +24,7 @@ export function isSpeechSupported() {
   return !!(w.SpeechRecognition || w.webkitSpeechRecognition) && !!w.speechSynthesis;
 }
 
-export function speak(text: string, opts?: { onEnd?: () => void; rate?: number; pitch?: number }) {
+function speakBrowser(text: string, opts?: { onEnd?: () => void; rate?: number; pitch?: number }) {
   if (typeof window === "undefined" || !window.speechSynthesis) return;
   window.speechSynthesis.cancel();
   const utter = new SpeechSynthesisUtterance(text);
@@ -36,9 +40,29 @@ export function speak(text: string, opts?: { onEnd?: () => void; rate?: number; 
   window.speechSynthesis.speak(utter);
 }
 
+/**
+ * Speak `text` aloud using the best available backend:
+ *   1. ElevenLabs (lifelike) when an ElevenLabs key is present
+ *   2. Browser SpeechSynthesis (robotic, free) as fallback
+ * On ElevenLabs failure, silently falls back to browser TTS.
+ */
+export async function speak(text: string, opts?: { onEnd?: () => void }) {
+  if (typeof window === "undefined") return;
+  if (hasElevenKey()) {
+    try {
+      await speakElevenLabs(text, { onEnd: opts?.onEnd });
+      return;
+    } catch (error) {
+      console.warn("ElevenLabs failed, falling back to browser TTS:", error);
+    }
+  }
+  speakBrowser(text, opts);
+}
+
 export function stopSpeaking() {
-  if (typeof window === "undefined" || !window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
+  if (typeof window === "undefined") return;
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  stopElevenLabs();
 }
 
 export function createRecognition(): RecognitionLike | null {
@@ -54,4 +78,8 @@ export function createRecognition(): RecognitionLike | null {
   recognition.interimResults = true;
   recognition.lang = "en-US";
   return recognition;
+}
+
+export function isLifelikeVoiceAvailable(): boolean {
+  return hasElevenKey();
 }
