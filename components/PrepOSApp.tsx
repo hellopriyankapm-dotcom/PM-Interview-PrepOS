@@ -9,6 +9,7 @@ import {
   ExternalLink,
   Lightbulb,
   Maximize2,
+  Mic,
   Minimize2,
   RefreshCw,
   Send,
@@ -23,11 +24,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Dashboard, type RepHistoryEntry } from "@/components/Dashboard";
 import { LearningMemory } from "@/components/LearningMemory";
 import { Logo } from "@/components/Logo";
+import { Simulator } from "@/components/simulator/Simulator";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { buildPracticeQueue, readiness } from "@/lib/adaptive/engine";
 import { createInitialConceptStates, levelProfiles, targetLevelOptions } from "@/lib/content";
 import { findResourcesForQuestion, type ResourceMatch } from "@/lib/resources";
-import { coachCopy, explanationDepthForMode } from "@/lib/scaffolding/scaffolding";
+import { coachCopy, explanationDepthForMode, updateConceptState } from "@/lib/scaffolding/scaffolding";
 import { evaluateAnswer } from "@/lib/scoring/rubrics";
 import type {
   Calibration,
@@ -78,6 +80,7 @@ export default function PrepOSApp() {
   const [focusMode, setFocusMode] = useState(false);
   const [timerStart, setTimerStart] = useState<number | null>(null);
   const [helpPanel, setHelpPanel] = useState<"none" | "resources" | "coach">("none");
+  const [simulatorOpen, setSimulatorOpen] = useState(false);
   const queue = useMemo(
     () => buildPracticeQueue(calibration, concepts, completedQuestionIds, queueExpanded ? 24 : 4),
     [calibration, concepts, completedQuestionIds, queueExpanded]
@@ -110,6 +113,26 @@ export default function PrepOSApp() {
       {
         questionId: activeItem.question.id,
         title: activeItem.question.title,
+        score: evaluation.total,
+        at: Date.now()
+      }
+    ]);
+  }
+
+  function applySimulatorEvaluation(evaluation: Evaluation) {
+    if (!activeItem) return;
+    const activeConceptIds = new Set(activeItem.question.concepts);
+    const nextConcepts = concepts.map((concept) =>
+      activeConceptIds.has(concept.conceptId) ? updateConceptState(concept, evaluation.total) : concept
+    );
+    setConcepts(nextConcepts);
+    setCompletedQuestionIds((current) => Array.from(new Set([...current, activeItem.question.id])));
+    setLastEvaluation({ ...evaluation, updatedConcepts: nextConcepts });
+    setRepHistory((current) => [
+      ...current,
+      {
+        questionId: activeItem.question.id,
+        title: `🎤 ${activeItem.question.title}`,
         score: evaluation.total,
         at: Date.now()
       }
@@ -350,6 +373,13 @@ export default function PrepOSApp() {
                   <button type="button" className="btn primary" onClick={scrollToDrill}>
                     Start drill <ArrowDown size={16} />
                   </button>
+                  <button
+                    type="button"
+                    className="btn"
+                    onClick={() => setSimulatorOpen(true)}
+                  >
+                    <Mic size={16} /> Run voice mock
+                  </button>
                   <span className="workspace-head-hint">
                     Press <kbd>F</kbd> for focus mode
                   </span>
@@ -575,6 +605,16 @@ export default function PrepOSApp() {
         MVP1 runs locally with trusted seed content. The weekly update workflow validates source metadata before adding
         questions to the bank.
       </p>
+
+      {simulatorOpen && activeItem && effectiveMode ? (
+        <Simulator
+          question={activeItem.question}
+          calibration={calibration}
+          mode={effectiveMode}
+          onClose={() => setSimulatorOpen(false)}
+          onComplete={applySimulatorEvaluation}
+        />
+      ) : null}
     </main>
   );
 }
