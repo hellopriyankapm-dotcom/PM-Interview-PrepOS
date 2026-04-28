@@ -1055,3 +1055,166 @@ button {
   background: var(--blue-soft);
   color: var(--blue);
 }
+
+/* Trust strip */
+
+.strip {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface-soft) 60%, transparent);
+}
+
+.strip-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 22px clamp(18px, 4vw, 56px);
+}
+
+.strip-inner > span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.strip-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.strip-tags span {
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+}
+
+/* Section blocks */
+
+.section-block {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(56px, 9vw, 104px) clamp(18px, 4vw, 56px);
+}
+
+.section-block.alt {
+  background: color-mix(in srgb, var(--surface-soft) 50%, transparent);
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.section-block.alt > * {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(18px, 4vw, 56px);
+  padding-right: clamp(18px, 4vw, 56px);
+}
+
+.section-head {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.section-head.left {
+  margin: 0;
+  text-align: left;
+}
+
+.section-head .eyebrow {
+  display: inline-block;
+  margin-bottom: 14px;
+}
+
+.section-head h2 {
+  margin: 0;
+  font-size: clamp(1.85rem, 3.4vw, 2.7rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.section-head p {
+  margin: 16px auto 0;
+  color: var(--muted);
+  font-size: 1.02rem;
+  line-height: 1.62;
+}
+
+.section-head.left p {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Steps */
+
+.step-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 48px;
+}
+
+.step-card {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  transition: transform 200ms ease, border-color 200ms ease;
+}
+
+.step-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--green) 35%, var(--line));
+}
+
+.step-index {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.step-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.step-card h3 {
+  margin: 0;
+  font-size: 1.18rem;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.step-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.58;
+  font-size: 0.96rem;
+}
