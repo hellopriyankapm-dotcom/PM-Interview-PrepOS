@@ -4,8 +4,8 @@ MVP1 proves the core PrepOS loop:
 
 1. Calibrate the candidate by target level, company style, interview date, and weakness.
 2. Build a next-best practice queue.
-3. Teach concepts when the candidate is new or weak.
-4. Fade explanations as answers improve.
+3. Coach concepts when the candidate is new or weak.
+4. Fade support as answers improve.
 5. Score answers against target-level readiness.
 6. Update concept mastery after each drill.
 7. Keep the question bank source-aware and self-updating through reviewed submissions.
@@ -17,7 +17,7 @@ MVP1 proves the core PrepOS loop:
 - Target-level readiness profiles.
 - Concept mastery states.
 - Adaptive practice queue.
-- Adaptive explanation depth.
+- adaptive learning support level.
 - Heuristic answer scorecard.
 - Weekly question-bank update workflow.
 - Content validation script.

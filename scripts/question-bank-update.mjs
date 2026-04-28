@@ -28,6 +28,7 @@ const normalized = approved.map((submission) => ({
   title: submission.title,
   prompt: submission.prompt,
   roundType: submission.roundType,
+  categories: submission.categories,
   targetLevels: submission.targetLevels,
   concepts: submission.concepts,
   difficulty: submission.difficulty,

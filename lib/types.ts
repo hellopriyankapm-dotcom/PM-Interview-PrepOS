@@ -8,6 +8,17 @@ export type RoundType =
   | "ai_product_judgment"
   | "technical_collaboration";
 
+export type PracticeCategory =
+  | "all"
+  | "product_sense"
+  | "execution_metrics"
+  | "analytics_experimentation"
+  | "strategy"
+  | "behavioral_leadership"
+  | "ai_product_judgment"
+  | "technical_collaboration"
+  | "estimation_prioritization";
+
 export type ScaffoldingMode =
   | "teach"
   | "guided_practice"
@@ -32,6 +43,7 @@ export type Question = {
   title: string;
   prompt: string;
   roundType: RoundType;
+  categories: PracticeCategory[];
   targetLevels: TargetLevel[];
   concepts: string[];
   difficulty: 1 | 2 | 3 | 4 | 5;
@@ -43,6 +55,7 @@ export type Question = {
 
 export type Calibration = {
   targetLevel: TargetLevel;
+  practiceCategory: PracticeCategory;
   companyStyle: string;
   interviewDate: string;
   weeklyHours: number;

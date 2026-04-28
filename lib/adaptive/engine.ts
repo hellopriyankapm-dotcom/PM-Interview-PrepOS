@@ -25,7 +25,11 @@ export function buildPracticeQueue(
   const weakness = calibration.selfReportedWeakness.toLowerCase();
 
   return questions
-    .filter((question) => !completedQuestionIds.includes(question.id))
+    .filter((question) => {
+      const matchesCategory =
+        calibration.practiceCategory === "all" || question.categories.includes(calibration.practiceCategory);
+      return !completedQuestionIds.includes(question.id) && matchesCategory;
+    })
     .map((question) => {
       const linkedConcepts = concepts.filter((concept) => question.concepts.includes(concept.conceptId));
       const weakestConceptScore =
@@ -86,9 +90,9 @@ function buildReason(mode: PracticePlanItem["mode"], calibration: Calibration, c
   const concept = concepts.find((item) => item.state === "teach") ?? concepts[0];
   const target = levelProfiles[calibration.targetLevel].label;
 
-  if (mode === "teach") return `Teach ${concept?.label ?? "a core concept"} before pushing toward ${target}.`;
+  if (mode === "teach") return `Coach ${concept?.label ?? "a core concept"} before building toward ${target}.`;
   if (mode === "guided_practice") return `Guided rep to close a known gap for ${target}.`;
   if (mode === "light_feedback") return `Candidate is close; use short feedback and a harder follow-up.`;
-  if (mode === "interview_mode") return `Target interview is near or skill is strong enough for pressure testing.`;
+  if (mode === "interview_mode") return `Ready for realistic interview-style practice.`;
   return `Maintenance rep to keep mastery fresh.`;
 }

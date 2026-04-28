@@ -5,6 +5,7 @@ const requiredQuestionFields = [
   "title",
   "prompt",
   "roundType",
+  "categories",
   "targetLevels",
   "concepts",
   "difficulty",
@@ -32,6 +33,10 @@ for (const question of questions) {
 
   if (!allowedSources.has(question.sourceType)) {
     failures.push(`${question.id} has unsupported sourceType ${question.sourceType}`);
+  }
+
+  if (!Array.isArray(question.categories) || question.categories.length === 0) {
+    failures.push(`${question.id} needs at least one practice category`);
   }
 
   if (question.sourceType !== "original" && question.sourceType !== "synthetic" && !question.sourceUrl) {

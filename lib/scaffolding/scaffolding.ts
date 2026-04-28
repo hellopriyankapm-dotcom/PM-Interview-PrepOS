@@ -25,7 +25,7 @@ export function coachCopy(mode: ScaffoldingMode, labels: string[]): string {
   const conceptList = labels.slice(0, 3).join(", ");
 
   if (mode === "teach") {
-    return `Before answering, frame the concept: ${conceptList}. Define the goal, pick a user or stakeholder, state the trade-off, and name the metric you would use.`;
+    return `Coach mode: start with ${conceptList}. Define the goal, pick a user or stakeholder, state the trade-off, and name the metric you would use.`;
   }
 
   if (mode === "guided_practice") {
@@ -37,7 +37,7 @@ export function coachCopy(mode: ScaffoldingMode, labels: string[]): string {
   }
 
   if (mode === "interview_mode") {
-    return "Interview mode: no upfront hints. Answer as if a real interviewer is timing you.";
+    return "Interview practice: answer independently, then use the feedback to refine your next rep.";
   }
 
   return "Maintenance rep: keep it concise and prove the concept still holds under time pressure.";

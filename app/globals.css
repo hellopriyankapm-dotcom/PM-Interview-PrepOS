@@ -245,6 +245,13 @@ button {
   resize: vertical;
 }
 
+.field-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.42;
+}
+
 .range-row {
   display: flex;
   align-items: center;
@@ -579,6 +586,11 @@ button {
   padding-left: 18px;
   color: var(--muted);
   line-height: 1.5;
+}
+
+.empty-state {
+  min-height: 180px;
+  align-content: center;
 }
 
 .concepts {

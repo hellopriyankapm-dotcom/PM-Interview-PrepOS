@@ -16,8 +16,9 @@ Implemented now:
 
 - local Next.js app
 - calibration by target level, company style, date, and weak area
+- candidate-selected practice categories
 - adaptive practice queue
-- adaptive explanation depth: Teach, Guided Practice, Light Feedback, Interview Mode, Maintenance
+- adaptive learning support: Coach, Guided Practice, Light Feedback, Interview Practice, Maintenance
 - concept mastery tracking
 - answer scorecard
 - source-aware seed question bank
@@ -80,6 +81,17 @@ The first version should feel like:
 4. See the one habit that would improve the answer most.
 5. Try again immediately.
 
+Practice categories:
+
+- Product sense
+- Execution and metrics
+- Analytics and experimentation
+- Strategy
+- Behavioral and leadership
+- AI product judgment
+- Technical collaboration
+- Estimation and prioritization
+
 ## Adaptive Learning Goal
 
 PrepOS should optimize for speed to interview readiness, not content completion.
@@ -102,7 +114,7 @@ The system should always answer:
 - What is the fastest next practice rep?
 - What can be skipped because it is already strong enough?
 
-PrepOS should also adapt how much it teaches. At the beginning, the system should explain concepts, frameworks, examples, and common mistakes in detail. Once the candidate repeatedly answers correctly or almost correctly, PrepOS should reduce explanations and move into realistic interview pressure.
+PrepOS should also adapt how much support it gives. At the beginning, the system should explain concepts, frameworks, examples, and common mistakes in detail. Once the candidate repeatedly answers correctly or almost correctly, PrepOS should reduce support and move into more realistic interview practice.
 
 The candidate should feel the product getting out of their way as they improve.
 
@@ -267,36 +279,36 @@ The queue should update after every drill using:
 - candidate confidence
 - spaced repetition intervals
 
-### 7. Adaptive Explanation And Scaffolding
+### 7. Adaptive Learning Support
 
-PrepOS should not explain every concept forever. The teaching style should change based on demonstrated understanding.
+PrepOS should not explain every concept forever. The coaching style should change based on demonstrated understanding.
 
 Coaching levels:
 
 | Level | When Used | PrepOS Behavior |
 |---|---|---|
-| Teach | New concept, low score, or repeated confusion. | Explain the concept, show a framework, give examples, and name common mistakes. |
+| Coach | New concept, low score, or repeated confusion. | Explain the concept, show a framework, give examples, and name common mistakes. |
 | Guided Practice | Candidate understands basics but misses pieces. | Ask the candidate to apply the concept, give hints, and correct gaps after the answer. |
 | Light Feedback | Candidate is usually correct. | Give short feedback, one improvement, and a harder follow-up. |
-| Interview Mode | Candidate repeatedly meets target-level bar. | Stop teaching upfront. Simulate realistic interviewer behavior with pressure, ambiguity, and limited hints. |
-| Maintenance | Candidate has mastered the skill but may forget it. | Use occasional spaced repetition with minimal explanation. |
+| Interview Practice | Candidate repeatedly meets target-level bar. | Reduce upfront coaching and simulate realistic interviewer behavior with ambiguity and limited hints. |
+| Maintenance | Candidate has mastered the skill but may forget it. | Use occasional spaced repetition with minimal support. |
 
 Promotion rules:
 
-- Move from Teach to Guided Practice after one solid answer or two almost-correct answers.
+- Move from Coach to Guided Practice after one solid answer or two almost-correct answers.
 - Move from Guided Practice to Light Feedback after two recent target-level answers.
-- Move from Light Feedback to Interview Mode after three recent target-level answers under time pressure.
+- Move from Light Feedback to Interview Practice after three recent target-level answers in timed practice.
 - Move back to Guided Practice if the candidate misses the same concept twice.
-- Move back to Teach if the candidate cannot explain the underlying concept in their own words.
+- Move back to Coach if the candidate cannot explain the underlying concept in their own words.
 
 Examples:
 
 - If the candidate is new to North Star metrics, PrepOS explains what a North Star metric is, why it matters, examples, and pitfalls.
 - If the candidate already selects strong metrics consistently, PrepOS should stop explaining North Star metrics and instead ask sharper trade-off questions.
 - If the candidate understands AI hallucination risk, PrepOS should stop defining hallucination and start asking how they would measure, mitigate, and launch safely.
-- If the candidate keeps giving generic behavioral stories, PrepOS should teach STAR/ARC structure again and force sharper evidence.
+- If the candidate keeps giving generic behavioral stories, PrepOS should return to Coach mode for STAR/ARC structure and help them add sharper evidence.
 
-The goal is adaptive teaching, not repetitive tutoring.
+The goal is adaptive coaching, not repetitive tutoring.
 
 ### 8. Readiness Dashboard
 
@@ -309,8 +321,8 @@ Candidate-facing metrics:
 - answer length and pacing
 - next recommended drill
 - concepts mastered
-- concepts still needing explanation
-- concepts moved into interview mode
+- concepts still needing support
+- concepts moved into Interview Practice
 
 The dashboard should avoid vanity scoring. It should answer: "Am I getting more interview-ready?"
 
@@ -409,8 +421,8 @@ Outputs:
 - skills to maintain
 - full-loop readiness estimate
 - recommended story to practice
-- explanation depth for each concept
-- whether the next drill should teach, guide, lightly review, or simulate
+- support depth for each concept
+- whether the next drill should Coach, guide, lightly review, or simulate
 
 Scheduling logic:
 
@@ -421,7 +433,7 @@ Scheduling logic:
 - If a candidate is strong in a dimension, use spaced repetition instead of daily repetition.
 - If a candidate is targeting Senior+ roles, increase ambiguity, stakeholder pushback, and strategy depth.
 - If a candidate has not mastered a concept, explain it before asking them to apply it.
-- If a candidate has mastered a concept, remove upfront explanations and test application under pressure.
+- If a candidate has mastered a concept, reduce upfront support and test application in realistic interview-style practice.
 
 The goal is not to maximize practice time. The goal is to reach the target-level readiness threshold with the fewest wasted reps.
 
@@ -472,13 +484,13 @@ Each concept should have a state:
   "confidence": "medium",
   "last_practiced_at": "2026-04-28",
   "next_review_at": "2026-05-02",
-  "explanation_depth": "medium"
+  "support_depth": "medium"
 }
 ```
 
-Explanation depth should be generated from this state:
+support depth should be generated from this state:
 
-- `high`: teach the concept first, with examples.
+- `high`: Coach the concept first, with examples.
 - `medium`: give a short reminder, then ask the candidate to apply it.
 - `low`: no upfront lesson; only feedback after the attempt.
 - `none`: interview simulation only.
@@ -587,7 +599,7 @@ flowchart TD
 - Add timer, follow-up prompts, transcript, and retry flow.
 - Add rubric evaluator and scorecard.
 - Add calibration flow and adaptive practice queue.
-- Add adaptive explanation depth: teach, guide, light feedback, interview mode.
+- Add adaptive learning support level: Coach, guide, light feedback, Interview Practice.
 
 ### Days 6-7: Story Bank
 
@@ -664,7 +676,7 @@ Trust:
 - calibration flow
 - target-level readiness profiles
 - concept mastery model
-- adaptive explanation and scaffolding
+- Adaptive Learning Support
 - adaptive practice queue
 - transcript and scorecard
 - story bank
@@ -712,7 +724,7 @@ Trust:
   lib/
     ai/                   Model provider adapters
     adaptive/             Practice queue and readiness engine
-    scaffolding/          Explanation depth and coaching-mode rules
+    scaffolding/          support depth and coaching-mode rules
     scoring/              Rubric evaluation helpers
     updates/              Source monitoring, dedupe, metadata validation
   docs/

@@ -3,11 +3,11 @@
 import {
   Activity,
   Brain,
-  CalendarClock,
   CheckCircle2,
   ClipboardList,
   RefreshCw,
   Send,
+  SlidersHorizontal,
   Target,
   TimerReset
 } from "lucide-react";
@@ -20,6 +20,7 @@ import type { Calibration, ConceptState, Evaluation, PracticePlanItem } from "@/
 
 const initialCalibration: Calibration = {
   targetLevel: "apm",
+  practiceCategory: "all",
   companyStyle: "General PM loop",
   interviewDate: "",
   weeklyHours: 8,
@@ -27,7 +28,21 @@ const initialCalibration: Calibration = {
   selfReportedWeakness: "metrics"
 };
 
+const practiceCategories: Array<{ value: Calibration["practiceCategory"]; label: string; detail: string }> = [
+  { value: "all", label: "All categories", detail: "Let PrepOS choose the best next rep." },
+  { value: "product_sense", label: "Product sense", detail: "Design or improve products around users." },
+  { value: "execution_metrics", label: "Execution and metrics", detail: "Define success, diagnose funnels, choose trade-offs." },
+  { value: "analytics_experimentation", label: "Analytics and experimentation", detail: "Reason with data, experiments, and guardrails." },
+  { value: "strategy", label: "Strategy", detail: "Market, competition, sequencing, and durable advantage." },
+  { value: "behavioral_leadership", label: "Behavioral and leadership", detail: "Stories, influence, conflict, and measurable impact." },
+  { value: "ai_product_judgment", label: "AI product judgment", detail: "Evals, safety, trust, quality, cost, and fallback paths." },
+  { value: "technical_collaboration", label: "Technical collaboration", detail: "APIs, architecture, reliability, and engineering alignment." },
+  { value: "estimation_prioritization", label: "Estimation and prioritization", detail: "Sizing, constraints, prioritization, and launch sequencing." }
+];
+
 function prettyMode(mode: string) {
+  if (mode === "teach") return "Coach";
+  if (mode === "interview_mode") return "Interview practice";
   return mode
     .split("_")
     .map((word) => word[0].toUpperCase() + word.slice(1))
@@ -83,7 +98,7 @@ export default function PrepOSApp() {
             <RefreshCw size={15} /> weekly question updates
           </span>
           <span className="pill">
-            <Brain size={15} /> adaptive explanations
+            <Brain size={15} /> adaptive learning
           </span>
           <span className="pill">
             <Target size={15} /> {levelProfiles[calibration.targetLevel].label}
@@ -95,7 +110,7 @@ export default function PrepOSApp() {
         <aside className="panel calibration">
           <div className="panel-header">
             <h2>Calibration</h2>
-            <p>PrepOS uses this to choose the fastest next rep and decide how much teaching to show.</p>
+            <p>PrepOS uses this to choose the fastest next rep and decide how much support to provide.</p>
           </div>
 
           <div className="field">
@@ -111,6 +126,26 @@ export default function PrepOSApp() {
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="field">
+            <label htmlFor="practice-category">Practice category</label>
+            <select
+              id="practice-category"
+              value={calibration.practiceCategory}
+              onChange={(event) =>
+                updateCalibration("practiceCategory", event.target.value as Calibration["practiceCategory"])
+              }
+            >
+              {practiceCategories.map((category) => (
+                <option key={category.value} value={category.value}>
+                  {category.label}
+                </option>
+              ))}
+            </select>
+            <p className="field-hint">
+              {practiceCategories.find((category) => category.value === calibration.practiceCategory)?.detail}
+            </p>
           </div>
 
           <div className="field">
@@ -182,12 +217,15 @@ export default function PrepOSApp() {
             <div>
               <span className="eyebrow">Today&apos;s focus</span>
               <h2>{activeItem ? activeItem.question.title : "Calibrate your prep plan"}</h2>
-              <p>{levelProfiles[calibration.targetLevel].bar}</p>
+              <p>
+                {practiceCategories.find((category) => category.value === calibration.practiceCategory)?.label}:{" "}
+                {levelProfiles[calibration.targetLevel].bar}
+              </p>
             </div>
             <div className="focus-card">
               <span>Current mode</span>
               <strong>{activeItem ? prettyMode(activeItem.mode) : "Calibration"}</strong>
-              <p>{activeItem ? `${activeItem.explanationDepth} explanation depth` : "Set your target to start."}</p>
+              <p>{activeItem ? `${activeItem.explanationDepth} support level` : "Set your target to start."}</p>
             </div>
           </section>
 
@@ -202,13 +240,13 @@ export default function PrepOSApp() {
               icon={<CheckCircle2 size={18} />}
               label="Concept mastery"
               value={`${ready.masteredCount}/${ready.totalConcepts}`}
-              detail="Mastered concepts receive less explanation and more pressure."
+              detail="PrepOS gives more support where concepts are still developing."
             />
             <MetricCard
-              icon={<CalendarClock size={18} />}
-              label="Sprint plan"
-              value={`${Math.max(3, calibration.weeklyHours)} reps`}
-              detail="Queue recalculates after every scored answer."
+              icon={<SlidersHorizontal size={18} />}
+              label="Question type"
+              value={practiceCategories.find((category) => category.value === calibration.practiceCategory)?.label ?? "All categories"}
+              detail="Candidates can choose the kind of question they want to practice."
             />
           </div>
 
@@ -262,6 +300,16 @@ export default function PrepOSApp() {
             </section>
           ) : null}
 
+          {!activeItem ? (
+            <section className="panel section empty-state">
+              <span className="eyebrow">No drills found</span>
+              <h2>Try another practice category</h2>
+              <p>
+                This MVP seed bank is still small. Choose All categories or add more reviewed questions to this category.
+              </p>
+            </section>
+          ) : null}
+
           <section className="panel section">
             <div className="section-title-row">
               <div>
@@ -300,7 +348,7 @@ export default function PrepOSApp() {
                   <strong>{concept.label}</strong>
                   <span className={concept.state === "teach" ? "tag risk" : "tag"}>{prettyMode(concept.state)}</span>
                   <div className="tag-row">
-                    <span className="tag warn">explain: {concept.explanationDepth}</span>
+                    <span className="tag warn">support: {concept.explanationDepth}</span>
                     <span className="tag">confidence: {concept.confidence}</span>
                   </div>
                 </div>
@@ -387,7 +435,7 @@ function QueueItem({
         <p>{item.reason}</p>
         <div className="tag-row">
           <span className="tag">{prettyMode(item.mode)}</span>
-          <span className="tag warn">explain: {item.explanationDepth}</span>
+          <span className="tag warn">support: {item.explanationDepth}</span>
         </div>
       </div>
       <ClipboardList size={20} />
