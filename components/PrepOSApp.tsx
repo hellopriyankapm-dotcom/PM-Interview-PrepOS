@@ -20,6 +20,7 @@ import {
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Dashboard, type RepHistoryEntry } from "@/components/Dashboard";
+import { LearningMemory } from "@/components/LearningMemory";
 import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { buildPracticeQueue, readiness } from "@/lib/adaptive/engine";
@@ -550,27 +551,7 @@ export default function PrepOSApp() {
             ) : null}
           </section>
 
-          <section className="panel section">
-            <div className="section-title-row">
-              <div>
-                <span className="eyebrow">Learning memory</span>
-                <h2>Concept mastery</h2>
-              </div>
-              <span className="mode-chip">{ready.masteredCount}/{ready.totalConcepts} mastered</span>
-            </div>
-            <div className="concepts">
-              {concepts.slice(0, 8).map((concept) => (
-                <div className="concept" key={concept.conceptId}>
-                  <strong>{concept.label}</strong>
-                  <span className={concept.state === "teach" ? "tag risk" : "tag"}>{prettyMode(concept.state)}</span>
-                  <div className="tag-row">
-                    <span className="tag warn">support: {concept.explanationDepth}</span>
-                    <span className="tag">confidence: {concept.confidence}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+          <LearningMemory concepts={concepts} readiness={ready} />
         </section>
       </div>
 
