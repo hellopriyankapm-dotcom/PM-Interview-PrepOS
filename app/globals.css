@@ -518,6 +518,62 @@ button {
   gap: 10px;
 }
 
+.queue-expand {
+  align-self: start;
+  justify-self: start;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  padding: 7px 14px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.queue-expand:hover {
+  transform: translateY(-1px);
+  border-color: var(--green);
+}
+
+.mode-selector {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.mode-selector-label {
+  margin-right: 4px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.mode-pill {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 5px 11px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.mode-pill:hover {
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.mode-pill.active {
+  border-color: color-mix(in srgb, var(--green) 55%, transparent);
+  background: var(--green-soft);
+  color: var(--green);
+}
+
 .queue-item {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
