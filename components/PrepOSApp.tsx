@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { Dashboard, type RepHistoryEntry } from "@/components/Dashboard";
 import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { buildPracticeQueue, readiness } from "@/lib/adaptive/engine";
@@ -56,6 +57,7 @@ export default function PrepOSApp() {
   const [calibration, setCalibration] = useState<Calibration>(initialCalibration);
   const [concepts, setConcepts] = useState<ConceptState[]>(() => createInitialConceptStates());
   const [completedQuestionIds, setCompletedQuestionIds] = useState<string[]>([]);
+  const [repHistory, setRepHistory] = useState<RepHistoryEntry[]>([]);
   const queue = useMemo(
     () => buildPracticeQueue(calibration, concepts, completedQuestionIds),
     [calibration, concepts, completedQuestionIds]
@@ -76,6 +78,15 @@ export default function PrepOSApp() {
     setConcepts(evaluation.updatedConcepts);
     setCompletedQuestionIds((current) => Array.from(new Set([...current, activeItem.question.id])));
     setLastEvaluation(evaluation);
+    setRepHistory((current) => [
+      ...current,
+      {
+        questionId: activeItem.question.id,
+        title: activeItem.question.title,
+        score: evaluation.total,
+        at: Date.now()
+      }
+    ]);
   }
 
   function resetSprint() {
@@ -84,6 +95,7 @@ export default function PrepOSApp() {
     setLastEvaluation(null);
     setAnswer("");
     setSelectedId(null);
+    setRepHistory([]);
   }
 
   return (
@@ -253,6 +265,8 @@ export default function PrepOSApp() {
               detail="Candidates can choose the kind of question they want to practice."
             />
           </div>
+
+          <Dashboard calibration={calibration} history={repHistory} />
 
           {activeItem ? (
             <section className="panel section drill">
