@@ -36,6 +36,15 @@ function client(key: string) {
   return new Anthropic({ apiKey: key, dangerouslyAllowBrowser: true });
 }
 
+export type ChatMessage = { role: "user" | "assistant"; content: string };
+
+function parseJson<T>(raw: string): T {
+  const cleaned = raw.trim().replace(/^```json\s*/i, "").replace(/```\s*$/i, "");
+  // Tolerant: grab the first {...} block if Claude wrapped it in prose
+  const match = cleaned.match(/\{[\s\S]*\}/);
+  return JSON.parse(match ? match[0] : cleaned) as T;
+}
+
 export async function callClaudeJson<T>(args: {
   apiKey: string;
   system: string;
@@ -51,6 +60,22 @@ export async function callClaudeJson<T>(args: {
 
   const block = response.content.find((entry) => entry.type === "text");
   const raw = block && block.type === "text" ? block.text : "";
-  const cleaned = raw.trim().replace(/^```json\s*/i, "").replace(/```\s*$/i, "");
-  return JSON.parse(cleaned) as T;
+  return parseJson<T>(raw);
+}
+
+export async function callClaudeChat<T>(args: {
+  apiKey: string;
+  system: string;
+  messages: ChatMessage[];
+  maxTokens?: number;
+}): Promise<T> {
+  const response = await client(args.apiKey).messages.create({
+    model: "claude-sonnet-4-5",
+    max_tokens: args.maxTokens ?? 400,
+    system: args.system,
+    messages: args.messages.map((m) => ({ role: m.role, content: m.content }))
+  });
+  const block = response.content.find((entry) => entry.type === "text");
+  const raw = block && block.type === "text" ? block.text : "";
+  return parseJson<T>(raw);
 }
