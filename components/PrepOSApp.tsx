@@ -2,6 +2,7 @@
 
 import {
   Activity,
+  ArrowDown,
   Brain,
   CheckCircle2,
   ClipboardList,
@@ -129,6 +130,11 @@ export default function PrepOSApp() {
   useEffect(() => {
     submitRef.current = submitAnswer;
   });
+
+  const drillRef = useRef<HTMLElement | null>(null);
+  function scrollToDrill() {
+    drillRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   useEffect(() => {
     if (focusMode && !activeItem) exitFocus();
@@ -339,6 +345,16 @@ export default function PrepOSApp() {
                 {practiceCategories.find((category) => category.value === calibration.practiceCategory)?.label}:{" "}
                 {levelProfiles[calibration.targetLevel].bar}
               </p>
+              {activeItem ? (
+                <div className="workspace-head-actions">
+                  <button type="button" className="btn primary" onClick={scrollToDrill}>
+                    Start drill <ArrowDown size={16} />
+                  </button>
+                  <span className="workspace-head-hint">
+                    Press <kbd>F</kbd> for focus mode
+                  </span>
+                </div>
+              ) : null}
             </div>
             <div className="focus-card">
               <span>Current mode</span>
@@ -375,7 +391,7 @@ export default function PrepOSApp() {
           <Dashboard calibration={calibration} history={repHistory} />
 
           {activeItem ? (
-            <section className="panel section drill">
+            <section className="panel section drill" ref={drillRef}>
               <div className="section-title-row">
                 <div>
                   <span className="eyebrow">Practice now</span>

@@ -2712,3 +2712,25 @@ kbd {
     justify-self: start;
   }
 }
+
+/* Workspace head Start-drill CTA */
+
+.workspace-head-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.workspace-head-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.workspace-head-hint kbd {
+  margin: 0;
+}
