@@ -2171,3 +2171,28 @@ kbd {
   font-weight: 700;
   letter-spacing: 0.02em;
 }
+
+.help-match {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.help-match-3 {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.help-match-2 {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.help-match-1 {
+  background: var(--gold-soft);
+  color: var(--gold);
+}

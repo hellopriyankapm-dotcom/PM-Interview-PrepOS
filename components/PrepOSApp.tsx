@@ -24,7 +24,7 @@ import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { buildPracticeQueue, readiness } from "@/lib/adaptive/engine";
 import { createInitialConceptStates, levelProfiles, targetLevelOptions } from "@/lib/content";
-import { findResourcesForQuestion } from "@/lib/resources";
+import { findResourcesForQuestion, type ResourceMatch } from "@/lib/resources";
 import { coachCopy, explanationDepthForMode } from "@/lib/scaffolding/scaffolding";
 import { evaluateAnswer } from "@/lib/scoring/rubrics";
 import type {
@@ -32,7 +32,6 @@ import type {
   ConceptState,
   Evaluation,
   PracticePlanItem,
-  Resource,
   ScaffoldingMode
 } from "@/lib/types";
 
@@ -86,7 +85,7 @@ export default function PrepOSApp() {
   const effectiveMode: ScaffoldingMode | null = activeItem ? (modeOverride ?? activeItem.mode) : null;
   const effectiveDepth = effectiveMode ? explanationDepthForMode(effectiveMode) : "high";
   const helpAvailable = effectiveMode !== null && effectiveMode !== "interview_mode";
-  const matchedResources = useMemo<Resource[]>(
+  const matchedResources = useMemo<ResourceMatch[]>(
     () => (activeItem ? findResourcesForQuestion(activeItem.question) : []),
     [activeItem]
   );
@@ -471,7 +470,7 @@ export default function PrepOSApp() {
               ) : null}
 
               {helpAvailable && helpPanel === "resources" ? (
-                <ResourcePanel resources={matchedResources} />
+                <ResourcePanel matches={matchedResources} />
               ) : null}
 
               {helpAvailable && helpPanel === "coach" ? <ComingSoonCoachPanel /> : null}
@@ -703,8 +702,8 @@ function Scorecard({ evaluation }: { evaluation: Evaluation }) {
   );
 }
 
-function ResourcePanel({ resources }: { resources: Resource[] }) {
-  if (resources.length === 0) {
+function ResourcePanel({ matches }: { matches: ResourceMatch[] }) {
+  if (matches.length === 0) {
     return (
       <div className="help-panel">
         <p className="help-empty">
@@ -716,9 +715,9 @@ function ResourcePanel({ resources }: { resources: Resource[] }) {
   }
   return (
     <div className="help-panel">
-      <span className="help-panel-eyebrow">Curated by PrepOS · click through to read</span>
+      <span className="help-panel-eyebrow">Top {matches.length} curated · ranked by relevance</span>
       <ul className="help-resource-list">
-        {resources.map((resource) => (
+        {matches.map(({ resource, specificity }) => (
           <li key={resource.id}>
             <a className="help-resource" href={resource.url} target="_blank" rel="noreferrer">
               <span className="help-resource-type">{resource.type}</span>
@@ -728,6 +727,14 @@ function ResourcePanel({ resources }: { resources: Resource[] }) {
                 <em>
                   {resource.source}
                   {resource.duration ? ` · ${resource.duration}` : ""}
+                  {" · "}
+                  <span className={`help-match help-match-${specificity}`}>
+                    {specificity === 3
+                      ? "this question"
+                      : specificity === 2
+                        ? "concept match"
+                        : "category match"}
+                  </span>
                 </em>
               </span>
               <ExternalLink size={15} />

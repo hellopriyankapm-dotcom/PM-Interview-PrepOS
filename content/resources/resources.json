@@ -21,6 +21,11 @@
     "type": "article",
     "description": "Deep dive on modern product-sense expectations beyond classic frameworks.",
     "appliesTo": {
+      "concepts": [
+        "product_sense.user_segmentation",
+        "product_sense.pain_point_prioritization",
+        "product_sense.success_metrics"
+      ],
       "categories": ["product_sense", "strategy"]
     },
     "reviewer": "PrepOS seed",
@@ -105,7 +110,7 @@
     "url": "https://www.tryexponent.com/questions?role=pm",
     "source": "Exponent",
     "type": "article",
-    "description": "Verified PM interview questions and answers across multiple companies and rounds.",
+    "description": "Verified PM interview questions and answers across multiple companies and rounds. Browse for an analogous example to compare against your answer.",
     "appliesTo": {
       "categories": [
         "product_sense",
@@ -161,8 +166,13 @@
     "url": "https://stellarpeers.com/meta-product-manager-interview-process/",
     "source": "StellarPeers",
     "type": "article",
-    "description": "Round-by-round breakdown of the Meta PM loop with example questions and rubrics.",
+    "description": "Round-by-round breakdown of the Meta PM loop with example questions and rubrics. Useful for STAR/ARC behavioral structure and product-sense rounds.",
     "appliesTo": {
+      "concepts": [
+        "behavioral.star_arc_structure",
+        "behavioral.measurable_impact",
+        "product_sense.user_segmentation"
+      ],
       "categories": ["product_sense", "behavioral_leadership", "strategy", "execution_metrics"]
     },
     "reviewer": "PrepOS seed",
@@ -187,8 +197,13 @@
     "url": "https://stellarpeers.com/product-manager-interview-prep-meta-google-amazon/",
     "source": "StellarPeers",
     "type": "article",
-    "description": "Cross-company guide comparing rubrics and expectations across the FAANG-style PM loops.",
+    "description": "Cross-company guide comparing rubrics and behavioral story expectations across the FAANG-style PM loops.",
     "appliesTo": {
+      "concepts": [
+        "behavioral.star_arc_structure",
+        "behavioral.conflict_handling",
+        "behavioral.measurable_impact"
+      ],
       "categories": ["product_sense", "behavioral_leadership", "strategy"]
     },
     "reviewer": "PrepOS seed",
