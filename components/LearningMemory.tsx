@@ -1,4 +1,4 @@
-import { Activity, Layers, Target } from "lucide-react";
+import { Activity, ChevronDown, Layers, Target } from "lucide-react";
 import type { ConceptState, RoundType, ScaffoldingMode } from "@/lib/types";
 
 const STAGES: ScaffoldingMode[] = [
@@ -68,10 +68,16 @@ export function LearningMemory({ concepts, readiness }: Props) {
 
       <MasterySummary readiness={readiness} buckets={buckets} total={concepts.length} />
 
-      <div className="round-breakdown">
-        <span className="learning-eyebrow">
-          <Layers size={13} /> By round type
-        </span>
+      <details className="learning-section">
+        <summary>
+          <span className="learning-section-summary">
+            <Layers size={14} /> By round type
+            <span className="learning-section-meta">
+              {ROUND_ORDER.filter((rt) => (groups.get(rt)?.length ?? 0) > 0).length} groups
+            </span>
+          </span>
+          <ChevronDown size={16} className="learning-section-chevron" />
+        </summary>
         <div className="round-grid">
           {ROUND_ORDER.map((roundType) => {
             const roundConcepts = groups.get(roundType) ?? [];
@@ -97,18 +103,22 @@ export function LearningMemory({ concepts, readiness }: Props) {
             );
           })}
         </div>
-      </div>
+      </details>
 
-      <div className="concept-cards">
-        <span className="learning-eyebrow">
-          <Activity size={13} /> Per-concept progression
-        </span>
+      <details className="learning-section">
+        <summary>
+          <span className="learning-section-summary">
+            <Activity size={14} /> Per-concept progression
+            <span className="learning-section-meta">{concepts.length} concepts</span>
+          </span>
+          <ChevronDown size={16} className="learning-section-chevron" />
+        </summary>
         <div className="concept-grid">
           {concepts.map((concept) => (
             <ConceptCard concept={concept} key={concept.conceptId} />
           ))}
         </div>
-      </div>
+      </details>
     </section>
   );
 }
@@ -198,14 +208,16 @@ function ConceptCard({ concept }: { concept: ConceptState }) {
           ]
             .filter(Boolean)
             .join(" ");
-          return <span key={stage} className={className} data-stage={stage} />;
+          return <span key={stage} className={className} data-stage={stage} title={STAGE_LABEL[stage]} />;
         })}
       </div>
 
-      <div className="concept-stage-track-labels">
-        {STAGES.map((stage) => (
-          <span key={stage}>{STAGE_LABEL[stage]}</span>
-        ))}
+      <div className="concept-stage-current">
+        <span className="concept-stage-current-label">Now at</span>
+        <strong>{STAGE_LABEL[concept.state]}</strong>
+        <span className="concept-stage-current-step mono">
+          {stageIndex + 1}/{STAGES.length}
+        </span>
       </div>
 
       {concept.recentScores.length >= 2 ? (
