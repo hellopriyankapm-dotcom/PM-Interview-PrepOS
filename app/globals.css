@@ -1371,6 +1371,83 @@ button {
   line-height: 1.5;
 }
 
+/* Built-by-a-PM story */
+
+.story-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 56px;
+  align-items: start;
+}
+
+.story-lead-quote {
+  margin: 22px 0 6px;
+  padding-left: 16px;
+  border-left: 3px solid var(--green);
+  color: var(--ink);
+  font-size: 1.06rem;
+  line-height: 1.55;
+  font-style: italic;
+}
+
+.story-lead-attr {
+  display: inline-block;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.story-cards {
+  display: grid;
+  gap: 14px;
+}
+
+.story-card {
+  display: grid;
+  gap: 8px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  transition: transform 200ms ease, border-color 200ms ease;
+}
+
+.story-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--line-strong);
+}
+
+.story-card-eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--green);
+  text-transform: uppercase;
+}
+
+.story-card h3 {
+  margin: 0;
+  font-size: 1.06rem;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+}
+
+.story-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+  font-size: 0.94rem;
+}
+
+@media (max-width: 980px) {
+  .story-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
 /* FAQ */
 
 .faq-grid {
