@@ -3099,3 +3099,105 @@ kbd {
   .sim-shell { border-radius: 0; max-height: 100vh; }
   .sim-running .sim-transcript { margin-top: 56px; }
 }
+
+/* Multi-turn conversation additions */
+
+.sim-turn-counter {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.sim-end-btn {
+  min-height: 32px;
+  padding: 6px 12px;
+  font-size: 0.84rem;
+}
+
+.sim-conversation {
+  width: 100%;
+  margin-top: 60px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface-soft) 40%, var(--surface));
+  display: grid;
+  gap: 10px;
+  text-align: left;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.sim-conversation-list {
+  display: grid;
+  gap: 10px;
+}
+
+.sim-msg {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+
+.sim-msg-label {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.sim-msg p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+.sim-msg em {
+  color: var(--muted);
+  font-style: normal;
+  opacity: 0.7;
+}
+
+.sim-msg-assistant {
+  background: var(--green-soft);
+  border-left: 3px solid var(--green);
+}
+
+.sim-msg-user {
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  border-left: 3px solid var(--line-strong);
+}
+
+.sim-msg-live {
+  border-left-color: var(--blue);
+  background: var(--blue-soft);
+  animation: simLivePulse 2s ease-in-out infinite;
+}
+
+@keyframes simLivePulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.85; }
+}
+
+.sim-listen-actions {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.sim-listen-hint {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sim-msg-live { animation: none; }
+}

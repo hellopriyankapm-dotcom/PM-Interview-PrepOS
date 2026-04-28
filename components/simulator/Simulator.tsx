@@ -4,11 +4,13 @@ import { Mic, MicOff, Trash2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { SarahAvatar } from "@/components/simulator/Avatar";
 import {
+  callClaudeChat,
   callClaudeJson,
   forgetKey,
   hasKey,
   loadKey,
-  saveKey
+  saveKey,
+  type ChatMessage
 } from "@/lib/simulator/anthropic";
 import { SARAH, FEEDBACK_SYSTEM_PROMPT, buildInterviewSystemPrompt } from "@/lib/simulator/persona";
 import { createRecognition, isSpeechSupported, speak, stopSpeaking } from "@/lib/simulator/speech";
@@ -40,6 +42,9 @@ type FeedbackResponse = {
   nextAction: string;
 };
 
+const MAX_FOLLOWUP_TURNS = 4;
+const MIN_USER_CHARS_PER_TURN = 12;
+
 type Props = {
   question: Question;
   calibration: Calibration;
@@ -54,20 +59,32 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
   const [keyAccepted, setKeyAccepted] = useState(hasKey());
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [avatarState, setAvatarState] = useState<AvatarState>("idle");
-  const [transcript, setTranscript] = useState("");
   const [interim, setInterim] = useState("");
   const [feedback, setFeedback] = useState<FeedbackResponse | null>(null);
   const [elapsed, setElapsed] = useState(0);
 
+  // Conversation state — full transcript of both sides
+  const [history, setHistory] = useState<ChatMessage[]>([]);
+  // The user's currently-being-recorded turn (live transcript that updates as they speak)
+  const [currentUserTurn, setCurrentUserTurn] = useState("");
+  const [followupCount, setFollowupCount] = useState(0);
+
   const recognitionRef = useRef<ReturnType<typeof createRecognition>>(null);
   const startedAtRef = useRef<number>(0);
   const speechSupported = useRef(isSpeechSupported());
+  const phaseRef = useRef<Phase>("preflight");
+  useEffect(() => {
+    phaseRef.current = phase;
+  }, [phase]);
 
   // Timer
   useEffect(() => {
-    if (phase !== "listening") return;
-    startedAtRef.current = Date.now();
-    setElapsed(0);
+    if (phase !== "listening" && phase !== "intro" && phase !== "thinking") {
+      return;
+    }
+    if (startedAtRef.current === 0) {
+      startedAtRef.current = Date.now();
+    }
     const id = setInterval(() => setElapsed(Math.floor((Date.now() - startedAtRef.current) / 1000)), 1000);
     return () => clearInterval(id);
   }, [phase]);
@@ -96,15 +113,16 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
       setErrorMsg("Add an Anthropic API key first.");
       return;
     }
+    setHistory([]);
+    setCurrentUserTurn("");
+    setFollowupCount(0);
+    startedAtRef.current = 0;
     setPhase("intro");
-    runIntroTurn();
+    runGreetingTurn();
   }
 
-  async function runIntroTurn() {
+  async function runGreetingTurn() {
     setAvatarState("thinking");
-    setTranscript("");
-    setInterim("");
-
     const apiKey = loadKey();
     if (!apiKey) {
       setErrorMsg("Anthropic key missing.");
@@ -112,26 +130,31 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
       return;
     }
 
+    const systemPrompt = buildInterviewSystemPrompt({
+      persona: SARAH,
+      targetLevel: calibration.targetLevel,
+      mode,
+      questionTitle: question.title,
+      questionPrompt: question.prompt
+    });
+
     try {
-      const response = await callClaudeJson<TurnResponse>({
+      const greeting = await callClaudeChat<TurnResponse>({
         apiKey,
-        system: buildInterviewSystemPrompt({
-          persona: SARAH,
-          targetLevel: calibration.targetLevel,
-          mode
-        }),
-        user: [
-          `Open the interview. Greet the candidate, briefly say who you are, and read this prompt verbatim.`,
-          ``,
-          `Question title: "${question.title}"`,
-          `Prompt: "${question.prompt}"`,
-          ``,
-          `Set intent="greeting", ended=false. Keep your turn under 60 words.`
-        ].join("\n"),
-        maxTokens: 300
+        system: systemPrompt,
+        messages: [
+          {
+            role: "user",
+            content:
+              "Open the interview now: greet the candidate in one warm sentence and read the prompt verbatim. intent='greeting', ended=false."
+          }
+        ],
+        maxTokens: 280
       });
+      const next: ChatMessage = { role: "assistant", content: greeting.say };
+      setHistory([next]);
       setAvatarState("speaking");
-      speak(response.say, {
+      speak(greeting.say, {
         onEnd: () => {
           setPhase("listening");
           setAvatarState("listening");
@@ -148,6 +171,8 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
   }
 
   function startListening() {
+    setCurrentUserTurn("");
+    setInterim("");
     const recognition = createRecognition();
     if (!recognition) {
       setErrorMsg("Speech recognition not available in this browser.");
@@ -163,32 +188,32 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
         else interimChunk += text;
       }
       if (finalChunk) {
-        setTranscript((prev) => (prev + " " + finalChunk).trim());
+        setCurrentUserTurn((prev) => (prev + " " + finalChunk).trim());
         setInterim("");
       } else {
         setInterim(interimChunk);
       }
     };
     recognition.onerror = (event: any) => {
-      // Treat 'no-speech' as benign — the user just paused
       if (event.error && event.error !== "no-speech") {
-        setErrorMsg(`Mic error: ${event.error}`);
+        // Surface only if not a benign pause
+        console.warn("Mic error:", event.error);
       }
     };
     recognition.onend = () => {
-      // If we end during listening (e.g. browser timeout), restart
-      if (phase === "listening") {
+      // Auto-restart if we're still in listening (browsers stop after long silence)
+      if (phaseRef.current === "listening") {
         try {
           recognition.start();
         } catch {
-          // already started
+          // already running
         }
       }
     };
     try {
       recognition.start();
       recognitionRef.current = recognition;
-    } catch (error) {
+    } catch {
       setErrorMsg("Could not start microphone. Check permissions.");
       setPhase("error");
     }
@@ -200,10 +225,95 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
     } catch {
       // ignore
     }
+    recognitionRef.current = null;
   }
 
-  async function finishAnswer() {
+  // User clicks "Sarah's turn" — pass everything to Claude, get follow-up or wrapup
+  async function handUserTurnToSarah() {
+    if (currentUserTurn.trim().length < MIN_USER_CHARS_PER_TURN) {
+      // Prompt them to keep going rather than blocking silently
+      return;
+    }
     stopListening();
+    const turnText = currentUserTurn.trim();
+    const nextHistory: ChatMessage[] = [...history, { role: "user", content: turnText }];
+    setHistory(nextHistory);
+    setCurrentUserTurn("");
+    setInterim("");
+    setPhase("thinking");
+    setAvatarState("thinking");
+
+    const apiKey = loadKey();
+    if (!apiKey) {
+      setErrorMsg("Anthropic key missing.");
+      setPhase("error");
+      return;
+    }
+
+    const systemPrompt = buildInterviewSystemPrompt({
+      persona: SARAH,
+      targetLevel: calibration.targetLevel,
+      mode,
+      questionTitle: question.title,
+      questionPrompt: question.prompt
+    });
+
+    const turnsRemaining = Math.max(0, MAX_FOLLOWUP_TURNS - followupCount);
+    const guidance =
+      turnsRemaining <= 1
+        ? "You have at most 1 follow-up left, then you must wrap up. Decide what's most useful."
+        : `You have at most ${turnsRemaining} follow-ups left. Ask one focused follow-up that quotes or pushes on something specific they just said, OR wrap up if you have enough signal.`;
+
+    try {
+      const turn = await callClaudeChat<TurnResponse>({
+        apiKey,
+        system: systemPrompt,
+        messages: [...nextHistory, { role: "user", content: `[INTERVIEWER NOTE]: ${guidance}` }],
+        maxTokens: 280
+      });
+
+      const updatedHistory: ChatMessage[] = [...nextHistory, { role: "assistant", content: turn.say }];
+      setHistory(updatedHistory);
+
+      const isWrapup = turn.ended || turn.intent === "wrapup" || turnsRemaining <= 0;
+      setFollowupCount((c) => c + (isWrapup ? 0 : 1));
+
+      setAvatarState("speaking");
+      setPhase(isWrapup ? "wrapup" : "intro"); // 'intro' phase reuses the speaking state
+      speak(turn.say, {
+        onEnd: () => {
+          if (isWrapup) {
+            setPhase("scoring");
+            setAvatarState("thinking");
+            runFeedback(updatedHistory);
+          } else {
+            setPhase("listening");
+            setAvatarState("listening");
+            startListening();
+          }
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      setErrorMsg(
+        error instanceof Error ? `Anthropic call failed: ${error.message}` : "Anthropic call failed."
+      );
+      setPhase("error");
+    }
+  }
+
+  // User clicks "End interview" — skip remaining followups, go straight to wrapup + scoring
+  async function endInterview() {
+    stopListening();
+    stopSpeaking();
+    // If they were mid-turn, fold whatever was captured into history first
+    let working = history;
+    if (currentUserTurn.trim().length >= MIN_USER_CHARS_PER_TURN) {
+      working = [...history, { role: "user", content: currentUserTurn.trim() }];
+      setHistory(working);
+    }
+    setCurrentUserTurn("");
+    setInterim("");
     setPhase("wrapup");
     setAvatarState("speaking");
 
@@ -214,47 +324,59 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
       return;
     }
 
-    // Wrapup turn — short, no feedback yet
+    const systemPrompt = buildInterviewSystemPrompt({
+      persona: SARAH,
+      targetLevel: calibration.targetLevel,
+      mode,
+      questionTitle: question.title,
+      questionPrompt: question.prompt
+    });
+
     try {
-      const wrap = await callClaudeJson<TurnResponse>({
+      const wrap = await callClaudeChat<TurnResponse>({
         apiKey,
-        system: buildInterviewSystemPrompt({
-          persona: SARAH,
-          targetLevel: calibration.targetLevel,
-          mode
-        }),
-        user: [
-          `The candidate is finished. Wrap the interview in one short, warm sentence.`,
-          `Set intent="wrapup", ended=true. Do not deliver feedback in this turn.`,
-          ``,
-          `Their answer transcript:`,
-          transcript || "(no audible answer captured)"
-        ].join("\n"),
+        system: systemPrompt,
+        messages: [
+          ...working,
+          { role: "user", content: "[INTERVIEWER NOTE]: Wrap up now in one short, warm sentence. intent='wrapup', ended=true." }
+        ],
         maxTokens: 200
       });
+      const updatedHistory: ChatMessage[] = [...working, { role: "assistant", content: wrap.say }];
+      setHistory(updatedHistory);
       speak(wrap.say, {
         onEnd: () => {
           setPhase("scoring");
           setAvatarState("thinking");
-          runFeedback();
+          runFeedback(updatedHistory);
         }
       });
     } catch (error) {
       console.error(error);
-      // Fall through to scoring even if wrap call fails
+      // Still try to score even if wrap call failed
       setPhase("scoring");
       setAvatarState("thinking");
-      runFeedback();
+      runFeedback(working);
     }
   }
 
-  async function runFeedback() {
+  async function runFeedback(finalHistory: ChatMessage[]) {
     const apiKey = loadKey();
     if (!apiKey) {
       setErrorMsg("Anthropic key missing.");
       setPhase("error");
       return;
     }
+
+    const userTurns = finalHistory
+      .filter((m) => m.role === "user")
+      .map((m, i) => `Candidate turn ${i + 1}: ${m.content}`)
+      .join("\n\n");
+    const interviewerTurns = finalHistory
+      .filter((m) => m.role === "assistant")
+      .map((m, i) => `${SARAH.name} turn ${i + 1}: ${m.content}`)
+      .join("\n\n");
+
     try {
       const result = await callClaudeJson<FeedbackResponse>({
         apiKey,
@@ -265,8 +387,11 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
           `Question title: "${question.title}"`,
           `Question prompt: "${question.prompt}"`,
           ``,
-          `Candidate answer transcript:`,
-          transcript || "(no answer captured)"
+          `Interviewer turns:`,
+          interviewerTurns || "(none)",
+          ``,
+          `Candidate turns:`,
+          userTurns || "(no audible answer captured)"
         ].join("\n"),
         maxTokens: 900
       });
@@ -274,14 +399,13 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
       setPhase("done");
       setAvatarState("idle");
       stopSpeaking();
-      // Plug into existing mastery state via onComplete
       onComplete({
         total: result.total,
         breakdown: result.breakdown,
         strengths: result.strengths,
         improvements: result.improvements,
         nextAction: result.nextAction,
-        updatedConcepts: [] // PrepOSApp re-runs mastery update from total via existing path
+        updatedConcepts: []
       });
     } catch (error) {
       console.error(error);
@@ -327,9 +451,21 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
         <header className="sim-bar">
           <div className="sim-bar-left">
             <span className="sim-bar-pill">{SARAH.name} · {SARAH.styleTag}</span>
+            {phase !== "preflight" && phase !== "done" && phase !== "error" ? (
+              <span className="sim-turn-counter mono">
+                Turn {followupCount + 1}/{MAX_FOLLOWUP_TURNS + 1}
+              </span>
+            ) : null}
           </div>
           <div className="sim-bar-right">
-            {phase === "listening" ? <span className="sim-timer mono">{timer()}</span> : null}
+            {phase !== "preflight" && phase !== "done" && phase !== "error" ? (
+              <span className="sim-timer mono">{timer()}</span>
+            ) : null}
+            {(phase === "listening" || phase === "thinking" || phase === "intro") ? (
+              <button type="button" className="btn sim-end-btn" onClick={endInterview}>
+                End interview
+              </button>
+            ) : null}
             <button type="button" className="icon-btn" onClick={handleClose} aria-label="Exit interview">
               <X size={16} />
             </button>
@@ -353,15 +489,17 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
         {phase !== "preflight" && phase !== "error" && phase !== "done" ? (
           <RunningStep
             avatarState={avatarState}
-            transcript={transcript}
+            history={history}
+            currentUserTurn={currentUserTurn}
             interim={interim}
             phase={phase}
-            onFinish={finishAnswer}
+            onSarahTurn={handUserTurnToSarah}
+            canHandTurn={currentUserTurn.trim().length >= MIN_USER_CHARS_PER_TURN}
           />
         ) : null}
 
         {phase === "done" && feedback ? (
-          <DoneStep feedback={feedback} transcript={transcript} onClose={handleClose} />
+          <DoneStep feedback={feedback} history={history} onClose={handleClose} />
         ) : null}
 
         {phase === "error" ? (
@@ -392,16 +530,17 @@ function PreflightStep(props: {
   return (
     <div className="sim-step sim-preflight">
       <span className="eyebrow">Voice mock · BYO key</span>
-      <h2>Run a full interview against {SARAH.name}</h2>
+      <h2>Run a real conversation with {SARAH.name}</h2>
       <p>
-        PrepOS uses your own Anthropic key. The key, your audio, and the transcript stay in your
-        browser. Nothing is sent to PrepOS infrastructure.
+        {SARAH.name} reads the prompt, listens to your answer, asks <strong>up to {MAX_FOLLOWUP_TURNS} follow-ups
+        based on what you actually said</strong>, then scores you on the standard PrepOS rubric. Your key, audio, and
+        transcript stay in your browser.
       </p>
 
       {!props.speechSupported ? (
         <div className="sim-warn">
-          Voice mode needs the Web Speech API. It works in Chrome and Edge today; Safari and Firefox
-          can&apos;t run this mode yet.
+          Voice mode needs the Web Speech API. It works in Chrome and Edge today; Safari and Firefox can&apos;t run
+          this mode yet.
         </div>
       ) : null}
 
@@ -449,47 +588,71 @@ function PreflightStep(props: {
           <Mic size={16} /> Begin interview
         </button>
         <span className="sim-cost-hint">
-          ~$0.05 per interview against your Anthropic account · voice via your browser (free)
+          ~$0.10–0.20 per interview against your Anthropic account · voice via your browser (free)
         </span>
       </div>
     </div>
   );
 }
 
+type AvatarState_ = "idle" | "speaking" | "listening" | "thinking";
+
 function RunningStep(props: {
-  avatarState: AvatarState;
-  transcript: string;
+  avatarState: AvatarState_;
+  history: ChatMessage[];
+  currentUserTurn: string;
   interim: string;
   phase: Phase;
-  onFinish: () => void;
+  onSarahTurn: () => void;
+  canHandTurn: boolean;
 }) {
-  const showFinish = props.phase === "listening";
+  const showHandTurn = props.phase === "listening";
   return (
     <div className="sim-step sim-running">
       <SarahAvatar name={SARAH.name} state={props.avatarState} />
 
-      <div className="sim-transcript">
-        <span className="eyebrow">Live transcript</span>
-        {props.transcript || props.interim ? (
-          <p>
-            {props.transcript}
-            {props.interim ? <em> {props.interim}</em> : null}
-          </p>
+      <div className="sim-conversation">
+        <span className="eyebrow">Conversation</span>
+        {props.history.length === 0 && !props.currentUserTurn && !props.interim ? (
+          <p className="sim-transcript-empty">{props.phase === "intro" ? "Sarah is greeting you…" : "Speak when you're ready."}</p>
         ) : (
-          <p className="sim-transcript-empty">
-            {props.phase === "intro" ? "Sarah is greeting you…" : null}
-            {props.phase === "listening" ? "Speak when you're ready." : null}
-            {props.phase === "thinking" ? "One second…" : null}
-            {props.phase === "wrapup" ? "Wrapping up." : null}
-            {props.phase === "scoring" ? "Sarah is scoring your answer." : null}
-          </p>
+          <div className="sim-conversation-list">
+            {props.history.map((msg, idx) => (
+              <div className={`sim-msg sim-msg-${msg.role}`} key={idx}>
+                <span className="sim-msg-label">{msg.role === "assistant" ? SARAH.name : "You"}</span>
+                <p>{msg.content}</p>
+              </div>
+            ))}
+            {(props.currentUserTurn || props.interim) && props.phase === "listening" ? (
+              <div className="sim-msg sim-msg-user sim-msg-live">
+                <span className="sim-msg-label">You · live</span>
+                <p>
+                  {props.currentUserTurn}
+                  {props.interim ? <em> {props.interim}</em> : null}
+                </p>
+              </div>
+            ) : null}
+          </div>
         )}
       </div>
 
-      {showFinish ? (
-        <button type="button" className="btn primary lg" onClick={props.onFinish}>
-          <MicOff size={16} /> I&apos;m done
-        </button>
+      {showHandTurn ? (
+        <div className="sim-listen-actions">
+          <button
+            type="button"
+            className="btn primary lg"
+            onClick={props.onSarahTurn}
+            disabled={!props.canHandTurn}
+            title={props.canHandTurn ? "Pass the turn to Sarah" : "Speak a bit more first"}
+          >
+            <MicOff size={16} /> Sarah&apos;s turn
+          </button>
+          <span className="sim-listen-hint">
+            {props.canHandTurn
+              ? "Click when you're ready for Sarah to respond"
+              : "Speak at least a sentence, then hand back to Sarah"}
+          </span>
+        </div>
       ) : null}
     </div>
   );
@@ -497,11 +660,11 @@ function RunningStep(props: {
 
 function DoneStep({
   feedback,
-  transcript,
+  history,
   onClose
 }: {
   feedback: FeedbackResponse;
-  transcript: string;
+  history: ChatMessage[];
   onClose: () => void;
 }) {
   const rows: Array<[string, number]> = [
@@ -549,10 +712,17 @@ function DoneStep({
         </div>
       </div>
 
-      {transcript ? (
+      {history.length > 0 ? (
         <details className="sim-transcript-archive">
           <summary>Show full transcript</summary>
-          <p>{transcript}</p>
+          <div className="sim-conversation-list">
+            {history.map((msg, idx) => (
+              <div className={`sim-msg sim-msg-${msg.role}`} key={idx}>
+                <span className="sim-msg-label">{msg.role === "assistant" ? SARAH.name : "You"}</span>
+                <p>{msg.content}</p>
+              </div>
+            ))}
+          </div>
         </details>
       ) : null}
 
