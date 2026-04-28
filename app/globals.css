@@ -2359,12 +2359,73 @@ kbd {
   font-weight: 700;
 }
 
-/* ---- Round-type breakdown ---- */
+/* ---- Collapsible learning sections (<details>) ---- */
 
-.round-breakdown {
-  display: grid;
-  gap: 12px;
+.learning-section {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  overflow: hidden;
+  transition: border-color 200ms ease;
 }
+
+.learning-section[open] {
+  border-color: color-mix(in srgb, var(--green) 28%, var(--line));
+}
+
+.learning-section > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  padding: 12px 14px;
+  list-style: none;
+  user-select: none;
+  color: var(--ink);
+}
+
+.learning-section > summary::-webkit-details-marker {
+  display: none;
+}
+
+.learning-section-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: 0.02em;
+}
+
+.learning-section-meta {
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.learning-section-chevron {
+  color: var(--muted);
+  transition: transform 200ms ease;
+}
+
+.learning-section[open] .learning-section-chevron {
+  transform: rotate(180deg);
+}
+
+.learning-section .round-grid,
+.learning-section .concept-grid {
+  padding: 0 14px 14px;
+}
+
+/* ---- Round-type breakdown ---- */
 
 .round-grid {
   display: grid;
@@ -2412,14 +2473,9 @@ kbd {
 
 /* ---- Per-concept cards ---- */
 
-.concept-cards {
-  display: grid;
-  gap: 12px;
-}
-
 .concept-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 10px;
 }
 
@@ -2506,19 +2562,34 @@ kbd {
   }
 }
 
-.concept-stage-track-labels {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 4px;
+.concept-stage-current {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 0.78rem;
   color: var(--muted);
-  font-size: 0.66rem;
+}
+
+.concept-stage-current-label {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  font-size: 0.66rem;
 }
 
-.concept-stage-track-labels span {
-  text-align: center;
+.concept-stage-current strong {
+  color: var(--stage-color);
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: -0.005em;
+}
+
+.concept-stage-current-step {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 700;
 }
 
 .concept-sparkline {
@@ -2545,21 +2616,99 @@ kbd {
   gap: 6px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 760px) {
+  .learning-memory {
+    gap: 16px;
+  }
+  .mastery-summary {
+    padding: 14px;
+    gap: 12px;
+  }
   .mastery-headline {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .mastery-score {
+    padding: 6px 12px;
+  }
+  .mastery-score-value {
+    font-size: 1.7rem;
+  }
+  .mastery-bar {
+    height: 18px;
+  }
+  .mastery-bar-segment {
+    font-size: 0.66rem;
+    min-width: 18px;
   }
   .round-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 6px;
+    padding: 10px;
   }
   .round-row-count {
+    justify-self: start;
     text-align: left;
+  }
+  .round-cell {
+    height: 12px;
+    min-width: 10px;
+  }
+  .concept-grid {
+    grid-template-columns: 1fr;
+  }
+  .concept-card {
+    padding: 12px;
+  }
+  .learning-section > summary {
+    padding: 11px 12px;
+  }
+  .learning-section .round-grid,
+  .learning-section .concept-grid {
+    padding: 0 12px 12px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .concept-stage-dot.current::after {
     animation: none;
+  }
+}
+
+/* ============================================================
+   Cross-app mobile polish
+   ============================================================ */
+
+@media (max-width: 760px) {
+  .section-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .drill-actions {
+    flex-wrap: wrap;
+  }
+  .mode-selector {
+    gap: 4px;
+  }
+  .mode-pill {
+    font-size: 0.74rem;
+    padding: 4px 9px;
+  }
+  .help-bar {
+    gap: 6px;
+  }
+  .help-toggle {
+    flex: 1 1 auto;
+    justify-content: center;
+    font-size: 0.82rem;
+    padding: 7px 12px;
+  }
+  .help-resource {
+    grid-template-columns: 1fr auto;
+  }
+  .help-resource-type {
+    grid-column: 1 / -1;
+    justify-self: start;
   }
 }
