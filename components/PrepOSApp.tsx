@@ -78,7 +78,7 @@ export default function PrepOSApp() {
   const [timerStart, setTimerStart] = useState<number | null>(null);
   const [helpPanel, setHelpPanel] = useState<"none" | "resources" | "coach">("none");
   const queue = useMemo(
-    () => buildPracticeQueue(calibration, concepts, completedQuestionIds, queueExpanded ? 24 : 8),
+    () => buildPracticeQueue(calibration, concepts, completedQuestionIds, queueExpanded ? 24 : 4),
     [calibration, concepts, completedQuestionIds, queueExpanded]
   );
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -540,7 +540,7 @@ export default function PrepOSApp() {
                 />
               ))}
             </div>
-            {queue.length >= 8 ? (
+            {queue.length >= 4 ? (
               <button
                 type="button"
                 className="queue-expand"
