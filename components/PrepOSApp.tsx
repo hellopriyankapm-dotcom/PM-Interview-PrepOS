@@ -19,8 +19,8 @@ import { evaluateAnswer } from "@/lib/scoring/rubrics";
 import type { Calibration, ConceptState, Evaluation, PracticePlanItem } from "@/lib/types";
 
 const initialCalibration: Calibration = {
-  targetLevel: "senior",
-  companyStyle: "AI lab style",
+  targetLevel: "apm",
+  companyStyle: "General PM loop",
   interviewDate: "",
   weeklyHours: 8,
   experience: "PM with 3-5 years of product experience",
@@ -236,9 +236,9 @@ export default function PrepOSApp() {
                 <div className="tag-row">
                   <span className="tag">{activeItem.question.roundType.replaceAll("_", " ")}</span>
                   <span className="tag warn">difficulty {activeItem.question.difficulty}/5</span>
-                  <span className="tag">{activeItem.question.sourceType}</span>
+                  {activeItem.question.companyClaim ? <span className="tag">{activeItem.question.sourceType}</span> : null}
                 </div>
-                <QuestionSource question={activeItem.question} />
+                {activeItem.question.companyClaim ? <QuestionSource question={activeItem.question} /> : null}
               </div>
 
               <div className="field answer-field">
@@ -319,6 +319,8 @@ export default function PrepOSApp() {
 }
 
 function QuestionSource({ question }: { question: PracticePlanItem["question"] }) {
+  if (!question.companyClaim) return null;
+
   const sourceLabel =
     question.sourceType === "original"
       ? "PrepOS original seed prompt"
@@ -334,8 +336,7 @@ function QuestionSource({ question }: { question: PracticePlanItem["question"] }
     <div className="source-box">
       <strong>Question source</strong>
       <p>
-        {sourceLabel}. Reviewer: {question.reviewer}. Company claim:{" "}
-        {question.companyClaim ? question.companyClaim : "none; this is not presented as a real company question"}.
+        {sourceLabel}. Reviewer: {question.reviewer}. Company claim: {question.companyClaim}.
       </p>
       {question.sourceUrl ? (
         <a href={question.sourceUrl} target="_blank" rel="noreferrer">

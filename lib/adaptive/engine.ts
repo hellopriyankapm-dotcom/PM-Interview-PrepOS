@@ -36,8 +36,10 @@ export function buildPracticeQueue(
           return sum;
         }, 0) || 1;
       const weaknessBoost = weakness && question.title.toLowerCase().includes(weakness) ? 4 : 0;
+      const companyClaimBoost = question.companyClaim ? 20 : 0;
       const mode = interviewIsSoon && weakestConceptScore <= 2 ? "interview_mode" : modeFromConcepts(linkedConcepts);
       const priority =
+        companyClaimBoost +
         targetMatch(question, calibration.targetLevel) +
         weakestConceptScore +
         weaknessBoost +
