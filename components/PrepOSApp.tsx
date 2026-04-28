@@ -11,7 +11,10 @@ import {
   Target,
   TimerReset
 } from "lucide-react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
+import { Logo } from "@/components/Logo";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { buildPracticeQueue, readiness } from "@/lib/adaptive/engine";
 import { createInitialConceptStates, levelProfiles, targetLevelOptions } from "@/lib/content";
 import { coachCopy } from "@/lib/scaffolding/scaffolding";
@@ -86,13 +89,13 @@ export default function PrepOSApp() {
   return (
     <main className="shell">
       <header className="topbar">
-        <div className="brand">
-          <img className="brand-mark" src="favicon-48.png" alt="PrepOS logo" width="36" height="36" />
+        <Link href="/" className="brand" aria-label="PrepOS home">
+          <Logo size={32} />
           <div>
             <h1>PrepOS</h1>
             <p>Adaptive PM interview prep</p>
           </div>
-        </div>
+        </Link>
         <div className="status-strip" aria-label="PrepOS status">
           <span className="pill">
             <RefreshCw size={15} /> weekly question updates
@@ -103,6 +106,7 @@ export default function PrepOSApp() {
           <span className="pill">
             <Target size={15} /> {levelProfiles[calibration.targetLevel].label}
           </span>
+          <ThemeToggle />
         </div>
       </header>
 
