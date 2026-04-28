@@ -5,14 +5,17 @@ import {
   Brain,
   CheckCircle2,
   ClipboardList,
+  Maximize2,
+  Minimize2,
   RefreshCw,
   Send,
   SlidersHorizontal,
   Target,
+  Timer,
   TimerReset
 } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Dashboard, type RepHistoryEntry } from "@/components/Dashboard";
 import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -66,6 +69,8 @@ export default function PrepOSApp() {
   const [repHistory, setRepHistory] = useState<RepHistoryEntry[]>([]);
   const [queueExpanded, setQueueExpanded] = useState(false);
   const [modeOverride, setModeOverride] = useState<ScaffoldingMode | null>(null);
+  const [focusMode, setFocusMode] = useState(false);
+  const [timerStart, setTimerStart] = useState<number | null>(null);
   const queue = useMemo(
     () => buildPracticeQueue(calibration, concepts, completedQuestionIds, queueExpanded ? 24 : 8),
     [calibration, concepts, completedQuestionIds, queueExpanded]
@@ -99,6 +104,54 @@ export default function PrepOSApp() {
     ]);
   }
 
+  function enterFocus() {
+    setFocusMode(true);
+    setTimerStart(Date.now());
+  }
+
+  function exitFocus() {
+    setFocusMode(false);
+    setTimerStart(null);
+  }
+
+  const submitRef = useRef(submitAnswer);
+  useEffect(() => {
+    submitRef.current = submitAnswer;
+  });
+
+  useEffect(() => {
+    if (focusMode && !activeItem) exitFocus();
+  }, [focusMode, activeItem]);
+
+  useEffect(() => {
+    function onKey(event: KeyboardEvent) {
+      const target = event.target as HTMLElement | null;
+      const isEditable =
+        !!target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT" ||
+          target.isContentEditable);
+
+      if (event.key === "Escape" && focusMode) {
+        event.preventDefault();
+        exitFocus();
+        return;
+      }
+      if ((event.key === "f" || event.key === "F") && !focusMode && !isEditable) {
+        event.preventDefault();
+        enterFocus();
+        return;
+      }
+      if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+        event.preventDefault();
+        submitRef.current();
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [focusMode]);
+
   function resetSprint() {
     setConcepts(createInitialConceptStates());
     setCompletedQuestionIds([]);
@@ -108,10 +161,27 @@ export default function PrepOSApp() {
     setRepHistory([]);
     setModeOverride(null);
     setQueueExpanded(false);
+    setFocusMode(false);
+    setTimerStart(null);
   }
 
   return (
-    <main className="shell">
+    <main className="shell" data-focus={focusMode ? "true" : "false"}>
+      {focusMode && timerStart ? (
+        <div className="focus-bar" role="region" aria-label="Focus mode toolbar">
+          <span className="focus-bar-timer">
+            <Timer size={15} /> <Stopwatch startedAt={timerStart} />
+          </span>
+          <span className="focus-bar-context">
+            {activeItem
+              ? `${prettyMode(effectiveMode ?? activeItem.mode)} · ${activeItem.question.roundType.replaceAll("_", " ")}`
+              : ""}
+          </span>
+          <button type="button" className="btn focus-bar-exit" onClick={exitFocus}>
+            <Minimize2 size={15} /> Exit focus <kbd>Esc</kbd>
+          </button>
+        </div>
+      ) : null}
       <header className="topbar">
         <Link href="/" className="brand" aria-label="PrepOS home">
           <Logo size={32} />
@@ -291,10 +361,33 @@ export default function PrepOSApp() {
                   <span className="eyebrow">Practice now</span>
                   <h2>Drill room</h2>
                 </div>
-                <span className="mode-chip">
-                  {prettyMode(effectiveMode ?? activeItem.mode)}
-                  {modeOverride ? " · manual" : ""}
-                </span>
+                <div className="drill-actions">
+                  <span className="mode-chip">
+                    {prettyMode(effectiveMode ?? activeItem.mode)}
+                    {modeOverride ? " · manual" : ""}
+                  </span>
+                  {focusMode ? (
+                    <button
+                      type="button"
+                      className="icon-btn"
+                      onClick={exitFocus}
+                      aria-label="Exit focus mode"
+                      title="Exit focus mode (Esc)"
+                    >
+                      <Minimize2 size={15} />
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="icon-btn"
+                      onClick={enterFocus}
+                      aria-label="Enter focus mode"
+                      title="Enter focus mode (F)"
+                    >
+                      <Maximize2 size={15} />
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div className="mode-selector" role="radiogroup" aria-label="Coaching mode">
@@ -356,7 +449,7 @@ export default function PrepOSApp() {
 
               <div className="action-row flush">
                 <button className="btn primary" type="button" onClick={submitAnswer} disabled={answer.trim().length < 12}>
-                  <Send size={16} /> Score answer
+                  <Send size={16} /> Score answer <kbd className="btn-kbd">⌘ Enter</kbd>
                 </button>
               </div>
 
@@ -557,4 +650,17 @@ function Scorecard({ evaluation }: { evaluation: Evaluation }) {
       </div>
     </div>
   );
+}
+
+function Stopwatch({ startedAt }: { startedAt: number }) {
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick((value) => value + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const seconds = Math.max(0, Math.floor((Date.now() - startedAt) / 1000));
+  const minutes = Math.floor(seconds / 60);
+  const sec = seconds % 60;
+  const display = `${String(minutes).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+  return <span className="mono">{display}</span>;
 }

@@ -1852,3 +1852,152 @@ button {
     transform: none;
   }
 }
+
+/* ============================================================
+   Drill-room focus mode
+   ============================================================ */
+
+.drill-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
+}
+
+.icon-btn:hover {
+  transform: translateY(-1px);
+  border-color: var(--green);
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+kbd {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--muted);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.btn-kbd {
+  margin-left: 4px;
+  border-color: rgba(255, 255, 255, 0.35);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+[data-theme="dark"] .btn-kbd {
+  border-color: rgba(0, 0, 0, 0.35);
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.focus-bar {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 10px clamp(18px, 4vw, 56px);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(18px);
+}
+
+.focus-bar-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid color-mix(in srgb, var(--green) 35%, transparent);
+  border-radius: 999px;
+  background: var(--green-soft);
+  color: var(--green);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-feature-settings: "tnum";
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.focus-bar-context {
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.focus-bar-exit {
+  min-height: 36px;
+}
+
+/* Hide everything except the drill room when in focus mode */
+
+.shell[data-focus="true"] .topbar,
+.shell[data-focus="true"] .calibration,
+.shell[data-focus="true"] .workspace-head,
+.shell[data-focus="true"] .grid,
+.shell[data-focus="true"] .footer-note {
+  display: none;
+}
+
+.shell[data-focus="true"] .workspace > .panel.section:not(.drill) {
+  display: none;
+}
+
+.shell[data-focus="true"] .main {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 880px;
+  padding-top: 22px;
+}
+
+.shell[data-focus="true"] .answer {
+  min-height: 55vh;
+}
+
+.shell[data-focus="true"] .drill {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
+}
+
+.shell[data-focus="true"] .drill .prompt-box {
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+@media (max-width: 640px) {
+  .focus-bar {
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    row-gap: 8px;
+  }
+  .focus-bar-context {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+}
