@@ -207,7 +207,7 @@ export default function PrepOSApp() {
           <Logo size={32} />
           <div>
             <h1>PrepOS</h1>
-            <p>Adaptive PM interview prep</p>
+            <p>Adaptive PM interview simulator</p>
           </div>
         </Link>
         <div className="status-strip" aria-label="PrepOS status">
