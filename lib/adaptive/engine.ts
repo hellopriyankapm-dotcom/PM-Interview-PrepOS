@@ -19,7 +19,8 @@ function targetMatch(question: Question, targetLevel: TargetLevel) {
 export function buildPracticeQueue(
   calibration: Calibration,
   concepts: ConceptState[],
-  completedQuestionIds: string[]
+  completedQuestionIds: string[],
+  limit = 8
 ): PracticePlanItem[] {
   const interviewIsSoon = daysUntil(calibration.interviewDate) <= 10;
   const weakness = calibration.selfReportedWeakness.toLowerCase();
@@ -58,7 +59,7 @@ export function buildPracticeQueue(
       };
     })
     .sort((a, b) => b.priority - a.priority)
-    .slice(0, 4);
+    .slice(0, limit);
 }
 
 export function readiness(concepts: ConceptState[], calibration: Calibration) {

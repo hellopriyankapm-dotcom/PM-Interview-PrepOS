@@ -18,9 +18,15 @@ import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { buildPracticeQueue, readiness } from "@/lib/adaptive/engine";
 import { createInitialConceptStates, levelProfiles, targetLevelOptions } from "@/lib/content";
-import { coachCopy } from "@/lib/scaffolding/scaffolding";
+import { coachCopy, explanationDepthForMode } from "@/lib/scaffolding/scaffolding";
 import { evaluateAnswer } from "@/lib/scoring/rubrics";
-import type { Calibration, ConceptState, Evaluation, PracticePlanItem } from "@/lib/types";
+import type {
+  Calibration,
+  ConceptState,
+  Evaluation,
+  PracticePlanItem,
+  ScaffoldingMode
+} from "@/lib/types";
 
 const initialCalibration: Calibration = {
   targetLevel: "apm",
@@ -58,12 +64,16 @@ export default function PrepOSApp() {
   const [concepts, setConcepts] = useState<ConceptState[]>(() => createInitialConceptStates());
   const [completedQuestionIds, setCompletedQuestionIds] = useState<string[]>([]);
   const [repHistory, setRepHistory] = useState<RepHistoryEntry[]>([]);
+  const [queueExpanded, setQueueExpanded] = useState(false);
+  const [modeOverride, setModeOverride] = useState<ScaffoldingMode | null>(null);
   const queue = useMemo(
-    () => buildPracticeQueue(calibration, concepts, completedQuestionIds),
-    [calibration, concepts, completedQuestionIds]
+    () => buildPracticeQueue(calibration, concepts, completedQuestionIds, queueExpanded ? 24 : 8),
+    [calibration, concepts, completedQuestionIds, queueExpanded]
   );
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const activeItem = queue.find((item) => item.question.id === selectedId) ?? queue[0];
+  const effectiveMode: ScaffoldingMode | null = activeItem ? (modeOverride ?? activeItem.mode) : null;
+  const effectiveDepth = effectiveMode ? explanationDepthForMode(effectiveMode) : "high";
   const [answer, setAnswer] = useState("");
   const [lastEvaluation, setLastEvaluation] = useState<Evaluation | null>(null);
   const ready = readiness(concepts, calibration);
@@ -96,6 +106,8 @@ export default function PrepOSApp() {
     setAnswer("");
     setSelectedId(null);
     setRepHistory([]);
+    setModeOverride(null);
+    setQueueExpanded(false);
   }
 
   return (
@@ -240,8 +252,12 @@ export default function PrepOSApp() {
             </div>
             <div className="focus-card">
               <span>Current mode</span>
-              <strong>{activeItem ? prettyMode(activeItem.mode) : "Calibration"}</strong>
-              <p>{activeItem ? `${activeItem.explanationDepth} support level` : "Set your target to start."}</p>
+              <strong>{effectiveMode ? prettyMode(effectiveMode) : "Calibration"}</strong>
+              <p>
+                {effectiveMode
+                  ? `${effectiveDepth} support level${modeOverride ? " · manual" : ""}`
+                  : "Set your target to start."}
+              </p>
             </div>
           </section>
 
@@ -275,13 +291,43 @@ export default function PrepOSApp() {
                   <span className="eyebrow">Practice now</span>
                   <h2>Drill room</h2>
                 </div>
-                <span className="mode-chip">{prettyMode(activeItem.mode)}</span>
+                <span className="mode-chip">
+                  {prettyMode(effectiveMode ?? activeItem.mode)}
+                  {modeOverride ? " · manual" : ""}
+                </span>
+              </div>
+
+              <div className="mode-selector" role="radiogroup" aria-label="Coaching mode">
+                <span className="mode-selector-label">Mode</span>
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={modeOverride === null}
+                  className={`mode-pill ${modeOverride === null ? "active" : ""}`}
+                  onClick={() => setModeOverride(null)}
+                >
+                  Auto
+                </button>
+                {(
+                  ["teach", "guided_practice", "light_feedback", "interview_mode", "maintenance"] as const
+                ).map((mode) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    role="radio"
+                    aria-checked={modeOverride === mode}
+                    className={`mode-pill ${modeOverride === mode ? "active" : ""}`}
+                    onClick={() => setModeOverride(mode)}
+                  >
+                    {prettyMode(mode)}
+                  </button>
+                ))}
               </div>
 
               <div className="coach-note">
                 <strong>Coach behavior</strong>
                 {coachCopy(
-                  activeItem.mode,
+                  effectiveMode ?? activeItem.mode,
                   concepts.filter((concept) => activeItem.question.concepts.includes(concept.conceptId)).map((concept) => concept.label)
                 )}
               </div>
@@ -350,6 +396,15 @@ export default function PrepOSApp() {
                 />
               ))}
             </div>
+            {queue.length >= 8 ? (
+              <button
+                type="button"
+                className="queue-expand"
+                onClick={() => setQueueExpanded((current) => !current)}
+              >
+                {queueExpanded ? "Show fewer" : "Show more"}
+              </button>
+            ) : null}
           </section>
 
           <section className="panel section">
