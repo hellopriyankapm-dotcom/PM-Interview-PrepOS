@@ -301,18 +301,18 @@ export default function LandingPage() {
       <section id="story" className="section-block">
         <div className="story-grid">
           <div className="section-head left">
-            <span className="eyebrow">From the inside</span>
-            <h2>Built by a PM who used it to clear PM interviews.</h2>
+            <span className="eyebrow">By a PM, for PMs</span>
+            <h2>Built by a PM. For the PMs ready to be next.</h2>
             <p>
               PrepOS started as one PM&apos;s personal interview lab — the question bank, the rubric, and the
-              adaptive queue that closed real gaps inside real loops. It is open source so the next candidate
-              does not have to start from zero.
+              adaptive queue that closed real gaps inside real loops. It&apos;s open-sourced so the next PM
+              doesn&apos;t start from zero.
             </p>
             <p className="story-lead-quote">
               &ldquo;The tool I wish I had the night before my onsite. Honest feedback, no marketing fluff,
               and the next rep was always the right one.&rdquo;
             </p>
-            <span className="story-lead-attr">— PrepOS founder, PM</span>
+            <span className="story-lead-attr">— PrepOS founder</span>
           </div>
           <div className="story-cards">
             <article className="story-card">
