@@ -18,6 +18,16 @@ import {
   loadElevenKey,
   saveElevenKey
 } from "@/lib/simulator/elevenlabs";
+import {
+  forgetDidKey,
+  forgetDidPortrait,
+  generateTalkVideo,
+  hasDid,
+  loadDidKey,
+  loadDidPortrait,
+  saveDidKey,
+  saveDidPortrait
+} from "@/lib/simulator/d-id";
 import { SARAH, FEEDBACK_SYSTEM_PROMPT, buildInterviewSystemPrompt } from "@/lib/simulator/persona";
 import {
   createRecognition,
@@ -72,8 +82,12 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
   const [keyAccepted, setKeyAccepted] = useState(hasKey());
   const [elevenKeyInput, setElevenKeyInput] = useState(loadElevenKey() ?? "");
   const [elevenAccepted, setElevenAccepted] = useState(hasElevenKey());
+  const [didKeyInput, setDidKeyInput] = useState(loadDidKey() ?? "");
+  const [didPortraitInput, setDidPortraitInput] = useState(loadDidPortrait() ?? "");
+  const [didAccepted, setDidAccepted] = useState(hasDid());
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [avatarState, setAvatarState] = useState<AvatarState>("idle");
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [interim, setInterim] = useState("");
   const [feedback, setFeedback] = useState<FeedbackResponse | null>(null);
   const [elapsed, setElapsed] = useState(0);
@@ -91,6 +105,14 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
   const currentUserTurnRef = useRef<string>("");
   const silenceTimerRef = useRef<number | null>(null);
   const handingOverRef = useRef<boolean>(false);
+  const videoEndedResolverRef = useRef<(() => void) | null>(null);
+
+  function handleVideoEnded() {
+    setVideoUrl(null);
+    const resolve = videoEndedResolverRef.current;
+    videoEndedResolverRef.current = null;
+    resolve?.();
+  }
   useEffect(() => {
     phaseRef.current = phase;
   }, [phase]);
@@ -175,13 +197,10 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
       const next: ChatMessage = { role: "assistant", content: greeting.say };
       setHistory([next]);
       setAvatarState("speaking");
-      speak(greeting.say, {
-        onEnd: () => {
-          setPhase("listening");
-          setAvatarState("listening");
-          startListening();
-        }
-      });
+      await playResponse(greeting.say);
+      setPhase("listening");
+      setAvatarState("listening");
+      startListening();
     } catch (error) {
       console.error(error);
       setErrorMsg(
@@ -333,19 +352,16 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
 
       setAvatarState("speaking");
       setPhase(isWrapup ? "wrapup" : "intro"); // 'intro' phase reuses the speaking state
-      speak(turn.say, {
-        onEnd: () => {
-          if (isWrapup) {
-            setPhase("scoring");
-            setAvatarState("thinking");
-            runFeedback(updatedHistory);
-          } else {
-            setPhase("listening");
-            setAvatarState("listening");
-            startListening();
-          }
-        }
-      });
+      await playResponse(turn.say);
+      if (isWrapup) {
+        setPhase("scoring");
+        setAvatarState("thinking");
+        runFeedback(updatedHistory);
+      } else {
+        setPhase("listening");
+        setAvatarState("listening");
+        startListening();
+      }
     } catch (error) {
       console.error(error);
       setErrorMsg(
@@ -397,13 +413,10 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
       });
       const updatedHistory: ChatMessage[] = [...working, { role: "assistant", content: wrap.say }];
       setHistory(updatedHistory);
-      speak(wrap.say, {
-        onEnd: () => {
-          setPhase("scoring");
-          setAvatarState("thinking");
-          runFeedback(updatedHistory);
-        }
-      });
+      await playResponse(wrap.say);
+      setPhase("scoring");
+      setAvatarState("thinking");
+      runFeedback(updatedHistory);
     } catch (error) {
       console.error(error);
       // Still try to score even if wrap call failed
@@ -503,6 +516,70 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
     setElevenKeyInput("");
   }
 
+  function handleSaveDidKey() {
+    const trimmedKey = didKeyInput.trim();
+    const trimmedPortrait = didPortraitInput.trim();
+    if (trimmedKey.length < 10) {
+      setErrorMsg("That doesn't look like a D-ID key.");
+      return;
+    }
+    if (!trimmedPortrait.startsWith("https://")) {
+      setErrorMsg("Sarah's portrait URL must start with https://");
+      return;
+    }
+    saveDidKey(trimmedKey);
+    saveDidPortrait(trimmedPortrait);
+    setDidAccepted(true);
+    setErrorMsg(null);
+  }
+
+  function handleForgetDidKey() {
+    forgetDidKey();
+    forgetDidPortrait();
+    setDidAccepted(false);
+    setDidKeyInput("");
+    setDidPortraitInput("");
+  }
+
+  /**
+   * Speak `text` to the candidate, awaiting completion.
+   * - With D-ID key: generate a lipsync video, play it, resolve onended.
+   * - Otherwise: speak() (ElevenLabs if keyed, else browser TTS), resolve onEnd.
+   */
+  function playResponse(text: string): Promise<void> {
+    if (hasDid()) {
+      return playResponseAsVideo(text);
+    }
+    return new Promise<void>((resolve) => {
+      void speak(text, { onEnd: () => resolve() });
+    });
+  }
+
+  async function playResponseAsVideo(text: string): Promise<void> {
+    const apiKey = loadDidKey();
+    const portraitUrl = loadDidPortrait();
+    if (!apiKey || !portraitUrl) {
+      // Fall back to TTS path silently
+      return new Promise<void>((resolve) => {
+        void speak(text, { onEnd: () => resolve() });
+      });
+    }
+    try {
+      const url = await generateTalkVideo({ apiKey, portraitUrl, text });
+      return await new Promise<void>((resolve) => {
+        // The Avatar component plays the <video> on src change; we resolve
+        // when it ends via the onVideoEnded callback wired in JSX.
+        videoEndedResolverRef.current = resolve;
+        setVideoUrl(url);
+      });
+    } catch (error) {
+      console.warn("D-ID failed, falling back to TTS:", error);
+      return new Promise<void>((resolve) => {
+        void speak(text, { onEnd: () => resolve() });
+      });
+    }
+  }
+
   function handleClose() {
     stopSpeaking();
     stopListening();
@@ -521,7 +598,11 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
         <header className="sim-bar">
           <div className="sim-bar-left">
             <span className="sim-bar-pill">{SARAH.name} · {SARAH.styleTag}</span>
-            {isLifelikeVoiceAvailable() ? (
+            {didAccepted ? (
+              <span className="sim-voice-pill">
+                <Sparkles size={12} /> Real video
+              </span>
+            ) : isLifelikeVoiceAvailable() ? (
               <span className="sim-voice-pill">
                 <Sparkles size={12} /> Lifelike voice
               </span>
@@ -555,11 +636,18 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
             elevenKeyInput={elevenKeyInput}
             setElevenKeyInput={setElevenKeyInput}
             elevenAccepted={elevenAccepted}
+            didKeyInput={didKeyInput}
+            setDidKeyInput={setDidKeyInput}
+            didPortraitInput={didPortraitInput}
+            setDidPortraitInput={setDidPortraitInput}
+            didAccepted={didAccepted}
             errorMsg={errorMsg}
             onSaveKey={handleSaveKey}
             onForgetKey={handleForgetKey}
             onSaveElevenKey={handleSaveElevenKey}
             onForgetElevenKey={handleForgetElevenKey}
+            onSaveDidKey={handleSaveDidKey}
+            onForgetDidKey={handleForgetDidKey}
             onStart={startInterview}
             speechSupported={speechSupported.current}
             question={question}
@@ -575,6 +663,9 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
             phase={phase}
             onSarahTurn={handUserTurnToSarah}
             canHandTurn={currentUserTurn.trim().length >= MIN_USER_CHARS_PER_TURN}
+            videoUrl={videoUrl}
+            onVideoEnded={handleVideoEnded}
+            portraitUrl={didAccepted ? loadDidPortrait() : null}
           />
         ) : null}
 
@@ -603,16 +694,24 @@ function PreflightStep(props: {
   elevenKeyInput: string;
   setElevenKeyInput: (next: string) => void;
   elevenAccepted: boolean;
+  didKeyInput: string;
+  setDidKeyInput: (next: string) => void;
+  didPortraitInput: string;
+  setDidPortraitInput: (next: string) => void;
+  didAccepted: boolean;
   errorMsg: string | null;
   onSaveKey: () => void;
   onForgetKey: () => void;
   onSaveElevenKey: () => void;
   onForgetElevenKey: () => void;
+  onSaveDidKey: () => void;
+  onForgetDidKey: () => void;
   onStart: () => void;
   speechSupported: boolean;
   question: Question;
 }) {
   const lifelike = props.elevenAccepted;
+  const realVideo = props.didAccepted;
   return (
     <div className="sim-step sim-preflight">
       <span className="eyebrow">Voice mock · BYO keys</span>
@@ -698,6 +797,52 @@ function PreflightStep(props: {
         </div>
       </div>
 
+      <div className="sim-key-row">
+        <label htmlFor="sim-did-input">
+          D-ID API key <em>(optional — real-video Sarah)</em>
+        </label>
+        <input
+          id="sim-did-input"
+          type="password"
+          placeholder="D-ID API key"
+          value={props.didKeyInput}
+          onChange={(event) => props.setDidKeyInput(event.target.value)}
+          autoComplete="off"
+          spellCheck={false}
+        />
+        <input
+          id="sim-did-portrait"
+          type="url"
+          placeholder="https://… portrait URL of Sarah (face image, public https)"
+          value={props.didPortraitInput}
+          onChange={(event) => props.setDidPortraitInput(event.target.value)}
+          autoComplete="off"
+          spellCheck={false}
+        />
+        <div className="sim-key-actions">
+          {props.didAccepted ? (
+            <button type="button" className="btn" onClick={props.onForgetDidKey}>
+              <Trash2 size={14} /> Forget D-ID
+            </button>
+          ) : (
+            <button type="button" className="btn" onClick={props.onSaveDidKey}>
+              Save D-ID
+            </button>
+          )}
+          <span className={`sim-key-status ${realVideo ? "lifelike" : ""}`}>
+            {realVideo ? (
+              <>
+                <Sparkles size={12} /> Real-video Sarah enabled
+              </>
+            ) : (
+              <>
+                Without it, you&apos;ll see Sarah as an illustrated portrait. Get a key + portrait URL at studio.d-id.com.
+              </>
+            )}
+          </span>
+        </div>
+      </div>
+
       {props.errorMsg ? <div className="sim-warn">{props.errorMsg}</div> : null}
 
       <div className="sim-cta-row">
@@ -710,9 +855,11 @@ function PreflightStep(props: {
           <Mic size={16} /> Begin interview
         </button>
         <span className="sim-cost-hint">
-          {lifelike
-            ? "~$0.10–0.20 Claude + ~$0.30 ElevenLabs per interview, billed to your accounts"
-            : "~$0.10–0.20 per interview against your Anthropic account"}
+          {realVideo
+            ? "~$0.10–0.20 Claude + ~$0.30 ElevenLabs + ~$3–8 D-ID per interview, billed to your accounts"
+            : lifelike
+              ? "~$0.10–0.20 Claude + ~$0.30 ElevenLabs per interview, billed to your accounts"
+              : "~$0.10–0.20 per interview against your Anthropic account"}
         </span>
       </div>
     </div>
@@ -729,11 +876,20 @@ function RunningStep(props: {
   phase: Phase;
   onSarahTurn: () => void;
   canHandTurn: boolean;
+  videoUrl: string | null;
+  onVideoEnded: () => void;
+  portraitUrl: string | null;
 }) {
   const showHandTurn = props.phase === "listening";
   return (
     <div className="sim-step sim-running">
-      <SarahAvatar name={SARAH.name} state={props.avatarState} />
+      <SarahAvatar
+        name={SARAH.name}
+        state={props.avatarState}
+        videoUrl={props.videoUrl}
+        onVideoEnded={props.onVideoEnded}
+        portraitUrl={props.portraitUrl}
+      />
 
       <div className="sim-conversation">
         <span className="eyebrow">Conversation</span>
