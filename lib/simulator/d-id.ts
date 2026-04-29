@@ -104,45 +104,46 @@ type TalkStatus = {
 
 /**
  * Create a D-ID Talk. Returns the talk id.
- * If an ElevenLabs key is also stored locally, voice flows through D-ID's
- * elevenlabs provider for lifelike audio in the lipsync'd video.
+ *
+ * Provider selection:
+ *   - If an ElevenLabs key is stored locally we ask D-ID to call ElevenLabs
+ *     for TTS using the candidate's own quota (passed via x-api-key-external).
+ *   - Otherwise we use D-ID's built-in Microsoft voice.
+ *
+ * We keep the request body minimal — D-ID rejects unknown / extra fields
+ * with a 400 ValidationError on script.provider.
  */
 async function createTalk(args: { apiKey: string; portraitUrl: string; text: string }): Promise<string> {
   const elevenKey = loadElevenKey();
   const provider = elevenKey
-    ? {
-        type: "elevenlabs",
-        voice_id: SARAH_VOICE_ID,
-        voice_config: { stability: 0.45, similarity_boost: 0.78, style: 0.35 }
-      }
+    ? { type: "elevenlabs", voice_id: SARAH_VOICE_ID }
     : { type: "microsoft", voice_id: "en-US-JennyNeural" };
 
-  const body: Record<string, unknown> = {
+  const body = {
     source_url: args.portraitUrl,
-    script: { type: "text", input: args.text, provider },
-    config: { stitch: true, fluent: true, pad_audio: 0, result_format: "mp4" }
+    script: {
+      type: "text",
+      input: args.text,
+      provider
+    }
+  };
+
+  const headers: Record<string, string> = {
+    Authorization: authHeader(args.apiKey),
+    "Content-Type": "application/json"
   };
   if (elevenKey) {
-    // D-ID forwards the candidate's ElevenLabs key through this header
-    // when provider.type === 'elevenlabs'. Falls back gracefully if not set.
-    body.script = {
-      ...(body.script as Record<string, unknown>),
-      provider: { ...provider, voice_id: SARAH_VOICE_ID }
-    };
+    headers["x-api-key-external"] = JSON.stringify({ elevenlabs: elevenKey });
   }
 
   const response = await fetch("https://api.d-id.com/talks", {
     method: "POST",
-    headers: {
-      Authorization: authHeader(args.apiKey),
-      "Content-Type": "application/json",
-      ...(elevenKey ? { "x-api-key-external": JSON.stringify({ elevenlabs: elevenKey }) } : {})
-    },
+    headers,
     body: JSON.stringify(body)
   });
   if (!response.ok) {
     const detail = await response.text().catch(() => "");
-    throw new Error(`D-ID create ${response.status}: ${detail.slice(0, 200)}`);
+    throw new Error(`D-ID create ${response.status}: ${detail.slice(0, 240)}`);
   }
   const data = (await response.json()) as CreateTalkResponse;
   return data.id;
