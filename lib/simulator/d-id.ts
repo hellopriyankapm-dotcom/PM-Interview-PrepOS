@@ -84,8 +84,13 @@ export function hasDid(): boolean {
 }
 
 function authHeader(apiKey: string) {
-  // D-ID accepts Basic auth with the API key as username (empty password)
-  const encoded = typeof window === "undefined" ? Buffer.from(`${apiKey}:`).toString("base64") : btoa(`${apiKey}:`);
+  // D-ID's API key format embeds the username:password separator directly:
+  // newer keys look like "<base64email>:<secret>". Older or test keys may
+  // be a single secret without ":", in which case we append it so the
+  // resulting Basic auth header is valid (username = key, empty password).
+  const value = apiKey.includes(":") ? apiKey : `${apiKey}:`;
+  const encoded =
+    typeof window === "undefined" ? Buffer.from(value).toString("base64") : btoa(value);
   return `Basic ${encoded}`;
 }
 
