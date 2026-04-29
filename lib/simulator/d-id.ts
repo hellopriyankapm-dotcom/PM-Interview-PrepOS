@@ -1,0 +1,159 @@
+import { loadElevenKey, SARAH_VOICE_ID } from "@/lib/simulator/elevenlabs";
+
+const KEY_STORAGE = "prepos-did-key";
+const PORTRAIT_STORAGE = "prepos-did-portrait";
+const POLL_INTERVAL_MS = 1500;
+const POLL_TIMEOUT_MS = 60000;
+
+export function loadDidKey(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return window.localStorage.getItem(KEY_STORAGE);
+  } catch {
+    return null;
+  }
+}
+
+export function saveDidKey(key: string) {
+  try {
+    window.localStorage.setItem(KEY_STORAGE, key);
+  } catch {
+    // ignore
+  }
+}
+
+export function forgetDidKey() {
+  try {
+    window.localStorage.removeItem(KEY_STORAGE);
+  } catch {
+    // ignore
+  }
+}
+
+export function loadDidPortrait(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return window.localStorage.getItem(PORTRAIT_STORAGE);
+  } catch {
+    return null;
+  }
+}
+
+export function saveDidPortrait(url: string) {
+  try {
+    window.localStorage.setItem(PORTRAIT_STORAGE, url);
+  } catch {
+    // ignore
+  }
+}
+
+export function forgetDidPortrait() {
+  try {
+    window.localStorage.removeItem(PORTRAIT_STORAGE);
+  } catch {
+    // ignore
+  }
+}
+
+export function hasDid(): boolean {
+  const key = loadDidKey();
+  const portrait = loadDidPortrait();
+  return !!key && key.length > 10 && !!portrait && portrait.startsWith("https://");
+}
+
+function authHeader(apiKey: string) {
+  // D-ID accepts Basic auth with the API key as username (empty password)
+  const encoded = typeof window === "undefined" ? Buffer.from(`${apiKey}:`).toString("base64") : btoa(`${apiKey}:`);
+  return `Basic ${encoded}`;
+}
+
+type CreateTalkResponse = { id: string; status: string };
+type TalkStatus = {
+  id: string;
+  status: "created" | "started" | "done" | "error" | "rejected";
+  result_url?: string;
+  error?: { description?: string; message?: string };
+};
+
+/**
+ * Create a D-ID Talk. Returns the talk id.
+ * If an ElevenLabs key is also stored locally, voice flows through D-ID's
+ * elevenlabs provider for lifelike audio in the lipsync'd video.
+ */
+async function createTalk(args: { apiKey: string; portraitUrl: string; text: string }): Promise<string> {
+  const elevenKey = loadElevenKey();
+  const provider = elevenKey
+    ? {
+        type: "elevenlabs",
+        voice_id: SARAH_VOICE_ID,
+        voice_config: { stability: 0.45, similarity_boost: 0.78, style: 0.35 }
+      }
+    : { type: "microsoft", voice_id: "en-US-JennyNeural" };
+
+  const body: Record<string, unknown> = {
+    source_url: args.portraitUrl,
+    script: { type: "text", input: args.text, provider },
+    config: { stitch: true, fluent: true, pad_audio: 0, result_format: "mp4" }
+  };
+  if (elevenKey) {
+    // D-ID forwards the candidate's ElevenLabs key through this header
+    // when provider.type === 'elevenlabs'. Falls back gracefully if not set.
+    body.script = {
+      ...(body.script as Record<string, unknown>),
+      provider: { ...provider, voice_id: SARAH_VOICE_ID }
+    };
+  }
+
+  const response = await fetch("https://api.d-id.com/talks", {
+    method: "POST",
+    headers: {
+      Authorization: authHeader(args.apiKey),
+      "Content-Type": "application/json",
+      ...(elevenKey ? { "x-api-key-external": JSON.stringify({ elevenlabs: elevenKey }) } : {})
+    },
+    body: JSON.stringify(body)
+  });
+  if (!response.ok) {
+    const detail = await response.text().catch(() => "");
+    throw new Error(`D-ID create ${response.status}: ${detail.slice(0, 200)}`);
+  }
+  const data = (await response.json()) as CreateTalkResponse;
+  return data.id;
+}
+
+async function getTalk(args: { apiKey: string; talkId: string }): Promise<TalkStatus> {
+  const response = await fetch(`https://api.d-id.com/talks/${encodeURIComponent(args.talkId)}`, {
+    headers: { Authorization: authHeader(args.apiKey) }
+  });
+  if (!response.ok) {
+    const detail = await response.text().catch(() => "");
+    throw new Error(`D-ID get ${response.status}: ${detail.slice(0, 200)}`);
+  }
+  return (await response.json()) as TalkStatus;
+}
+
+/**
+ * Generate a Talk video for the given text. Resolves with the result mp4 URL.
+ * Polls every 1.5s up to 60s. Throws on error/rejected/timeout.
+ */
+export async function generateTalkVideo(args: {
+  apiKey: string;
+  portraitUrl: string;
+  text: string;
+}): Promise<string> {
+  const talkId = await createTalk(args);
+  const startedAt = Date.now();
+  while (Date.now() - startedAt < POLL_TIMEOUT_MS) {
+    await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
+    const status = await getTalk({ apiKey: args.apiKey, talkId });
+    if (status.status === "done" && status.result_url) {
+      return status.result_url;
+    }
+    if (status.status === "error" || status.status === "rejected") {
+      throw new Error(
+        `D-ID generation ${status.status}: ${status.error?.description ?? status.error?.message ?? "unknown"}`
+      );
+    }
+  }
+  throw new Error("D-ID generation timed out");
+}
