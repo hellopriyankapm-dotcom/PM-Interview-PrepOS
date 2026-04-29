@@ -25,6 +25,7 @@ import {
   hasDid,
   loadDidKey,
   loadDidPortrait,
+  loadDidPortraitOverride,
   saveDidKey,
   saveDidPortrait
 } from "@/lib/simulator/d-id";
@@ -83,7 +84,7 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
   const [elevenKeyInput, setElevenKeyInput] = useState(loadElevenKey() ?? "");
   const [elevenAccepted, setElevenAccepted] = useState(hasElevenKey());
   const [didKeyInput, setDidKeyInput] = useState(loadDidKey() ?? "");
-  const [didPortraitInput, setDidPortraitInput] = useState(loadDidPortrait() ?? "");
+  const [didPortraitInput, setDidPortraitInput] = useState(loadDidPortraitOverride() ?? "");
   const [didAccepted, setDidAccepted] = useState(hasDid());
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [avatarState, setAvatarState] = useState<AvatarState>("idle");
@@ -523,12 +524,17 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
       setErrorMsg("That doesn't look like a D-ID key.");
       return;
     }
-    if (!trimmedPortrait.startsWith("https://")) {
-      setErrorMsg("Sarah's portrait URL must start with https://");
+    if (trimmedPortrait && !trimmedPortrait.startsWith("https://")) {
+      setErrorMsg("If you provide a portrait URL it must start with https://");
       return;
     }
     saveDidKey(trimmedKey);
-    saveDidPortrait(trimmedPortrait);
+    if (trimmedPortrait) {
+      saveDidPortrait(trimmedPortrait);
+    } else {
+      // Clear any previous override so the bundled Sarah portrait is used
+      forgetDidPortrait();
+    }
     setDidAccepted(true);
     setErrorMsg(null);
   }
@@ -813,7 +819,7 @@ function PreflightStep(props: {
         <input
           id="sim-did-portrait"
           type="url"
-          placeholder="https://… portrait URL of Sarah (face image, public https)"
+          placeholder="Custom portrait URL (optional — leave blank to use the bundled Sarah)"
           value={props.didPortraitInput}
           onChange={(event) => props.setDidPortraitInput(event.target.value)}
           autoComplete="off"

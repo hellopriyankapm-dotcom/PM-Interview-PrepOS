@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { SARAH_PORTRAIT_LOCAL } from "@/lib/simulator/assets";
+
 type State = "idle" | "speaking" | "listening" | "thinking";
 
 type Props = {
@@ -10,7 +13,11 @@ type Props = {
 };
 
 export function SarahAvatar({ name, state, size = 220, videoUrl, onVideoEnded, portraitUrl }: Props) {
+  const [imgFailed, setImgFailed] = useState(false);
   const useVideo = !!videoUrl;
+  // Precedence: video > caller-provided portrait > hard-coded local Sarah > SVG fallback
+  const effectivePortrait = !useVideo ? (portraitUrl ?? SARAH_PORTRAIT_LOCAL) : null;
+  const showPortraitImg = !!effectivePortrait && !imgFailed;
   return (
     <div className="sim-avatar" data-state={state} style={{ width: size, height: size }}>
       {useVideo ? (
@@ -22,11 +29,12 @@ export function SarahAvatar({ name, state, size = 220, videoUrl, onVideoEnded, p
           onEnded={onVideoEnded}
           aria-hidden="true"
         />
-      ) : portraitUrl ? (
+      ) : showPortraitImg ? (
         <img
           className="sim-avatar-portrait"
-          src={portraitUrl}
+          src={effectivePortrait ?? undefined}
           alt={`${name} portrait`}
+          onError={() => setImgFailed(true)}
         />
       ) : (
         <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
