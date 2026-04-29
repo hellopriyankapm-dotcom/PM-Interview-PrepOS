@@ -89,6 +89,7 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [avatarState, setAvatarState] = useState<AvatarState>("idle");
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [didNotice, setDidNotice] = useState<string | null>(null);
   const [interim, setInterim] = useState("");
   const [feedback, setFeedback] = useState<FeedbackResponse | null>(null);
   const [elapsed, setElapsed] = useState(0);
@@ -107,12 +108,22 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
   const silenceTimerRef = useRef<number | null>(null);
   const handingOverRef = useRef<boolean>(false);
   const videoEndedResolverRef = useRef<(() => void) | null>(null);
+  const videoErrorResolverRef = useRef<((errMsg: string) => void) | null>(null);
 
   function handleVideoEnded() {
     setVideoUrl(null);
+    videoErrorResolverRef.current = null;
     const resolve = videoEndedResolverRef.current;
     videoEndedResolverRef.current = null;
     resolve?.();
+  }
+
+  function handleVideoError(errMsg: string) {
+    setVideoUrl(null);
+    const errResolve = videoErrorResolverRef.current;
+    videoErrorResolverRef.current = null;
+    videoEndedResolverRef.current = null;
+    errResolve?.(errMsg);
   }
   useEffect(() => {
     phaseRef.current = phase;
@@ -565,21 +576,27 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
     const apiKey = loadDidKey();
     const portraitUrl = loadDidPortrait();
     if (!apiKey || !portraitUrl) {
-      // Fall back to TTS path silently
+      setDidNotice("D-ID key or portrait missing — using voice-only fallback.");
       return new Promise<void>((resolve) => {
         void speak(text, { onEnd: () => resolve() });
       });
     }
     try {
+      setDidNotice(null);
       const url = await generateTalkVideo({ apiKey, portraitUrl, text });
-      return await new Promise<void>((resolve) => {
-        // The Avatar component plays the <video> on src change; we resolve
-        // when it ends via the onVideoEnded callback wired in JSX.
+      return await new Promise<void>((resolve, reject) => {
         videoEndedResolverRef.current = resolve;
+        videoErrorResolverRef.current = (errMsg: string) => {
+          setDidNotice(`Video playback failed (${errMsg}). Using voice-only for this turn.`);
+          // Speak the line via TTS so the conversation continues
+          void speak(text, { onEnd: () => resolve() });
+        };
         setVideoUrl(url);
       });
     } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
       console.warn("D-ID failed, falling back to TTS:", error);
+      setDidNotice(`D-ID error: ${message.slice(0, 200)}`);
       return new Promise<void>((resolve) => {
         void speak(text, { onEnd: () => resolve() });
       });
@@ -661,18 +678,26 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
         ) : null}
 
         {phase !== "preflight" && phase !== "error" && phase !== "done" ? (
-          <RunningStep
-            avatarState={avatarState}
-            history={history}
-            currentUserTurn={currentUserTurn}
-            interim={interim}
-            phase={phase}
-            onSarahTurn={handUserTurnToSarah}
-            canHandTurn={currentUserTurn.trim().length >= MIN_USER_CHARS_PER_TURN}
-            videoUrl={videoUrl}
-            onVideoEnded={handleVideoEnded}
-            portraitUrl={didAccepted ? loadDidPortrait() : null}
-          />
+          <>
+            {didNotice ? (
+              <div className="sim-notice-bar" role="status">
+                <span>{didNotice}</span>
+              </div>
+            ) : null}
+            <RunningStep
+              avatarState={avatarState}
+              history={history}
+              currentUserTurn={currentUserTurn}
+              interim={interim}
+              phase={phase}
+              onSarahTurn={handUserTurnToSarah}
+              canHandTurn={currentUserTurn.trim().length >= MIN_USER_CHARS_PER_TURN}
+              videoUrl={videoUrl}
+              onVideoEnded={handleVideoEnded}
+              onVideoError={handleVideoError}
+              portraitUrl={didAccepted ? loadDidPortrait() : null}
+            />
+          </>
         ) : null}
 
         {phase === "done" && feedback ? (
@@ -884,6 +909,7 @@ function RunningStep(props: {
   canHandTurn: boolean;
   videoUrl: string | null;
   onVideoEnded: () => void;
+  onVideoError: (errMsg: string) => void;
   portraitUrl: string | null;
 }) {
   const showHandTurn = props.phase === "listening";
@@ -894,6 +920,7 @@ function RunningStep(props: {
         state={props.avatarState}
         videoUrl={props.videoUrl}
         onVideoEnded={props.onVideoEnded}
+        onVideoError={props.onVideoError}
         portraitUrl={props.portraitUrl}
       />
 
