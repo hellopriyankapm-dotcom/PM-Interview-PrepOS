@@ -9,10 +9,19 @@ type Props = {
   size?: number;
   videoUrl?: string | null;
   onVideoEnded?: () => void;
+  onVideoError?: (errMsg: string) => void;
   portraitUrl?: string | null;
 };
 
-export function SarahAvatar({ name, state, size = 220, videoUrl, onVideoEnded, portraitUrl }: Props) {
+export function SarahAvatar({
+  name,
+  state,
+  size = 220,
+  videoUrl,
+  onVideoEnded,
+  onVideoError,
+  portraitUrl
+}: Props) {
   const [imgFailed, setImgFailed] = useState(false);
   const useVideo = !!videoUrl;
   // Precedence: video > caller-provided portrait > hard-coded local Sarah > SVG fallback
@@ -27,6 +36,12 @@ export function SarahAvatar({ name, state, size = 220, videoUrl, onVideoEnded, p
           autoPlay
           playsInline
           onEnded={onVideoEnded}
+          onError={(event) => {
+            const target = event.currentTarget;
+            const code = target.error?.code;
+            const msg = target.error?.message ?? "unknown";
+            onVideoError?.(`code ${code}: ${msg}`);
+          }}
           aria-hidden="true"
         />
       ) : showPortraitImg ? (
