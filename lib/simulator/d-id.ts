@@ -1,9 +1,12 @@
+import { SARAH_PORTRAIT_PUBLIC_URL } from "@/lib/simulator/assets";
 import { loadElevenKey, SARAH_VOICE_ID } from "@/lib/simulator/elevenlabs";
 
 const KEY_STORAGE = "prepos-did-key";
 const PORTRAIT_STORAGE = "prepos-did-portrait";
 const POLL_INTERVAL_MS = 1500;
 const POLL_TIMEOUT_MS = 60000;
+
+export const DEFAULT_SARAH_PORTRAIT = SARAH_PORTRAIT_PUBLIC_URL;
 
 export function loadDidKey(): string | null {
   if (typeof window === "undefined") return null;
@@ -30,7 +33,21 @@ export function forgetDidKey() {
   }
 }
 
+/**
+ * Returns the portrait URL D-ID should animate. Falls back to the
+ * hard-coded Sarah portrait baked into the repo so candidates can use the
+ * real-video mode with just a D-ID API key — no portrait URL hunt required.
+ */
 export function loadDidPortrait(): string | null {
+  if (typeof window === "undefined") return DEFAULT_SARAH_PORTRAIT;
+  try {
+    return window.localStorage.getItem(PORTRAIT_STORAGE) || DEFAULT_SARAH_PORTRAIT;
+  } catch {
+    return DEFAULT_SARAH_PORTRAIT;
+  }
+}
+
+export function loadDidPortraitOverride(): string | null {
   if (typeof window === "undefined") return null;
   try {
     return window.localStorage.getItem(PORTRAIT_STORAGE);
@@ -55,6 +72,11 @@ export function forgetDidPortrait() {
   }
 }
 
+/**
+ * Real-video mode is on whenever the candidate has a D-ID API key. The
+ * portrait defaults to the bundled Sarah image, so a portrait override is
+ * optional.
+ */
 export function hasDid(): boolean {
   const key = loadDidKey();
   const portrait = loadDidPortrait();
