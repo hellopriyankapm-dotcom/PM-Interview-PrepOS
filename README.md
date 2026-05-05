@@ -32,7 +32,7 @@ Do not claim fake traction. Do not claim a question was asked at a company unles
 
 Live site:
 
-https://hellopriyankapm-dotcom.github.io/PM-Interview-PrepOS/
+https://pmprepos.com/
 
 ```bash
 npm install
