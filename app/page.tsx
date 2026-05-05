@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { PromoSlot } from "@/components/PromoSlot";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import questions from "@/content/questions/questions.json";
 import concepts from "@/content/concepts/concepts.json";
@@ -205,6 +206,8 @@ export default function LandingPage() {
           </ul>
         </div>
       </section>
+
+      <PromoSlot variant="landing" />
 
       <section className="strip">
         <div className="strip-inner">

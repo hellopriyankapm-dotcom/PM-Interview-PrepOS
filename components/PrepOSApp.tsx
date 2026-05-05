@@ -24,6 +24,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Dashboard, type RepHistoryEntry } from "@/components/Dashboard";
 import { LearningMemory } from "@/components/LearningMemory";
 import { Logo } from "@/components/Logo";
+import { PromoSlot } from "@/components/PromoSlot";
 import { Simulator } from "@/components/simulator/Simulator";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { buildPracticeQueue, readiness } from "@/lib/adaptive/engine";
@@ -269,6 +270,8 @@ export default function PrepOSApp() {
             <h2>Calibration</h2>
             <p>PrepOS uses this to choose the fastest next rep and decide how much support to provide.</p>
           </div>
+
+          <PromoSlot variant="sidebar" />
 
           <div className="field">
             <label htmlFor="target-level">Target level</label>
