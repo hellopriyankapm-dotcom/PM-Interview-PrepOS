@@ -138,7 +138,7 @@ export default function LandingPage() {
           <span className="eyebrow hero-eyebrow">PM Interview Prep, Calibrated</span>
           <h1 className="hero-title">
             Know what to practice <em>next</em>,<br />
-            not just what question to answer.
+            not just what question to <em>answer</em>.
           </h1>
           <p className="hero-sub">
             PrepOS is an adaptive PM interview coach. Calibrate your target level, practice the highest-impact
@@ -148,14 +148,6 @@ export default function LandingPage() {
             <Link className="btn-primary lg" href="/app">
               Start practicing <ArrowRight size={16} />
             </Link>
-            <a
-              className="btn-ghost lg"
-              href="https://github.com/hellopriyankapm-dotcom/PM-Interview-PrepOS"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <Github size={16} /> View on GitHub
-            </a>
           </div>
           <dl className="hero-stats">
             <div>
