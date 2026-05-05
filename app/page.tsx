@@ -3,7 +3,6 @@ import {
   Brain,
   CheckCircle2,
   Compass,
-  Github,
   LineChart,
   RefreshCw,
   Sparkles,
@@ -69,11 +68,6 @@ const features = [
     icon: <Timer size={18} />,
     title: "Date-aware urgency",
     body: "Within 10 days of your interview, PrepOS shifts toward harder, timed, interview-mode reps."
-  },
-  {
-    icon: <Github size={18} />,
-    title: "Open source, local-first",
-    body: "Runs entirely in your browser. No account, no tracking, no server. Fork it and make it yours."
   }
 ];
 
@@ -138,7 +132,7 @@ export default function LandingPage() {
           </h1>
           <p className="hero-sub">
             PrepOS is an adaptive PM interview coach. Calibrate your target level, practice the highest-impact
-            questions first, and track your readiness — all in your browser, fully open source.
+            questions first, and track your readiness — all in your browser.
           </p>
           <div className="hero-actions">
             <Link className="btn-primary lg" href="/app">
@@ -363,7 +357,7 @@ export default function LandingPage() {
         <div className="landing-footer-inner">
           <div className="landing-footer-brand">
             <Logo size={24} withWordmark />
-            <p>Adaptive PM interview prep. Open source. Local-first.</p>
+            <p>Adaptive PM interview prep. Local-first.</p>
           </div>
           <div className="landing-footer-cols">
             <div>
@@ -373,33 +367,9 @@ export default function LandingPage() {
               <a href="#features">Features</a>
               <a href="#scorecard">Scorecard</a>
             </div>
-            <div>
-              <strong>Project</strong>
-              <a
-                href="https://github.com/hellopriyankapm-dotcom/PM-Interview-PrepOS"
-                target="_blank"
-                rel="noreferrer"
-              >
-                GitHub
-              </a>
-              <a
-                href="https://github.com/hellopriyankapm-dotcom/PM-Interview-PrepOS/blob/main/README.md"
-                target="_blank"
-                rel="noreferrer"
-              >
-                README
-              </a>
-              <a
-                href="https://github.com/hellopriyankapm-dotcom/PM-Interview-PrepOS/blob/main/LICENSE"
-                target="_blank"
-                rel="noreferrer"
-              >
-                License
-              </a>
-            </div>
           </div>
         </div>
-        <p className="landing-footer-fineprint">© PrepOS · MIT licensed · Made for PM candidates.</p>
+        <p className="landing-footer-fineprint">© PrepOS · Made for PM candidates.</p>
       </footer>
     </div>
   );
