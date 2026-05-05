@@ -37,7 +37,6 @@ jobs:
       - name: Build static site
         run: npm run build
         env:
-          GITHUB_PAGES: "true"
           NEXT_PUBLIC_PROMO_ENABLED: "true"
           NEXT_PUBLIC_PROMO_FORM_ENDPOINT: "https://formspree.io/f/xlgznbgz"
 

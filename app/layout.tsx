@@ -14,7 +14,7 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono"
 });
 
-const siteUrl = "https://hellopriyankapm-dotcom.github.io/PM-Interview-PrepOS";
+const siteUrl = "https://pmprepos.com";
 const description =
   "Adaptive PM interview prep that tells you what to practice next, not just what question to answer. Calibrated for APM, PM, Senior, Staff, AI PM, and PM-T loops.";
 
