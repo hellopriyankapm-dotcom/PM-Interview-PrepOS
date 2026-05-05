@@ -1,5 +1,6 @@
 "use client";
 
+import { Check, Sparkles } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
 import { isPromoConfigured, promoConfig } from "@/lib/promo";
 
@@ -48,55 +49,63 @@ export function PromoSlot({ variant }: { variant: Variant }) {
   }
 
   return (
-    <aside className={`panel promo-slot promo-slot--${variant}`} aria-label="PrepOS announcement">
-      <div className="panel-header">
-        <h3>{promoConfig.title}</h3>
-        <p>{promoConfig.description}</p>
-      </div>
-      {status === "success" ? (
-        <p className="promo-success" role="status">
-          {promoConfig.successMessage}
-        </p>
-      ) : (
-        <form className="promo-form" onSubmit={submit}>
-          <input
-            type="email"
-            name="email"
-            required
-            placeholder="you@work.com"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            disabled={status === "submitting"}
-            aria-label="Email address"
-            autoComplete="email"
-          />
-          <input
-            type="text"
-            name="_gotcha"
-            tabIndex={-1}
-            autoComplete="off"
-            aria-hidden="true"
-            style={{ position: "absolute", left: "-9999px", height: 0, width: 0 }}
-          />
-          <button
-            type="submit"
-            className="mode-pill active"
-            disabled={status === "submitting"}
-          >
-            {status === "submitting" ? "Sending…" : promoConfig.ctaLabel}
+    <aside className={`promo-slot promo-slot--${variant}`} aria-label="PrepOS announcement">
+      <span className="promo-badge" aria-hidden="true">
+        <Sparkles size={12} />
+        Early access
+      </span>
+      <div className="promo-body">
+        <div className="promo-head">
+          <h3 className="promo-title">{promoConfig.title}</h3>
+          <p className="promo-description">{promoConfig.description}</p>
+        </div>
+        {status === "success" ? (
+          <p className="promo-success" role="status">
+            <Check size={16} aria-hidden="true" />
+            {promoConfig.successMessage}
+          </p>
+        ) : (
+          <form className="promo-form" onSubmit={submit}>
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="you@work.com"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              disabled={status === "submitting"}
+              aria-label="Email address"
+              autoComplete="email"
+              className="promo-input"
+            />
+            <input
+              type="text"
+              name="_gotcha"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              style={{ position: "absolute", left: "-9999px", height: 0, width: 0 }}
+            />
+            <button
+              type="submit"
+              className="promo-cta"
+              disabled={status === "submitting"}
+            >
+              {status === "submitting" ? "Sending…" : promoConfig.ctaLabel}
+            </button>
+          </form>
+        )}
+        {errorMessage ? (
+          <p className="promo-error" role="alert">
+            {errorMessage}
+          </p>
+        ) : null}
+        <div className="promo-actions">
+          <p className="promo-fineprint">{promoConfig.fineprint}</p>
+          <button type="button" className="link-btn promo-dismiss" onClick={dismiss}>
+            Dismiss
           </button>
-        </form>
-      )}
-      {errorMessage ? (
-        <p className="promo-error" role="alert">
-          {errorMessage}
-        </p>
-      ) : null}
-      <div className="promo-actions">
-        <p className="promo-fineprint">{promoConfig.fineprint}</p>
-        <button type="button" className="link-btn" onClick={dismiss}>
-          Dismiss
-        </button>
+        </div>
       </div>
     </aside>
   );
