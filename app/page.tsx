@@ -348,7 +348,7 @@ export default function LandingPage() {
         <div className="cta-inner">
           <h2>Practice the rep that moves your readiness — not just any question.</h2>
           <Link className="btn-primary lg" href="/app">
-            Open PrepOS <ArrowRight size={16} />
+            Start practicing <ArrowRight size={16} />
           </Link>
         </div>
       </section>
