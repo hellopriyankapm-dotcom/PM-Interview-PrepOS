@@ -3711,3 +3711,55 @@ kbd {
   }
 }
 
+
+/* Header "Pro Pack early access" CTA */
+
+.cta-promo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--green), var(--green-strong));
+  box-shadow: 0 8px 18px -10px color-mix(in srgb, var(--green) 70%, transparent);
+  transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+  white-space: nowrap;
+}
+
+.cta-promo:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  box-shadow: 0 14px 26px -12px color-mix(in srgb, var(--green) 80%, transparent);
+}
+
+.cta-promo:active {
+  transform: translateY(0);
+}
+
+.cta-promo svg {
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cta-promo svg {
+    animation: promoSparkle 2.6s ease-in-out infinite;
+  }
+}
+
+/* Anchor placeholder when slot is dismissed */
+.promo-anchor {
+  display: block;
+  height: 0;
+  scroll-margin-top: 96px;
+}
+
+/* Scroll offset so the slot lands clear of the sticky header */
+.promo-slot--landing {
+  scroll-margin-top: 96px;
+}

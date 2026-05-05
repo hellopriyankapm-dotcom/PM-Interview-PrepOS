@@ -7,6 +7,8 @@ import { isPromoConfigured, promoConfig } from "@/lib/promo";
 type Variant = "landing" | "sidebar";
 type Status = "idle" | "submitting" | "success" | "error";
 
+const PROMO_OPEN_EVENT = "prepos:promo:open";
+
 export function PromoSlot({ variant }: { variant: Variant }) {
   const [dismissed, setDismissed] = useState(true);
   const [email, setEmail] = useState("");
@@ -16,9 +18,21 @@ export function PromoSlot({ variant }: { variant: Variant }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
     setDismissed(window.localStorage.getItem(promoConfig.dismissKey) === "true");
+
+    function handleOpen() {
+      setDismissed(false);
+      setStatus("idle");
+      setErrorMessage(null);
+    }
+    window.addEventListener(PROMO_OPEN_EVENT, handleOpen);
+    return () => window.removeEventListener(PROMO_OPEN_EVENT, handleOpen);
   }, []);
 
-  if (!isPromoConfigured() || dismissed) return null;
+  if (!isPromoConfigured()) return null;
+  const anchorId = variant === "landing" ? "early-access" : undefined;
+  if (dismissed) {
+    return anchorId ? <span id={anchorId} className="promo-anchor" aria-hidden="true" /> : null;
+  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -49,7 +63,11 @@ export function PromoSlot({ variant }: { variant: Variant }) {
   }
 
   return (
-    <aside className={`promo-slot promo-slot--${variant}`} aria-label="PrepOS announcement">
+    <aside
+      id={anchorId}
+      className={`promo-slot promo-slot--${variant}`}
+      aria-label="PrepOS announcement"
+    >
       <span className="promo-badge" aria-hidden="true">
         <Sparkles size={12} />
         Early access
