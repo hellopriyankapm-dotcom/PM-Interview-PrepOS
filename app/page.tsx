@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { PromoOpenButton } from "@/components/PromoOpenButton";
 import { PromoSlot } from "@/components/PromoSlot";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import questions from "@/content/questions/questions.json";
@@ -124,12 +125,7 @@ export default function LandingPage() {
         </nav>
         <div className="landing-nav-cta">
           <ThemeToggle />
-          <Link className="btn-ghost" href="/app">
-            Open app
-          </Link>
-          <Link className="btn-primary" href="/app">
-            Start practicing <ArrowRight size={15} />
-          </Link>
+          <PromoOpenButton />
         </div>
       </header>
 
