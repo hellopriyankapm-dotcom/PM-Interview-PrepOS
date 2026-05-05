@@ -3321,81 +3321,334 @@ kbd {
 
 /* Self-promo slot — landing + app sidebar */
 
+@keyframes promoEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes promoBadgeShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes promoSparkle {
+  0%, 100% { transform: rotate(0deg) scale(1); opacity: 1; }
+  50% { transform: rotate(15deg) scale(1.15); opacity: 0.85; }
+}
+
+@keyframes promoGlow {
+  0%, 100% { box-shadow: 0 18px 38px -22px color-mix(in srgb, var(--green) 55%, transparent), 0 0 0 1px color-mix(in srgb, var(--green) 28%, transparent); }
+  50% { box-shadow: 0 24px 50px -22px color-mix(in srgb, var(--green) 70%, transparent), 0 0 0 1px color-mix(in srgb, var(--green) 40%, transparent); }
+}
+
+@keyframes promoCheckIn {
+  0% { transform: scale(0) rotate(-30deg); opacity: 0; }
+  60% { transform: scale(1.2) rotate(0deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
 .promo-slot {
+  position: relative;
+  border-radius: 18px;
+  background:
+    radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--green) 18%, transparent) 0%, transparent 55%),
+    radial-gradient(110% 130% at 100% 100%, color-mix(in srgb, var(--green-strong) 14%, transparent) 0%, transparent 60%),
+    var(--surface);
+  border: 1px solid color-mix(in srgb, var(--green) 22%, var(--line));
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.promo-slot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--green) 70%, transparent),
+    color-mix(in srgb, var(--green-strong) 35%, transparent) 50%,
+    transparent 80%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.promo-body {
+  position: relative;
+  z-index: 1;
   display: grid;
-  gap: 12px;
+  gap: 14px;
 }
 
 .promo-slot--landing {
-  margin: 24px auto;
-  max-width: 920px;
+  margin: 28px auto;
+  max-width: 960px;
+  padding: 28px 32px;
+  box-shadow: 0 18px 38px -22px color-mix(in srgb, var(--green) 55%, transparent), 0 0 0 1px color-mix(in srgb, var(--green) 28%, transparent);
 }
 
 .promo-slot--sidebar {
-  padding: 14px;
+  padding: 16px;
+}
+
+.promo-slot--sidebar .promo-body {
   gap: 10px;
 }
 
-.promo-slot--sidebar .panel-header h3 {
-  font-size: 0.95rem;
-  margin: 0 0 4px;
+/* Badge */
+.promo-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--green-strong);
+  background:
+    linear-gradient(120deg,
+      color-mix(in srgb, var(--green) 22%, var(--surface)) 0%,
+      color-mix(in srgb, var(--green) 38%, var(--surface)) 35%,
+      color-mix(in srgb, var(--green) 22%, var(--surface)) 70%
+    );
+  background-size: 200% 100%;
+  border: 1px solid color-mix(in srgb, var(--green) 35%, transparent);
 }
 
-.promo-slot--sidebar .panel-header p {
-  font-size: 0.8rem;
+.promo-slot--sidebar .promo-badge {
+  top: 10px;
+  right: 10px;
+  font-size: 0.6rem;
+  padding: 4px 8px;
+}
+
+[data-theme="dark"] .promo-badge {
+  color: var(--green);
+}
+
+/* Header */
+.promo-head {
+  display: grid;
+  gap: 6px;
+  padding-right: 110px; /* keeps title clear of the badge */
+}
+
+.promo-slot--sidebar .promo-head {
+  padding-right: 96px;
+}
+
+.promo-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--ink);
+  letter-spacing: -0.01em;
 }
 
+.promo-title::before {
+  content: "✦";
+  color: var(--green);
+  font-size: 1.1em;
+  display: inline-block;
+}
+
+.promo-slot--sidebar .promo-title {
+  font-size: 0.98rem;
+}
+
+.promo-description {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.promo-slot--sidebar .promo-description {
+  font-size: 0.8rem;
+}
+
+/* Form */
 .promo-form {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
   align-items: center;
 }
 
-.promo-form input[type="email"] {
-  flex: 1 1 200px;
+.promo-input {
+  flex: 1 1 220px;
   min-width: 0;
-  padding: 8px 10px;
-  border-radius: 10px;
+  padding: 11px 14px;
+  border-radius: 12px;
   border: 1px solid var(--line);
   background: var(--surface);
   color: var(--ink);
   font: inherit;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
-.promo-form input[type="email"]:focus {
-  outline: 2px solid var(--green);
-  outline-offset: 1px;
+.promo-input::placeholder {
+  color: color-mix(in srgb, var(--muted) 80%, transparent);
 }
 
-.promo-form input[type="email"]:disabled {
+.promo-input:focus {
+  outline: none;
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 20%, transparent);
+}
+
+.promo-input:disabled {
   opacity: 0.6;
 }
 
-.promo-success {
-  color: var(--green);
+.promo-cta {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  padding: 11px 20px;
+  border-radius: 12px;
+  font: inherit;
   font-weight: 700;
+  font-size: 0.92rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--green), var(--green-strong));
+  box-shadow: 0 8px 18px -10px color-mix(in srgb, var(--green) 70%, transparent);
+  transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+}
+
+.promo-cta:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 26px -12px color-mix(in srgb, var(--green) 80%, transparent);
+  filter: brightness(1.05);
+}
+
+.promo-cta:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.promo-cta:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.promo-slot--sidebar .promo-input,
+.promo-slot--sidebar .promo-cta {
+  padding: 9px 14px;
   font-size: 0.85rem;
+}
+
+/* Status */
+.promo-success {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--green-strong);
+  font-weight: 700;
+  font-size: 0.92rem;
   margin: 0;
+}
+
+[data-theme="dark"] .promo-success {
+  color: var(--green);
+}
+
+.promo-success svg {
+  padding: 3px;
+  background: color-mix(in srgb, var(--green) 22%, transparent);
+  border-radius: 999px;
+  color: var(--green-strong);
+}
+
+[data-theme="dark"] .promo-success svg {
+  color: var(--green);
 }
 
 .promo-error {
   color: var(--red);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   margin: 0;
+}
+
+/* Actions row */
+.promo-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 4px;
 }
 
 .promo-fineprint {
   color: var(--muted);
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   margin: 0;
   flex: 1 1 auto;
 }
 
-.promo-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+.promo-dismiss {
+  font-size: 0.74rem;
 }
+
+/* Animations — only when motion is allowed */
+@media (prefers-reduced-motion: no-preference) {
+  .promo-slot {
+    animation: promoEntrance 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .promo-slot--landing {
+    animation: promoEntrance 700ms cubic-bezier(0.22, 1, 0.36, 1) both,
+               promoGlow 4.5s ease-in-out 700ms infinite;
+  }
+
+  .promo-badge {
+    animation: promoBadgeShimmer 3.2s linear infinite;
+  }
+
+  .promo-title::before {
+    animation: promoSparkle 2.6s ease-in-out infinite;
+  }
+
+  .promo-success svg {
+    animation: promoCheckIn 460ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+}
+
+/* Mobile tweaks */
+@media (max-width: 640px) {
+  .promo-slot--landing {
+    padding: 22px 20px;
+    margin: 20px 16px;
+  }
+  .promo-head {
+    padding-right: 0;
+  }
+  .promo-badge {
+    position: static;
+    align-self: flex-start;
+    margin-bottom: 8px;
+  }
+  .promo-title {
+    font-size: 1.1rem;
+  }
+}
+
