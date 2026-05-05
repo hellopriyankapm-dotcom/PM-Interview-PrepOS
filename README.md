@@ -49,6 +49,34 @@ npm run build
 npm audit --audit-level=moderate
 ```
 
+### Self-promo slot & email capture
+
+PrepOS ships with a single reusable promo card that can appear on the landing
+page and at the top of the practice-app sidebar. It captures email addresses
+via a JSON POST to a configurable endpoint — no PrepOS backend needed.
+
+**Disabled by default.** To enable, copy `.env.example` to `.env.local` and:
+
+1. Sign up for [Formspree](https://formspree.io) (free tier: 50 submissions/month).
+2. Create a new form and copy the form ID.
+3. Set:
+   ```
+   NEXT_PUBLIC_PROMO_ENABLED=true
+   NEXT_PUBLIC_PROMO_FORM_ENDPOINT=https://formspree.io/f/<your-form-id>
+   ```
+
+Submissions arrive in your email inbox and in the Formspree dashboard
+(exportable as CSV). The `source` field on each submission tells you whether
+the signup came from the landing page (`prepos-landing`) or the in-app
+sidebar (`prepos-sidebar`).
+
+**Swapping providers** — point `NEXT_PUBLIC_PROMO_FORM_ENDPOINT` at any URL
+that accepts a JSON `POST { email, source }` and returns 2xx. Buttondown,
+ConvertKit forms, and Airtable forms are all compatible.
+
+**Resetting dismissals** for a relaunch — bump `dismissKey` in `lib/promo.ts`
+from `prepos-promo-dismissed-v1` to `-v2`.
+
 GitHub Pages deploys automatically from `main` using `.github/workflows/deploy-pages.yml`.
 
 ## Why This Should Exist

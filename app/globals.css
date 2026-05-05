@@ -3318,3 +3318,84 @@ kbd {
   flex-wrap: wrap;
   gap: 4px;
 }
+
+/* Self-promo slot — landing + app sidebar */
+
+.promo-slot {
+  display: grid;
+  gap: 12px;
+}
+
+.promo-slot--landing {
+  margin: 24px auto;
+  max-width: 920px;
+}
+
+.promo-slot--sidebar {
+  padding: 14px;
+  gap: 10px;
+}
+
+.promo-slot--sidebar .panel-header h3 {
+  font-size: 0.95rem;
+  margin: 0 0 4px;
+}
+
+.promo-slot--sidebar .panel-header p {
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.promo-form {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.promo-form input[type="email"] {
+  flex: 1 1 200px;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+
+.promo-form input[type="email"]:focus {
+  outline: 2px solid var(--green);
+  outline-offset: 1px;
+}
+
+.promo-form input[type="email"]:disabled {
+  opacity: 0.6;
+}
+
+.promo-success {
+  color: var(--green);
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.promo-error {
+  color: var(--red);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.promo-fineprint {
+  color: var(--muted);
+  font-size: 0.72rem;
+  margin: 0;
+  flex: 1 1 auto;
+}
+
+.promo-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
