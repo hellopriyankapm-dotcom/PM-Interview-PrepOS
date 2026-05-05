@@ -30,3 +30,21 @@ export function createInitialConceptStates(): ConceptState[] {
     explanationDepth: "high"
   }));
 }
+
+export type ConceptOption = { id: string; label: string; roundType: RoundType };
+
+export const concepts: ConceptOption[] = conceptsRaw.map((concept) => ({
+  id: concept.id,
+  label: concept.label,
+  roundType: concept.roundType as RoundType
+}));
+
+export const conceptsByRound: Map<RoundType, ConceptOption[]> = (() => {
+  const map = new Map<RoundType, ConceptOption[]>();
+  for (const concept of concepts) {
+    const list = map.get(concept.roundType) ?? [];
+    list.push(concept);
+    map.set(concept.roundType, list);
+  }
+  return map;
+})();

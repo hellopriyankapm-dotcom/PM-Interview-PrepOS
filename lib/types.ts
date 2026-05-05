@@ -60,7 +60,7 @@ export type Calibration = {
   interviewDate: string;
   weeklyHours: number;
   experience: string;
-  selfReportedWeakness: string;
+  weakConcepts: string[];
 };
 
 export type ScoreBreakdown = {

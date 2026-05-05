@@ -23,7 +23,6 @@ export function buildPracticeQueue(
   limit = 8
 ): PracticePlanItem[] {
   const interviewIsSoon = daysUntil(calibration.interviewDate) <= 10;
-  const weakness = calibration.selfReportedWeakness.toLowerCase();
 
   return questions
     .filter((question) => {
@@ -40,7 +39,8 @@ export function buildPracticeQueue(
           if (concept.state === "light_feedback") return sum + 1;
           return sum;
         }, 0) || 1;
-      const weaknessBoost = weakness && question.title.toLowerCase().includes(weakness) ? 4 : 0;
+      const weaknessBoost =
+        calibration.weakConcepts.filter((id) => question.concepts.includes(id)).length * 4;
       const companyClaimBoost = question.companyClaim ? 20 : 0;
       const mode = interviewIsSoon && weakestConceptScore <= 2 ? "interview_mode" : modeFromConcepts(linkedConcepts);
       const priority =

@@ -27,7 +27,8 @@ import { Logo } from "@/components/Logo";
 import { Simulator } from "@/components/simulator/Simulator";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { buildPracticeQueue, readiness } from "@/lib/adaptive/engine";
-import { createInitialConceptStates, levelProfiles, targetLevelOptions } from "@/lib/content";
+import { conceptsByRound, createInitialConceptStates, levelProfiles, targetLevelOptions } from "@/lib/content";
+import { ROUND_LABEL, ROUND_ORDER } from "@/lib/round-types";
 import { findResourcesForQuestion, type ResourceMatch } from "@/lib/resources";
 import { coachCopy, explanationDepthForMode, updateConceptState } from "@/lib/scaffolding/scaffolding";
 import { evaluateAnswer } from "@/lib/scoring/rubrics";
@@ -46,7 +47,7 @@ const initialCalibration: Calibration = {
   interviewDate: "",
   weeklyHours: 8,
   experience: "PM with 3-5 years of product experience",
-  selfReportedWeakness: "metrics"
+  weakConcepts: []
 };
 
 const practiceCategories: Array<{ value: Calibration["practiceCategory"]; label: string; detail: string }> = [
@@ -100,6 +101,15 @@ export default function PrepOSApp() {
 
   function updateCalibration<K extends keyof Calibration>(key: K, value: Calibration[K]) {
     setCalibration((current) => ({ ...current, [key]: value }));
+  }
+
+  function toggleWeakConcept(conceptId: string) {
+    setCalibration((current) => {
+      const next = current.weakConcepts.includes(conceptId)
+        ? current.weakConcepts.filter((id) => id !== conceptId)
+        : [...current.weakConcepts, conceptId];
+      return { ...current, weakConcepts: next };
+    });
   }
 
   function submitAnswer() {
@@ -344,12 +354,48 @@ export default function PrepOSApp() {
           </div>
 
           <div className="field">
-            <label htmlFor="weakness">Current weakest area</label>
-            <input
-              id="weakness"
-              value={calibration.selfReportedWeakness}
-              onChange={(event) => updateCalibration("selfReportedWeakness", event.target.value)}
-            />
+            <div className="field-head">
+              <label>Current weakest areas</label>
+              {calibration.weakConcepts.length > 0 ? (
+                <button
+                  type="button"
+                  className="link-btn"
+                  onClick={() => updateCalibration("weakConcepts", [])}
+                >
+                  Clear
+                </button>
+              ) : null}
+            </div>
+            <p className="field-hint">
+              Tap any number — PrepOS will prioritise drills that hit these.
+            </p>
+            <div className="weakness-chips">
+              {ROUND_ORDER.map((roundType) => {
+                const group = conceptsByRound.get(roundType) ?? [];
+                if (group.length === 0) return null;
+                return (
+                  <div className="weakness-group" key={roundType}>
+                    <span className="weakness-group-label">{ROUND_LABEL[roundType]}</span>
+                    <div className="weakness-group-chips">
+                      {group.map((concept) => {
+                        const selected = calibration.weakConcepts.includes(concept.id);
+                        return (
+                          <button
+                            key={concept.id}
+                            type="button"
+                            className={`mode-pill ${selected ? "active" : ""}`}
+                            onClick={() => toggleWeakConcept(concept.id)}
+                            aria-pressed={selected}
+                          >
+                            {concept.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           <div className="action-row">
