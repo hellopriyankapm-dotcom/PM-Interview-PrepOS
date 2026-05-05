@@ -1,4 +1,5 @@
 import { Activity, ChevronDown, Layers, Target } from "lucide-react";
+import { ROUND_LABEL, ROUND_ORDER } from "@/lib/round-types";
 import type { ConceptState, RoundType, ScaffoldingMode } from "@/lib/types";
 
 const STAGES: ScaffoldingMode[] = [
@@ -16,24 +17,6 @@ const STAGE_LABEL: Record<ScaffoldingMode, string> = {
   interview_mode: "Interview",
   maintenance: "Mastered"
 };
-
-const ROUND_LABEL: Record<RoundType, string> = {
-  product_sense: "Product sense",
-  execution: "Execution",
-  ai_product_judgment: "AI judgment",
-  behavioral: "Behavioral",
-  strategy: "Strategy",
-  technical_collaboration: "Technical"
-};
-
-const ROUND_ORDER: RoundType[] = [
-  "product_sense",
-  "execution",
-  "ai_product_judgment",
-  "behavioral",
-  "strategy",
-  "technical_collaboration"
-];
 
 const READY_STAGES = new Set<ScaffoldingMode>(["interview_mode", "maintenance"]);
 
