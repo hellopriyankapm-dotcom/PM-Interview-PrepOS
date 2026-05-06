@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { OpenAppButton } from "@/components/OpenAppButton";
 import { PromoOpenButton } from "@/components/PromoOpenButton";
 import { PromoSlot } from "@/components/PromoSlot";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -135,9 +136,7 @@ export default function LandingPage() {
             questions first, and track your readiness — all in your browser.
           </p>
           <div className="hero-actions">
-            <Link className="btn-primary lg" href="/app">
-              Start practicing <ArrowRight size={16} />
-            </Link>
+            <OpenAppButton source="hero" />
           </div>
           <dl className="hero-stats">
             <div>
@@ -321,8 +320,9 @@ export default function LandingPage() {
               <span className="story-card-eyebrow">Principle 03</span>
               <h3>Local-first by design</h3>
               <p>
-                Your answers, scores, and progress live in your browser. No account, no analytics, no
-                tracking — and the whole project is MIT-licensed on GitHub.
+                Your answers, scores, and progress live in your browser. No account, no per-user
+                tracking, no cookies. Aggregate page-view analytics only — used to understand demand,
+                never to identify you.
               </p>
             </article>
           </div>
@@ -347,9 +347,7 @@ export default function LandingPage() {
       <section className="cta">
         <div className="cta-inner">
           <h2>Practice the rep that moves your readiness — not just any question.</h2>
-          <Link className="btn-primary lg" href="/app">
-            Start practicing <ArrowRight size={16} />
-          </Link>
+          <OpenAppButton source="closing-cta" />
         </div>
       </section>
 
