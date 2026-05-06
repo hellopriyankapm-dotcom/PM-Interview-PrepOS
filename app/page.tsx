@@ -15,6 +15,7 @@ import { OpenAppButton } from "@/components/OpenAppButton";
 import { PromoOpenButton } from "@/components/PromoOpenButton";
 import { PromoSlot } from "@/components/PromoSlot";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { faqs } from "@/lib/faqs";
 import questions from "@/content/questions/questions.json";
 import concepts from "@/content/concepts/concepts.json";
 import levels from "@/content/levels/levels.json";
@@ -69,29 +70,6 @@ const features = [
     icon: <Timer size={18} />,
     title: "Date-aware urgency",
     body: "Within 10 days of your interview, PrepOS shifts toward harder, timed, interview-mode reps."
-  }
-];
-
-const faqs = [
-  {
-    q: "Is PrepOS free?",
-    a: "Yes. PrepOS is open source and runs in your browser. No account required."
-  },
-  {
-    q: "Does it score answers with AI?",
-    a: "MVP1 uses a transparent keyword-and-structure rubric. LLM-based scoring is on the roadmap and will be opt-in."
-  },
-  {
-    q: "How fresh is the question bank?",
-    a: `The bank ships with ${questionCount} reviewed prompts and is updated weekly. Every prompt has a reviewer name, source type, and (if applicable) citation.`
-  },
-  {
-    q: "Who is PrepOS for?",
-    a: "Candidates targeting APM, PM, Senior, Staff, AI PM, or PM-T loops at product-led companies."
-  },
-  {
-    q: "Does my data leave the browser?",
-    a: "No. State is local. PrepOS does not collect or transmit your answers."
   }
 ];
 

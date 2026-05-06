@@ -3792,3 +3792,186 @@ kbd {
 .promo-slot--landing {
   scroll-margin-top: 96px;
 }
+
+/* Programmatic content pages — /questions, /concepts, /rounds, /levels */
+
+.content-shell {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  display: grid;
+  gap: 24px;
+}
+
+.breadcrumbs {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.breadcrumbs a {
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.breadcrumbs a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--line);
+}
+
+.content-head {
+  display: grid;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.content-head .eyebrow {
+  display: inline-block;
+}
+
+.content-head h1 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.content-head .content-lede {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.content-body {
+  display: grid;
+  gap: 28px;
+}
+
+.content-section {
+  display: grid;
+  gap: 10px;
+}
+
+.content-section h2 {
+  margin: 0;
+  font-size: 1.18rem;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.content-section h2 a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dashed var(--line);
+}
+
+.content-section h2 a:hover {
+  border-bottom-color: var(--green);
+  color: var(--green);
+}
+
+.content-section p {
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+.content-section .muted {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.prompt-quote {
+  margin: 0;
+  padding: 16px 20px;
+  border-left: 3px solid var(--green);
+  background: color-mix(in srgb, var(--green) 6%, var(--surface));
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: var(--ink);
+  border-radius: 0 8px 8px 0;
+}
+
+.question-list,
+.concept-list,
+.bullet-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+
+.question-list li,
+.concept-list li {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.question-list a,
+.concept-list a {
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px solid transparent;
+}
+
+.question-list a:hover,
+.concept-list a:hover {
+  color: var(--green);
+  border-bottom-color: var(--green);
+}
+
+.question-meta {
+  color: var(--muted);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.bullet-list {
+  list-style: disc;
+  padding-left: 22px;
+}
+
+.bullet-list li {
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+.meta-strip {
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--ink) 4%, var(--surface));
+  border: 1px solid var(--line);
+}
+
+.meta-strip p {
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+
+.meta-strip a {
+  color: var(--green);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.meta-strip a:hover {
+  border-bottom-color: var(--green);
+}
+
+@media (max-width: 640px) {
+  .content-shell {
+    padding: 20px 16px 48px;
+  }
+}

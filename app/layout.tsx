@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@/components/Analytics";
+import { StructuredData } from "@/components/StructuredData";
 import "./globals.css";
 
 const inter = Inter({
@@ -17,24 +18,37 @@ const jetbrainsMono = JetBrains_Mono({
 
 const siteUrl = "https://pmprepos.com";
 const description =
-  "Adaptive PM interview prep that tells you what to practice next, not just what question to answer. Calibrated for APM, PM, Senior, Staff, AI PM, and PM-T loops.";
+  "Adaptive PM interview prep and practice simulator. 250 reviewed PM interview questions, calibrated for APM, PM, Senior, Staff, AI PM, and PM-T loops. Free, runs in your browser.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "PrepOS — Adaptive PM Interview Prep",
+    default: "PrepOS — Adaptive PM Interview Prep & Practice Simulator",
     template: "%s · PrepOS"
   },
   description,
+  alternates: {
+    canonical: "/"
+  },
   applicationName: "PrepOS",
   keywords: [
     "PM interview prep",
+    "PM interview practice",
+    "PM interview simulator",
+    "product management interview",
     "product manager interview",
+    "product manager interview questions",
     "APM interview",
     "AI PM interview",
-    "adaptive learning",
-    "interview practice",
-    "FAANG PM"
+    "Senior PM interview",
+    "Staff PM interview",
+    "behavioral PM interview",
+    "PM interview rounds",
+    "north star metric",
+    "product sense interview",
+    "AI product manager interview",
+    "PM mock interview",
+    "FAANG PM interview"
   ],
   authors: [{ name: "PrepOS" }],
   creator: "PrepOS",
@@ -101,6 +115,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <Analytics />
+        <StructuredData />
       </head>
       <body>{children}</body>
     </html>

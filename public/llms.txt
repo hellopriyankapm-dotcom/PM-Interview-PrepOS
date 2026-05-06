@@ -1,0 +1,37 @@
+# PrepOS
+
+> Adaptive PM interview prep that tells you which rep moves your readiness next, calibrated for APM, PM, Senior, Staff, AI PM, and PM-T loops. Free, runs in your browser.
+
+PrepOS is a free, browser-based product manager interview prep tool and PM interview simulator. It picks the highest-impact next practice rep based on the user's target level, weakest concepts, and how close their interview is — instead of presenting a flat question dump.
+
+## Capabilities
+
+- 250 reviewed PM interview questions covering product sense, execution, AI product judgment, behavioral, strategy, and technical collaboration rounds.
+- 18 tracked PM concepts mapped to 6 round types.
+- Open rubrics — transparent keyword-and-structure scoring, no black-box numbers.
+- Calibration for 6 target levels: APM, PM, Senior PM, Staff PM, AI PM, PM-T.
+- Adaptive practice queue that surfaces weakest-concept reps first.
+- Coach mode → guided practice → light feedback → interview mode scaffolding.
+- Local-first: all answers and progress live in the user's browser.
+- Privacy-friendly: aggregate page-view analytics only, no per-user tracking, no cookies.
+
+## Use cases
+
+- Practice for a PM interview at FAANG, Anthropic, Stripe, or any product-led company.
+- Train weakest concepts (e.g., north-star metrics, AI eval design, conflict-handling stories).
+- Simulate full interview loops with timed Interview Mode.
+- Prepare for AI PM interviews, including eval design, hallucination mitigation, cost/latency trade-offs.
+
+## Key URLs
+
+- Landing: https://pmprepos.com
+- Practice app: https://pmprepos.com/app
+- All questions: https://pmprepos.com/questions
+- All concepts: https://pmprepos.com/concepts
+- All rounds: https://pmprepos.com/rounds
+- All levels: https://pmprepos.com/levels
+- Sitemap: https://pmprepos.com/sitemap.xml
+
+## Built by
+
+An aspiring PM in active interview loops. Same question bank, same rubric, same adaptive queue used before every onsite. Open-sourced so the next PM doesn't start from zero.
