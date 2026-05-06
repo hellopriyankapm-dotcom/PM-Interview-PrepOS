@@ -440,6 +440,33 @@ export default function PrepOSApp() {
         </aside>
 
         <section className="workspace">
+          {calibration.targetLevel === "ai-pm" ? (
+            <section className="workspace-head workspace-head--ai-pm">
+              <div>
+                <span className="eyebrow">AI PM track · Pro Pack only</span>
+                <h2>AI PM interview questions are coming in Pro Pack</h2>
+                <p>
+                  AI PM interviews test a different bundle: eval design, hallucination mitigation,
+                  cost / latency trade-offs, and human-fallback design. PrepOS is curating a dedicated
+                  AI PM question bank with reviewer notes and expert answers — included in Pro Pack.
+                </p>
+                <div className="workspace-head-actions ai-pm-head-actions">
+                  <PromoEmailForm
+                    source="prepos-ai-pm-gate"
+                    ctaLabel="Notify me about AI PM Pro Pack"
+                  />
+                </div>
+                <p className="workspace-head-hint workspace-head-hint--block">
+                  Want to keep practising? Switch Target level to PM, Senior, Staff, or PM-T.
+                </p>
+              </div>
+              <div className="focus-card">
+                <span>Current mode</span>
+                <strong>Pro Pack only</strong>
+                <p>AI PM bank ships with Pro Pack — drop your email to be notified.</p>
+              </div>
+            </section>
+          ) : (
           <section className="workspace-head">
             <div>
               <span className="eyebrow">Today&apos;s focus</span>
@@ -476,6 +503,7 @@ export default function PrepOSApp() {
               </p>
             </div>
           </section>
+          )}
 
           <div className="grid">
             <MetricCard
@@ -498,23 +526,8 @@ export default function PrepOSApp() {
             />
           </div>
 
-          <Dashboard calibration={calibration} history={repHistory} />
-
-          {calibration.targetLevel === "ai-pm" ? (
-            <section className="panel section ai-pm-gate">
-              <span className="eyebrow">AI PM track · Pro Pack only</span>
-              <h2>AI PM interview questions are coming in Pro Pack</h2>
-              <p>
-                AI PM interviews test a different bundle: eval design, hallucination mitigation,
-                cost / latency trade-offs, and human-fallback design. PrepOS is curating a dedicated
-                AI PM question bank with reviewer notes and expert answers — included in Pro Pack.
-              </p>
-              <p>
-                Drop your email and we&apos;ll let you know the moment it ships. Meanwhile, switch
-                Target level to PM, Senior, Staff, or PM-T to keep practicing the rest of the bank.
-              </p>
-              <PromoEmailForm source="prepos-ai-pm-gate" ctaLabel="Notify me about AI PM Pro Pack" />
-            </section>
+          {calibration.targetLevel !== "ai-pm" ? (
+            <Dashboard calibration={calibration} history={repHistory} />
           ) : null}
 
           {calibration.targetLevel !== "ai-pm" && activeItem ? (

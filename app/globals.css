@@ -4150,3 +4150,36 @@ kbd {
   line-height: 1.55;
   font-size: 0.95rem;
 }
+
+/* AI PM workspace-head variant — replaces Today's focus when AI PM is selected */
+.workspace-head--ai-pm {
+  background:
+    radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--green) 14%, transparent) 0%, transparent 60%),
+    var(--surface);
+  border: 1px solid color-mix(in srgb, var(--green) 28%, var(--line));
+}
+
+.ai-pm-head-actions {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.ai-pm-head-actions .promo-form {
+  max-width: 480px;
+}
+
+.workspace-head-hint--block {
+  display: block;
+  margin-top: 14px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.workspace-head--ai-pm .focus-card strong {
+  color: var(--green-strong);
+}
+
+[data-theme="dark"] .workspace-head--ai-pm .focus-card strong {
+  color: var(--green);
+}
