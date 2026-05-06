@@ -39,6 +39,7 @@ jobs:
         env:
           NEXT_PUBLIC_PROMO_ENABLED: "true"
           NEXT_PUBLIC_PROMO_FORM_ENDPOINT: "https://formspree.io/f/xlgznbgz"
+          NEXT_PUBLIC_GOATCOUNTER_DOMAIN: "pmprepos"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
