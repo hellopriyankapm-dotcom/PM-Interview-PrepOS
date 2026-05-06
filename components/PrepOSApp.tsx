@@ -24,6 +24,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Dashboard, type RepHistoryEntry } from "@/components/Dashboard";
 import { LearningMemory } from "@/components/LearningMemory";
 import { Logo } from "@/components/Logo";
+import { PromoEmailForm } from "@/components/PromoEmailForm";
 import { PromoSlot } from "@/components/PromoSlot";
 import { Simulator } from "@/components/simulator/Simulator";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -499,7 +500,24 @@ export default function PrepOSApp() {
 
           <Dashboard calibration={calibration} history={repHistory} />
 
-          {activeItem ? (
+          {calibration.targetLevel === "ai-pm" ? (
+            <section className="panel section ai-pm-gate">
+              <span className="eyebrow">AI PM track · Pro Pack only</span>
+              <h2>AI PM interview questions are coming in Pro Pack</h2>
+              <p>
+                AI PM interviews test a different bundle: eval design, hallucination mitigation,
+                cost / latency trade-offs, and human-fallback design. PrepOS is curating a dedicated
+                AI PM question bank with reviewer notes and expert answers — included in Pro Pack.
+              </p>
+              <p>
+                Drop your email and we&apos;ll let you know the moment it ships. Meanwhile, switch
+                Target level to PM, Senior, Staff, or PM-T to keep practicing the rest of the bank.
+              </p>
+              <PromoEmailForm source="prepos-ai-pm-gate" ctaLabel="Notify me about AI PM Pro Pack" />
+            </section>
+          ) : null}
+
+          {calibration.targetLevel !== "ai-pm" && activeItem ? (
             <section className="panel section drill" ref={drillRef}>
               <div className="section-title-row">
                 <div>
@@ -633,7 +651,7 @@ export default function PrepOSApp() {
             </section>
           ) : null}
 
-          {!activeItem ? (
+          {calibration.targetLevel !== "ai-pm" && !activeItem ? (
             <section className="panel section empty-state">
               <span className="eyebrow">No drills found</span>
               <h2>Try another practice category</h2>
@@ -643,6 +661,7 @@ export default function PrepOSApp() {
             </section>
           ) : null}
 
+          {calibration.targetLevel !== "ai-pm" ? (
           <section className="panel section">
             <div className="section-title-row">
               <div>
@@ -675,8 +694,11 @@ export default function PrepOSApp() {
               </button>
             ) : null}
           </section>
+          ) : null}
 
-          <LearningMemory concepts={concepts} readiness={ready} />
+          {calibration.targetLevel !== "ai-pm" ? (
+            <LearningMemory concepts={concepts} readiness={ready} />
+          ) : null}
         </section>
       </div>
 
