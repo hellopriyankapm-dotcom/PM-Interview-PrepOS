@@ -323,6 +323,35 @@ button {
   box-shadow: 0 0 0 4px rgba(15, 95, 70, 0.1);
 }
 
+[data-theme="dark"] .field input,
+[data-theme="dark"] .field select,
+[data-theme="dark"] .field textarea {
+  background: color-mix(in srgb, var(--ink) 5%, var(--surface-soft));
+  border-color: color-mix(in srgb, var(--ink) 18%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ink) 6%, transparent);
+  color: var(--ink);
+}
+
+[data-theme="dark"] .field input::placeholder,
+[data-theme="dark"] .field textarea::placeholder {
+  color: color-mix(in srgb, var(--ink) 38%, transparent);
+}
+
+[data-theme="dark"] .field input:hover:not(:focus),
+[data-theme="dark"] .field select:hover:not(:focus),
+[data-theme="dark"] .field textarea:hover:not(:focus) {
+  border-color: color-mix(in srgb, var(--ink) 28%, transparent);
+}
+
+[data-theme="dark"] .field input:focus,
+[data-theme="dark"] .field select:focus,
+[data-theme="dark"] .field textarea:focus {
+  border-color: var(--green);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--ink) 6%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--green) 22%, transparent);
+}
+
 .field textarea {
   min-height: 92px;
   resize: vertical;
