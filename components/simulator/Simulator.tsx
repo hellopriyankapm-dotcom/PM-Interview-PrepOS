@@ -954,8 +954,9 @@ function PreflightStep(props: {
           <strong>Pro Pack — coming soon</strong>
         </div>
         <p>
-          Skip BYO keys. PrepOS handles the {llmLabel} calls, the lifelike voice, and the real-video persona on
-          your behalf for one monthly price. Drop your email to be first in line:
+          Skip BYO keys. PrepOS runs the {llmLabel} calls, lifelike voice, and real-video persona on your
+          behalf — and unlocks the <strong>AI PM interview question bank</strong> and expert-answer library —
+          for one monthly price. Drop your email to be first in line:
         </p>
         <PromoEmailForm source="prepos-simulator" ctaLabel="Notify me" />
       </div>
