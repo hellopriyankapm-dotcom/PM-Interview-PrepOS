@@ -3,7 +3,7 @@
 import { Mic, MicOff, Sparkles, Trash2, Video, Volume2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { SarahAvatar } from "@/components/simulator/Avatar";
-import { PromoOpenButton } from "@/components/PromoOpenButton";
+import { PromoEmailForm } from "@/components/PromoEmailForm";
 import {
   forgetElevenKey,
   hasElevenKey,
@@ -955,9 +955,9 @@ function PreflightStep(props: {
         </div>
         <p>
           Skip BYO keys. PrepOS handles the {llmLabel} calls, the lifelike voice, and the real-video persona on
-          your behalf for one monthly price. Get notified at launch:
+          your behalf for one monthly price. Drop your email to be first in line:
         </p>
-        <PromoOpenButton />
+        <PromoEmailForm source="prepos-simulator" ctaLabel="Notify me" />
       </div>
 
       {props.errorMsg ? <div className="sim-warn">{props.errorMsg}</div> : null}
