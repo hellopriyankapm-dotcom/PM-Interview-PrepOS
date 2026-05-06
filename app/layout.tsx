@@ -64,14 +64,12 @@ export const metadata: Metadata = {
     title: "PrepOS — Adaptive PM Interview Prep",
     description,
     siteName: "PrepOS",
-    url: siteUrl,
-    images: [{ url: "favicon-48.png", width: 48, height: 48, alt: "PrepOS" }]
+    url: siteUrl
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "PrepOS — Adaptive PM Interview Prep",
-    description,
-    images: ["favicon-48.png"]
+    description
   },
   robots: {
     index: true,
