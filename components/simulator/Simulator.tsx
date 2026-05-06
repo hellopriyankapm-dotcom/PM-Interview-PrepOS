@@ -17,9 +17,7 @@ import {
   hasDid,
   loadDidKey,
   loadDidPortrait,
-  loadDidPortraitOverride,
-  saveDidKey,
-  saveDidPortrait
+  saveDidKey
 } from "@/lib/simulator/d-id";
 import {
   callLlmChat,
@@ -97,7 +95,6 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
   const [elevenKeyInput, setElevenKeyInput] = useState(loadElevenKey() ?? "");
   const [elevenAccepted, setElevenAccepted] = useState(hasElevenKey());
   const [didKeyInput, setDidKeyInput] = useState(loadDidKey() ?? "");
-  const [didPortraitInput, setDidPortraitInput] = useState(loadDidPortraitOverride() ?? "");
   const [didAccepted, setDidAccepted] = useState(hasDid());
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [avatarState, setAvatarState] = useState<AvatarState>("idle");
@@ -550,22 +547,14 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
 
   function handleSaveDidKey() {
     const trimmedKey = didKeyInput.trim();
-    const trimmedPortrait = didPortraitInput.trim();
     if (trimmedKey.length < 10) {
       setErrorMsg("That doesn't look like a D-ID key.");
       return;
     }
-    if (trimmedPortrait && !trimmedPortrait.startsWith("https://")) {
-      setErrorMsg("If you provide a portrait URL it must start with https://");
-      return;
-    }
     saveDidKey(trimmedKey);
-    if (trimmedPortrait) {
-      saveDidPortrait(trimmedPortrait);
-    } else {
-      // Clear any previous override so the bundled Sarah portrait is used
-      forgetDidPortrait();
-    }
+    // Always use the bundled Sarah portrait. Clear any previous override
+    // from older versions of the app where users could set a custom URL.
+    forgetDidPortrait();
     setDidAccepted(true);
     setErrorMsg(null);
   }
@@ -575,7 +564,6 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
     forgetDidPortrait();
     setDidAccepted(false);
     setDidKeyInput("");
-    setDidPortraitInput("");
   }
 
   /**
@@ -719,8 +707,6 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
             elevenAccepted={elevenAccepted}
             didKeyInput={didKeyInput}
             setDidKeyInput={setDidKeyInput}
-            didPortraitInput={didPortraitInput}
-            setDidPortraitInput={setDidPortraitInput}
             didAccepted={didAccepted}
             errorMsg={errorMsg}
             onSaveKey={handleSaveKey}
@@ -789,8 +775,6 @@ function PreflightStep(props: {
   elevenAccepted: boolean;
   didKeyInput: string;
   setDidKeyInput: (next: string) => void;
-  didPortraitInput: string;
-  setDidPortraitInput: (next: string) => void;
   didAccepted: boolean;
   errorMsg: string | null;
   onSaveKey: () => void;
@@ -920,15 +904,6 @@ function PreflightStep(props: {
           autoComplete="off"
           spellCheck={false}
         />
-        <input
-          id="sim-did-portrait"
-          type="url"
-          placeholder="Custom portrait URL (optional — leave blank to use the bundled Sarah)"
-          value={props.didPortraitInput}
-          onChange={(event) => props.setDidPortraitInput(event.target.value)}
-          autoComplete="off"
-          spellCheck={false}
-        />
         <div className="sim-key-actions">
           {props.didAccepted ? (
             <button type="button" className="btn" onClick={props.onForgetDidKey}>
@@ -946,7 +921,7 @@ function PreflightStep(props: {
               </>
             ) : (
               <>
-                Without it, you&apos;ll see Sarah as an illustrated portrait. Get a key + portrait URL at studio.d-id.com.
+                Without it, you&apos;ll see Sarah as an illustrated portrait. Get a key at studio.d-id.com.
               </>
             )}
           </span>
