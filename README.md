@@ -77,6 +77,29 @@ ConvertKit forms, and Airtable forms are all compatible.
 **Resetting dismissals** for a relaunch — bump `dismissKey` in `lib/promo.ts`
 from `prepos-promo-dismissed-v1` to `-v2`.
 
+### Aggregate analytics (privacy-friendly)
+
+PrepOS supports three drop-in analytics providers via env vars. All are
+cookie-free, collect no PII, and never look inside `/app` (practice answers
+and scores stay local-only).
+
+**Disabled by default.** To enable, pick one:
+
+- **GoatCounter** (recommended free tier — sign up at https://www.goatcounter.com,
+  pick a subdomain, then set):
+  ```
+  NEXT_PUBLIC_GOATCOUNTER_DOMAIN=<your-subdomain>
+  ```
+- **Plausible**: `NEXT_PUBLIC_PLAUSIBLE_DOMAIN=pmprepos.com`
+- **Umami self-hosted**: `NEXT_PUBLIC_UMAMI_WEBSITE_ID=…` and
+  `NEXT_PUBLIC_UMAMI_SCRIPT_URL=…`
+
+Tracked events (in addition to automatic page views):
+`Pro Pack Click`, `Promo Submit Success`, `Promo Submit Error`, `Promo Dismiss`,
+`Open App`. The `source` prop on `Open App` distinguishes the hero CTA from
+the closing CTA; the `variant` prop on Promo events distinguishes the landing
+card from the in-app sidebar.
+
 GitHub Pages deploys automatically from `main` using `.github/workflows/deploy-pages.yml`.
 
 ## Why This Should Exist

@@ -2,6 +2,7 @@
 
 import { Check, Sparkles } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
+import { trackEvent } from "@/lib/analytics";
 import { isPromoConfigured, promoConfig } from "@/lib/promo";
 
 type Variant = "landing" | "sidebar";
@@ -51,15 +52,18 @@ export function PromoSlot({ variant }: { variant: Variant }) {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       setStatus("success");
       setEmail("");
+      trackEvent("Promo Submit Success", { variant });
     } catch {
       setStatus("error");
       setErrorMessage("Couldn’t reach the signup service. Try again in a moment.");
+      trackEvent("Promo Submit Error", { variant });
     }
   }
 
   function dismiss() {
     window.localStorage.setItem(promoConfig.dismissKey, "true");
     setDismissed(true);
+    trackEvent("Promo Dismiss", { variant });
   }
 
   return (
