@@ -343,6 +343,13 @@ export default function LandingPage() {
               <a href="#features">Features</a>
               <a href="#scorecard">Scorecard</a>
             </div>
+            <div>
+              <strong>Company</strong>
+              <Link href="/about">About</Link>
+              <Link href="/changelog">Changelog</Link>
+              <Link href="/privacy">Privacy</Link>
+              <Link href="/terms">Terms</Link>
+            </div>
           </div>
         </div>
         <p className="landing-footer-fineprint">© PrepOS · Made for PM candidates.</p>

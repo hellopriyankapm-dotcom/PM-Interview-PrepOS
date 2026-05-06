@@ -4165,3 +4165,128 @@ kbd {
   color: var(--muted) !important;
   font-size: 0.86rem;
 }
+
+/* ============================================================
+   Mobile polish — phone-friendly tweaks for /app + content pages
+   ============================================================ */
+
+/* Prevent iOS Safari auto-zoom on text input focus + ensure a sensible
+   tap target across all surfaces. Applies broadly because every form
+   control on the site needs the 16px font-size guard on touch devices. */
+@media (max-width: 640px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  /* Shell breathing room — pull content inset closer to the edge so
+     panels don't shrink to a sliver. */
+  .main {
+    padding-left: 14px;
+    padding-right: 14px;
+    padding-top: 16px;
+  }
+
+  /* Topbar tighter on phones */
+  .topbar {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  /* Header gradient pill — keep it readable, prevent overflow */
+  .cta-promo {
+    font-size: 0.78rem;
+    padding: 8px 12px;
+    white-space: nowrap;
+  }
+
+  /* Workspace-head-actions: stack cleanly, full-width buttons,
+     min tap target. */
+  .workspace-head-actions {
+    width: 100%;
+  }
+
+  .workspace-head-actions > .btn,
+  .workspace-head-actions > .btn-primary {
+    flex: 1 1 140px;
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  .workspace-head-hint {
+    width: 100%;
+  }
+
+  /* Drill action row + answer field */
+  .drill-actions {
+    width: 100%;
+  }
+
+  .answer {
+    min-height: 180px;
+  }
+
+  /* Tap targets across all standard buttons */
+  .btn,
+  .btn-primary,
+  .btn-ghost {
+    min-height: 40px;
+  }
+
+  .icon-btn {
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  /* Calibration sidebar — tighter inset so fields can breathe */
+  .field {
+    padding: 12px 14px 0;
+  }
+
+  /* Hero stats: 2-up grid at narrow widths */
+  .hero-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* Mode + weakness chips should wrap, not overflow */
+  .modes,
+  .weakness-group-chips {
+    flex-wrap: wrap;
+  }
+
+  /* AI PM panel: tighter padding so headline doesn't crowd edges */
+  .ai-pm-panel {
+    padding: 24px 18px;
+  }
+
+  /* Simulator overlay: tighter padding so shell uses the full viewport */
+  .sim-overlay {
+    padding: 12px 8px;
+  }
+
+  .sim-shell {
+    max-height: calc(100vh - 16px);
+    border-radius: 14px;
+  }
+
+  /* Promo card on simulator preflight — full-width form */
+  .sim-pro-card .promo-form {
+    width: 100%;
+  }
+
+  /* Footer: 2-up cols on phone instead of 1-up */
+  .landing-footer-cols {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+}
+
+/* Hide the in-page anchor nav on narrow widths — the CTAs and footer
+   carry the same links. Saves the topbar from cramping. */
+@media (max-width: 720px) {
+  .landing-nav-links {
+    display: none;
+  }
+}

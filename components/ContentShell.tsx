@@ -59,6 +59,13 @@ export function ContentShell({
               <Link href="/rounds">Round types</Link>
               <Link href="/levels">Target levels</Link>
             </div>
+            <div>
+              <strong>Company</strong>
+              <Link href="/about">About</Link>
+              <Link href="/changelog">Changelog</Link>
+              <Link href="/privacy">Privacy</Link>
+              <Link href="/terms">Terms</Link>
+            </div>
           </div>
         </div>
         <p className="landing-footer-fineprint">© PrepOS · Made for PM candidates.</p>
