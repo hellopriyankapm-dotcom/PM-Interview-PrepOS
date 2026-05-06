@@ -3975,3 +3975,133 @@ kbd {
     padding: 20px 16px 48px;
   }
 }
+
+/* Simulator — options screen + Pro Pack card on preflight */
+
+.sim-preflight-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sim-options {
+  display: grid;
+  gap: 22px;
+}
+
+.sim-option-group {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.sim-option-group legend {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.sim-option-card,
+.sim-toggle-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 140ms ease, background 140ms ease, box-shadow 140ms ease;
+}
+
+.sim-option-card:hover,
+.sim-toggle-card:hover {
+  border-color: color-mix(in srgb, var(--green) 35%, var(--line));
+}
+
+.sim-option-card.active,
+.sim-toggle-card.active {
+  border-color: var(--green);
+  background: color-mix(in srgb, var(--green) 8%, var(--surface));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 12%, transparent);
+}
+
+.sim-option-card input[type="radio"],
+.sim-toggle-card input[type="checkbox"] {
+  margin-top: 4px;
+  accent-color: var(--green);
+  flex-shrink: 0;
+}
+
+.sim-option-card-body,
+.sim-toggle-card-body {
+  display: grid;
+  gap: 4px;
+  flex: 1;
+}
+
+.sim-option-card-body strong,
+.sim-toggle-card-body strong {
+  color: var(--ink);
+  font-size: 0.96rem;
+}
+
+.sim-option-card-hint,
+.sim-toggle-card-hint {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.sim-toggle-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--green) 14%, var(--surface));
+  color: var(--green);
+  flex-shrink: 0;
+}
+
+.sim-toggle-card.active .sim-toggle-card-icon {
+  background: var(--green);
+  color: white;
+}
+
+/* Pro Pack card on the preflight screen */
+.sim-pro-card {
+  display: grid;
+  gap: 10px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--green) 28%, var(--line));
+  background: color-mix(in srgb, var(--green) 8%, var(--surface));
+  margin-top: 4px;
+}
+
+.sim-pro-card-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--green-strong);
+  font-size: 0.95rem;
+}
+
+[data-theme="dark"] .sim-pro-card-head {
+  color: var(--green);
+}
+
+.sim-pro-card p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}

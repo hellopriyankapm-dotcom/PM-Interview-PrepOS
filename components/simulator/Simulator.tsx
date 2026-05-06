@@ -1,17 +1,9 @@
 "use client";
 
-import { Mic, MicOff, Sparkles, Trash2, X } from "lucide-react";
+import { Mic, MicOff, Sparkles, Trash2, Video, Volume2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { SarahAvatar } from "@/components/simulator/Avatar";
-import {
-  callClaudeChat,
-  callClaudeJson,
-  forgetKey,
-  hasKey,
-  loadKey,
-  saveKey,
-  type ChatMessage
-} from "@/lib/simulator/anthropic";
+import { PromoOpenButton } from "@/components/PromoOpenButton";
 import {
   forgetElevenKey,
   hasElevenKey,
@@ -29,7 +21,21 @@ import {
   saveDidKey,
   saveDidPortrait
 } from "@/lib/simulator/d-id";
+import {
+  callLlmChat,
+  callLlmJson,
+  forgetKeyFor,
+  hasKeyFor,
+  LLM_KEY_HELP,
+  LLM_KEY_PLACEHOLDER,
+  LLM_PROVIDER_LABELS,
+  loadKeyFor,
+  saveKeyFor,
+  type ChatMessage,
+  type LlmProvider
+} from "@/lib/simulator/llm";
 import { SARAH, FEEDBACK_SYSTEM_PROMPT, buildInterviewSystemPrompt } from "@/lib/simulator/persona";
+import { loadSimPrefs, saveSimPrefs } from "@/lib/simulator/sim-prefs";
 import {
   createRecognition,
   isLifelikeVoiceAvailable,
@@ -40,6 +46,7 @@ import {
 import type { Calibration, Evaluation, Question, ScaffoldingMode, ScoreBreakdown } from "@/lib/types";
 
 type Phase =
+  | "options"
   | "preflight"
   | "intro"
   | "listening"
@@ -78,9 +85,15 @@ type Props = {
 };
 
 export function Simulator({ question, calibration, mode, onClose, onComplete }: Props) {
-  const [phase, setPhase] = useState<Phase>("preflight");
-  const [keyInput, setKeyInput] = useState(loadKey() ?? "");
-  const [keyAccepted, setKeyAccepted] = useState(hasKey());
+  const initialPrefs = loadSimPrefs();
+  const initialPhase: Phase = initialPrefs.optionsCompleted ? "preflight" : "options";
+
+  const [phase, setPhase] = useState<Phase>(initialPhase);
+  const [provider, setProvider] = useState<LlmProvider>(initialPrefs.provider);
+  const [wantsLifelikeVoice, setWantsLifelikeVoice] = useState(initialPrefs.wantVoice);
+  const [wantsVideo, setWantsVideo] = useState(initialPrefs.wantVideo);
+  const [keyInput, setKeyInput] = useState(loadKeyFor(initialPrefs.provider) ?? "");
+  const [keyAccepted, setKeyAccepted] = useState(hasKeyFor(initialPrefs.provider));
   const [elevenKeyInput, setElevenKeyInput] = useState(loadElevenKey() ?? "");
   const [elevenAccepted, setElevenAccepted] = useState(hasElevenKey());
   const [didKeyInput, setDidKeyInput] = useState(loadDidKey() ?? "");
@@ -103,7 +116,7 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
   const recognitionRef = useRef<ReturnType<typeof createRecognition>>(null);
   const startedAtRef = useRef<number>(0);
   const speechSupported = useRef(isSpeechSupported());
-  const phaseRef = useRef<Phase>("preflight");
+  const phaseRef = useRef<Phase>(initialPhase);
   const currentUserTurnRef = useRef<string>("");
   const silenceTimerRef = useRef<number | null>(null);
   const handingOverRef = useRef<boolean>(false);
@@ -165,7 +178,7 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
       return;
     }
     if (!keyAccepted) {
-      setErrorMsg("Add an Anthropic API key first.");
+      setErrorMsg(`Add a ${LLM_PROVIDER_LABELS[provider]} API key first.`);
       return;
     }
     setHistory([]);
@@ -178,9 +191,9 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
 
   async function runGreetingTurn() {
     setAvatarState("thinking");
-    const apiKey = loadKey();
+    const apiKey = loadKeyFor(provider);
     if (!apiKey) {
-      setErrorMsg("Anthropic key missing.");
+      setErrorMsg(`${LLM_PROVIDER_LABELS[provider]} key missing.`);
       setPhase("error");
       return;
     }
@@ -194,7 +207,8 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
     });
 
     try {
-      const greeting = await callClaudeChat<TurnResponse>({
+      const greeting = await callLlmChat<TurnResponse>({
+        provider,
         apiKey,
         system: systemPrompt,
         messages: [
@@ -216,7 +230,7 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
     } catch (error) {
       console.error(error);
       setErrorMsg(
-        error instanceof Error ? `Anthropic call failed: ${error.message}` : "Anthropic call failed."
+        error instanceof Error ? `${LLM_PROVIDER_LABELS[provider]} call failed: ${error.message}` : `${LLM_PROVIDER_LABELS[provider]} call failed.`
       );
       setPhase("error");
     }
@@ -327,9 +341,9 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
     setPhase("thinking");
     setAvatarState("thinking");
 
-    const apiKey = loadKey();
+    const apiKey = loadKeyFor(provider);
     if (!apiKey) {
-      setErrorMsg("Anthropic key missing.");
+      setErrorMsg(`${LLM_PROVIDER_LABELS[provider]} key missing.`);
       setPhase("error");
       return;
     }
@@ -349,7 +363,8 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
         : `You have at most ${turnsRemaining} follow-ups left. Ask one focused follow-up that quotes or pushes on something specific they just said, OR wrap up if you have enough signal.`;
 
     try {
-      const turn = await callClaudeChat<TurnResponse>({
+      const turn = await callLlmChat<TurnResponse>({
+        provider,
         apiKey,
         system: systemPrompt,
         messages: [...nextHistory, { role: "user", content: `[INTERVIEWER NOTE]: ${guidance}` }],
@@ -377,7 +392,7 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
     } catch (error) {
       console.error(error);
       setErrorMsg(
-        error instanceof Error ? `Anthropic call failed: ${error.message}` : "Anthropic call failed."
+        error instanceof Error ? `${LLM_PROVIDER_LABELS[provider]} call failed: ${error.message}` : `${LLM_PROVIDER_LABELS[provider]} call failed.`
       );
       setPhase("error");
     }
@@ -398,9 +413,9 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
     setPhase("wrapup");
     setAvatarState("speaking");
 
-    const apiKey = loadKey();
+    const apiKey = loadKeyFor(provider);
     if (!apiKey) {
-      setErrorMsg("Anthropic key missing.");
+      setErrorMsg(`${LLM_PROVIDER_LABELS[provider]} key missing.`);
       setPhase("error");
       return;
     }
@@ -414,7 +429,8 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
     });
 
     try {
-      const wrap = await callClaudeChat<TurnResponse>({
+      const wrap = await callLlmChat<TurnResponse>({
+        provider,
         apiKey,
         system: systemPrompt,
         messages: [
@@ -439,9 +455,9 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
   }
 
   async function runFeedback(finalHistory: ChatMessage[]) {
-    const apiKey = loadKey();
+    const apiKey = loadKeyFor(provider);
     if (!apiKey) {
-      setErrorMsg("Anthropic key missing.");
+      setErrorMsg(`${LLM_PROVIDER_LABELS[provider]} key missing.`);
       setPhase("error");
       return;
     }
@@ -456,7 +472,8 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
       .join("\n\n");
 
     try {
-      const result = await callClaudeJson<FeedbackResponse>({
+      const result = await callLlmJson<FeedbackResponse>({
+        provider,
         apiKey,
         system: FEEDBACK_SYSTEM_PROMPT,
         user: [
@@ -496,17 +513,20 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
 
   function handleSaveKey() {
     const trimmed = keyInput.trim();
-    if (!trimmed.startsWith("sk-ant-")) {
-      setErrorMsg("That doesn't look like an Anthropic key (sk-ant-…).");
+    const expected = LLM_KEY_PLACEHOLDER[provider];
+    const looksValid =
+      provider === "anthropic" ? trimmed.startsWith("sk-ant-") : trimmed.startsWith("sk-");
+    if (!looksValid || trimmed.length < 20) {
+      setErrorMsg(`That doesn't look like a ${LLM_PROVIDER_LABELS[provider]} key (${expected}).`);
       return;
     }
-    saveKey(trimmed);
+    saveKeyFor(provider, trimmed);
     setKeyAccepted(true);
     setErrorMsg(null);
   }
 
   function handleForgetKey() {
-    forgetKey();
+    forgetKeyFor(provider);
     setKeyAccepted(false);
     setKeyInput("");
   }
@@ -609,6 +629,28 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
     onClose();
   }
 
+  function handleProviderChange(next: LlmProvider) {
+    setProvider(next);
+    setKeyInput(loadKeyFor(next) ?? "");
+    setKeyAccepted(hasKeyFor(next));
+    setErrorMsg(null);
+  }
+
+  function handleOptionsContinue() {
+    saveSimPrefs({
+      provider,
+      wantVoice: wantsLifelikeVoice,
+      wantVideo: wantsVideo,
+      optionsCompleted: true
+    });
+    setPhase("preflight");
+  }
+
+  function handleBackToOptions() {
+    setPhase("options");
+    setErrorMsg(null);
+  }
+
   function timer() {
     const m = String(Math.floor(elapsed / 60)).padStart(2, "0");
     const s = String(elapsed % 60).padStart(2, "0");
@@ -630,14 +672,14 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
                 <Sparkles size={12} /> Lifelike voice
               </span>
             ) : null}
-            {phase !== "preflight" && phase !== "done" && phase !== "error" ? (
+            {phase !== "options" && phase !== "preflight" && phase !== "done" && phase !== "error" ? (
               <span className="sim-turn-counter mono">
                 Turn {followupCount + 1}/{MAX_FOLLOWUP_TURNS + 1}
               </span>
             ) : null}
           </div>
           <div className="sim-bar-right">
-            {phase !== "preflight" && phase !== "done" && phase !== "error" ? (
+            {phase !== "options" && phase !== "preflight" && phase !== "done" && phase !== "error" ? (
               <span className="sim-timer mono">{timer()}</span>
             ) : null}
             {(phase === "listening" || phase === "thinking" || phase === "intro") ? (
@@ -651,8 +693,24 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
           </div>
         </header>
 
+        {phase === "options" ? (
+          <OptionsStep
+            provider={provider}
+            onProviderChange={handleProviderChange}
+            wantsLifelikeVoice={wantsLifelikeVoice}
+            setWantsLifelikeVoice={setWantsLifelikeVoice}
+            wantsVideo={wantsVideo}
+            setWantsVideo={setWantsVideo}
+            onContinue={handleOptionsContinue}
+            speechSupported={speechSupported.current}
+          />
+        ) : null}
+
         {phase === "preflight" ? (
           <PreflightStep
+            provider={provider}
+            wantsLifelikeVoice={wantsLifelikeVoice}
+            wantsVideo={wantsVideo}
             keyInput={keyInput}
             setKeyInput={setKeyInput}
             keyAccepted={keyAccepted}
@@ -672,6 +730,7 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
             onSaveDidKey={handleSaveDidKey}
             onForgetDidKey={handleForgetDidKey}
             onStart={startInterview}
+            onBackToOptions={handleBackToOptions}
             speechSupported={speechSupported.current}
             question={question}
           />
@@ -719,6 +778,9 @@ export function Simulator({ question, calibration, mode, onClose, onComplete }: 
 }
 
 function PreflightStep(props: {
+  provider: LlmProvider;
+  wantsLifelikeVoice: boolean;
+  wantsVideo: boolean;
   keyInput: string;
   setKeyInput: (next: string) => void;
   keyAccepted: boolean;
@@ -738,14 +800,22 @@ function PreflightStep(props: {
   onSaveDidKey: () => void;
   onForgetDidKey: () => void;
   onStart: () => void;
+  onBackToOptions: () => void;
   speechSupported: boolean;
   question: Question;
 }) {
-  const lifelike = props.elevenAccepted;
-  const realVideo = props.didAccepted;
+  const lifelike = props.elevenAccepted && props.wantsLifelikeVoice;
+  const realVideo = props.didAccepted && props.wantsVideo;
+  const llmLabel = LLM_PROVIDER_LABELS[props.provider];
+
   return (
     <div className="sim-step sim-preflight">
-      <span className="eyebrow">Voice mock · BYO keys</span>
+      <div className="sim-preflight-head">
+        <span className="eyebrow">Voice mock · BYO keys</span>
+        <button type="button" className="link-btn" onClick={props.onBackToOptions}>
+          ← Change settings
+        </button>
+      </div>
       <h2>Run a real conversation with {SARAH.name}</h2>
       <p>
         {SARAH.name} reads the prompt, listens to your answer, asks <strong>up to {MAX_FOLLOWUP_TURNS} follow-ups
@@ -767,11 +837,11 @@ function PreflightStep(props: {
       </div>
 
       <div className="sim-key-row">
-        <label htmlFor="sim-key-input">Anthropic API key (required)</label>
+        <label htmlFor="sim-key-input">{llmLabel} API key (required)</label>
         <input
           id="sim-key-input"
           type="password"
-          placeholder="sk-ant-…"
+          placeholder={LLM_KEY_PLACEHOLDER[props.provider]}
           value={props.keyInput}
           onChange={(event) => props.setKeyInput(event.target.value)}
           autoComplete="off"
@@ -788,14 +858,15 @@ function PreflightStep(props: {
             </button>
           )}
           <span className="sim-key-status">
-            {props.keyAccepted ? "Key saved locally" : "Stored in localStorage only"}
+            {props.keyAccepted ? "Key saved locally" : LLM_KEY_HELP[props.provider]}
           </span>
         </div>
       </div>
 
+      {props.wantsLifelikeVoice ? (
       <div className="sim-key-row">
         <label htmlFor="sim-eleven-input">
-          ElevenLabs API key <em>(optional — lifelike voice)</em>
+          ElevenLabs API key <em>(for lifelike voice)</em>
         </label>
         <input
           id="sim-eleven-input"
@@ -827,10 +898,12 @@ function PreflightStep(props: {
           </span>
         </div>
       </div>
+      ) : null}
 
+      {props.wantsVideo ? (
       <div className="sim-key-row">
         <label htmlFor="sim-did-input">
-          D-ID API key <em>(optional — real-video Sarah)</em>
+          D-ID API key <em>(for real-video Sarah)</em>
         </label>
         <input
           id="sim-did-input"
@@ -873,6 +946,19 @@ function PreflightStep(props: {
           </span>
         </div>
       </div>
+      ) : null}
+
+      <div className="sim-pro-card">
+        <div className="sim-pro-card-head">
+          <Sparkles size={14} />
+          <strong>Pro Pack — coming soon</strong>
+        </div>
+        <p>
+          Skip BYO keys. PrepOS handles the {llmLabel} calls, the lifelike voice, and the real-video persona on
+          your behalf for one monthly price. Get notified at launch:
+        </p>
+        <PromoOpenButton />
+      </div>
 
       {props.errorMsg ? <div className="sim-warn">{props.errorMsg}</div> : null}
 
@@ -887,11 +973,118 @@ function PreflightStep(props: {
         </button>
         <span className="sim-cost-hint">
           {realVideo
-            ? "~$0.10–0.20 Claude + ~$0.30 ElevenLabs + ~$3–8 D-ID per interview, billed to your accounts"
+            ? `~$0.10–0.20 ${llmLabel} + ~$0.30 ElevenLabs + ~$3–8 D-ID per interview, billed to your accounts`
             : lifelike
-              ? "~$0.10–0.20 Claude + ~$0.30 ElevenLabs per interview, billed to your accounts"
-              : "~$0.10–0.20 per interview against your Anthropic account"}
+              ? `~$0.10–0.20 ${llmLabel} + ~$0.30 ElevenLabs per interview, billed to your accounts`
+              : `~$0.10–0.20 per interview against your ${llmLabel} account`}
         </span>
+      </div>
+    </div>
+  );
+}
+
+function OptionsStep(props: {
+  provider: LlmProvider;
+  onProviderChange: (next: LlmProvider) => void;
+  wantsLifelikeVoice: boolean;
+  setWantsLifelikeVoice: (next: boolean) => void;
+  wantsVideo: boolean;
+  setWantsVideo: (next: boolean) => void;
+  onContinue: () => void;
+  speechSupported: boolean;
+}) {
+  return (
+    <div className="sim-step sim-options">
+      <span className="eyebrow">Voice mock · Set up</span>
+      <h2>Pick your voice-mock setup</h2>
+      <p>
+        These choices control which API keys you&apos;ll need. You can change them any time from the
+        next screen.
+      </p>
+
+      {!props.speechSupported ? (
+        <div className="sim-warn">
+          Voice mode needs the Web Speech API (Chrome or Edge). Safari and Firefox aren&apos;t supported yet.
+        </div>
+      ) : null}
+
+      <fieldset className="sim-option-group">
+        <legend>Which model should run the interviewer?</legend>
+        {(["anthropic", "openai"] as LlmProvider[]).map((p) => (
+          <label
+            key={p}
+            className={`sim-option-card ${props.provider === p ? "active" : ""}`}
+          >
+            <input
+              type="radio"
+              name="sim-llm"
+              value={p}
+              checked={props.provider === p}
+              onChange={() => props.onProviderChange(p)}
+            />
+            <span className="sim-option-card-body">
+              <strong>{LLM_PROVIDER_LABELS[p]}</strong>
+              <span className="sim-option-card-hint">
+                {p === "anthropic"
+                  ? "Claude Sonnet 4.5. Strong reasoning, warm interviewer voice."
+                  : "GPT-4o-mini. Fast, lower per-call cost, JSON-mode native."}
+              </span>
+            </span>
+          </label>
+        ))}
+      </fieldset>
+
+      <fieldset className="sim-option-group">
+        <legend>Add-ons</legend>
+
+        <label
+          className={`sim-toggle-card ${props.wantsLifelikeVoice ? "active" : ""}`}
+        >
+          <input
+            type="checkbox"
+            checked={props.wantsLifelikeVoice}
+            onChange={(e) => props.setWantsLifelikeVoice(e.target.checked)}
+          />
+          <span className="sim-toggle-card-icon" aria-hidden="true">
+            <Volume2 size={18} />
+          </span>
+          <span className="sim-toggle-card-body">
+            <strong>Lifelike real-person voice</strong>
+            <span className="sim-toggle-card-hint">
+              ElevenLabs voice instead of the browser&apos;s robotic TTS. ~$0.30 per interview.
+            </span>
+          </span>
+        </label>
+
+        <label
+          className={`sim-toggle-card ${props.wantsVideo ? "active" : ""}`}
+        >
+          <input
+            type="checkbox"
+            checked={props.wantsVideo}
+            onChange={(e) => props.setWantsVideo(e.target.checked)}
+          />
+          <span className="sim-toggle-card-icon" aria-hidden="true">
+            <Video size={18} />
+          </span>
+          <span className="sim-toggle-card-body">
+            <strong>Real-video Teams-style simulation</strong>
+            <span className="sim-toggle-card-hint">
+              D-ID renders Sarah as a lipsynced video. ~$3–8 per interview.
+            </span>
+          </span>
+        </label>
+      </fieldset>
+
+      <div className="sim-cta-row">
+        <button
+          type="button"
+          className="btn primary lg"
+          onClick={props.onContinue}
+          disabled={!props.speechSupported}
+        >
+          Continue → enter API keys
+        </button>
       </div>
     </div>
   );
