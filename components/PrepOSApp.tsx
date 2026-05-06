@@ -441,94 +441,86 @@ export default function PrepOSApp() {
 
         <section className="workspace">
           {calibration.targetLevel === "ai-pm" ? (
-            <section className="workspace-head workspace-head--ai-pm">
-              <div>
-                <span className="eyebrow">AI PM track · Pro Pack only</span>
-                <h2>AI PM interview questions are coming in Pro Pack</h2>
-                <p>
-                  AI PM interviews test a different bundle: eval design, hallucination mitigation,
-                  cost / latency trade-offs, and human-fallback design. PrepOS is curating a dedicated
-                  AI PM question bank with reviewer notes and expert answers — included in Pro Pack.
-                </p>
-                <div className="workspace-head-actions ai-pm-head-actions">
-                  <PromoEmailForm
-                    source="prepos-ai-pm-gate"
-                    ctaLabel="Notify me about AI PM Pro Pack"
-                  />
-                </div>
-                <p className="workspace-head-hint workspace-head-hint--block">
-                  Want to keep practising? Switch Target level to PM, Senior, Staff, or PM-T.
-                </p>
-              </div>
-              <div className="focus-card">
-                <span>Current mode</span>
-                <strong>Pro Pack only</strong>
-                <p>AI PM bank ships with Pro Pack — drop your email to be notified.</p>
-              </div>
+            <section className="panel section ai-pm-panel" aria-label="AI PM Pro Pack">
+              <span className="eyebrow">AI PM track · Pro Pack only</span>
+              <h2>AI PM interview questions are coming in Pro Pack</h2>
+              <p>
+                AI PM interviews test a different bundle: eval design, hallucination mitigation,
+                cost / latency trade-offs, and human-fallback design. PrepOS is curating a dedicated
+                AI PM question bank with reviewer notes and expert answers — included in Pro Pack.
+              </p>
+              <PromoEmailForm
+                source="prepos-ai-pm-gate"
+                ctaLabel="Notify me about AI PM Pro Pack"
+              />
+              <p className="ai-pm-panel-nudge">
+                Want to keep practising today? Switch Target level to PM, Senior, Staff, or PM-T to
+                use the rest of the bank.
+              </p>
             </section>
           ) : (
-          <section className="workspace-head">
-            <div>
-              <span className="eyebrow">Today&apos;s focus</span>
-              <h2>{activeItem ? activeItem.question.title : "Calibrate your prep plan"}</h2>
-              <p>
-                {practiceCategories.find((category) => category.value === calibration.practiceCategory)?.label}:{" "}
-                {levelProfiles[calibration.targetLevel].bar}
-              </p>
-              {activeItem ? (
-                <div className="workspace-head-actions">
-                  <button type="button" className="btn primary" onClick={scrollToDrill}>
-                    Start drill <ArrowDown size={16} />
-                  </button>
-                  <button
-                    type="button"
-                    className="btn"
-                    onClick={() => setSimulatorOpen(true)}
-                  >
-                    <Mic size={16} /> Run voice mock
-                  </button>
-                  <span className="workspace-head-hint">
-                    Press <kbd>F</kbd> for focus mode
-                  </span>
+            <>
+              <section className="workspace-head">
+                <div>
+                  <span className="eyebrow">Today&apos;s focus</span>
+                  <h2>{activeItem ? activeItem.question.title : "Calibrate your prep plan"}</h2>
+                  <p>
+                    {practiceCategories.find((category) => category.value === calibration.practiceCategory)?.label}:{" "}
+                    {levelProfiles[calibration.targetLevel].bar}
+                  </p>
+                  {activeItem ? (
+                    <div className="workspace-head-actions">
+                      <button type="button" className="btn primary" onClick={scrollToDrill}>
+                        Start drill <ArrowDown size={16} />
+                      </button>
+                      <button
+                        type="button"
+                        className="btn"
+                        onClick={() => setSimulatorOpen(true)}
+                      >
+                        <Mic size={16} /> Run voice mock
+                      </button>
+                      <span className="workspace-head-hint">
+                        Press <kbd>F</kbd> for focus mode
+                      </span>
+                    </div>
+                  ) : null}
                 </div>
-              ) : null}
-            </div>
-            <div className="focus-card">
-              <span>Current mode</span>
-              <strong>{effectiveMode ? prettyMode(effectiveMode) : "Calibration"}</strong>
-              <p>
-                {effectiveMode
-                  ? `${effectiveDepth} support level${modeOverride ? " · manual" : ""}`
-                  : "Set your target to start."}
-              </p>
-            </div>
-          </section>
+                <div className="focus-card">
+                  <span>Current mode</span>
+                  <strong>{effectiveMode ? prettyMode(effectiveMode) : "Calibration"}</strong>
+                  <p>
+                    {effectiveMode
+                      ? `${effectiveDepth} support level${modeOverride ? " · manual" : ""}`
+                      : "Set your target to start."}
+                  </p>
+                </div>
+              </section>
+
+              <div className="grid">
+                <MetricCard
+                  icon={<Activity size={18} />}
+                  label="Readiness"
+                  value={ready.score ? `${ready.score}/5` : "New"}
+                  detail={`${ready.label}; target bar ${ready.threshold}/5`}
+                />
+                <MetricCard
+                  icon={<CheckCircle2 size={18} />}
+                  label="Concept mastery"
+                  value={`${ready.masteredCount}/${ready.totalConcepts}`}
+                  detail="PrepOS gives more support where concepts are still developing."
+                />
+                <MetricCard
+                  icon={<SlidersHorizontal size={18} />}
+                  label="Question type"
+                  value={practiceCategories.find((category) => category.value === calibration.practiceCategory)?.label ?? "All categories"}
+                  detail="Candidates can choose the kind of question they want to practice."
+                />
+              </div>
+
+              <Dashboard calibration={calibration} history={repHistory} />
+            </>
           )}
-
-          <div className="grid">
-            <MetricCard
-              icon={<Activity size={18} />}
-              label="Readiness"
-              value={ready.score ? `${ready.score}/5` : "New"}
-              detail={`${ready.label}; target bar ${ready.threshold}/5`}
-            />
-            <MetricCard
-              icon={<CheckCircle2 size={18} />}
-              label="Concept mastery"
-              value={`${ready.masteredCount}/${ready.totalConcepts}`}
-              detail="PrepOS gives more support where concepts are still developing."
-            />
-            <MetricCard
-              icon={<SlidersHorizontal size={18} />}
-              label="Question type"
-              value={practiceCategories.find((category) => category.value === calibration.practiceCategory)?.label ?? "All categories"}
-              detail="Candidates can choose the kind of question they want to practice."
-            />
-          </div>
-
-          {calibration.targetLevel !== "ai-pm" ? (
-            <Dashboard calibration={calibration} history={repHistory} />
-          ) : null}
 
           {calibration.targetLevel !== "ai-pm" && activeItem ? (
             <section className="panel section drill" ref={drillRef}>

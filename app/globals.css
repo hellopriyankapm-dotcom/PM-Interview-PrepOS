@@ -4127,59 +4127,41 @@ kbd {
   color: var(--green);
 }
 
-/* AI PM gate — shown in /app when target level is AI PM */
-.ai-pm-gate {
+
+/* AI PM Pro Pack panel — sole content of /app workspace when AI PM is selected */
+.ai-pm-panel {
   display: grid;
-  gap: 14px;
+  gap: 16px;
+  padding: clamp(28px, 4vw, 48px);
   border: 1px solid color-mix(in srgb, var(--green) 28%, var(--line));
   background:
     radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--green) 14%, transparent) 0%, transparent 60%),
+    radial-gradient(110% 130% at 100% 100%, color-mix(in srgb, var(--green-strong) 10%, transparent) 0%, transparent 60%),
     var(--surface);
 }
 
-.ai-pm-gate h2 {
+.ai-pm-panel h2 {
   margin: 0;
-  font-size: 1.4rem;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
   letter-spacing: -0.015em;
   color: var(--ink);
+  max-width: 720px;
 }
 
-.ai-pm-gate p {
+.ai-pm-panel p {
   margin: 0;
   color: var(--ink);
   line-height: 1.55;
-  font-size: 0.95rem;
+  font-size: 1rem;
+  max-width: 720px;
 }
 
-/* AI PM workspace-head variant — replaces Today's focus when AI PM is selected */
-.workspace-head--ai-pm {
-  background:
-    radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--green) 14%, transparent) 0%, transparent 60%),
-    var(--surface);
-  border: 1px solid color-mix(in srgb, var(--green) 28%, var(--line));
+.ai-pm-panel .promo-form {
+  max-width: 560px;
+  margin-top: 4px;
 }
 
-.ai-pm-head-actions {
-  display: block;
-  width: 100%;
-  margin-top: 12px;
-}
-
-.ai-pm-head-actions .promo-form {
-  max-width: 480px;
-}
-
-.workspace-head-hint--block {
-  display: block;
-  margin-top: 14px;
-  font-size: 0.82rem;
-  color: var(--muted);
-}
-
-.workspace-head--ai-pm .focus-card strong {
-  color: var(--green-strong);
-}
-
-[data-theme="dark"] .workspace-head--ai-pm .focus-card strong {
-  color: var(--green);
+.ai-pm-panel-nudge {
+  color: var(--muted) !important;
+  font-size: 0.86rem;
 }
