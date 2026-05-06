@@ -820,9 +820,15 @@ function PreflightStep(props: {
       <p>
         {SARAH.name} reads the prompt, listens to your answer, asks <strong>up to {MAX_FOLLOWUP_TURNS} follow-ups
         based on what you actually said</strong>, then scores you on the standard PrepOS rubric. Pause for ~2.5s when
-        you&apos;re done speaking and she&apos;ll respond automatically. Your keys, audio, and transcript stay in your
-        browser.
+        you&apos;re done speaking and she&apos;ll respond automatically.
       </p>
+
+      <div className="sim-byo-notice">
+        <strong>BYO keys — your keys never leave your browser.</strong> PrepOS does not store,
+        transmit, or see your API keys. They&apos;re saved in this browser&apos;s localStorage only,
+        on this device. You&apos;re responsible for any usage costs incurred against your provider
+        accounts — PrepOS does not bill you.
+      </div>
 
       {!props.speechSupported ? (
         <div className="sim-warn">
@@ -890,10 +896,10 @@ function PreflightStep(props: {
           <span className={`sim-key-status ${lifelike ? "lifelike" : ""}`}>
             {lifelike ? (
               <>
-                <Sparkles size={12} /> Lifelike voice on (~$0.30 per interview)
+                <Sparkles size={12} /> Lifelike voice on
               </>
             ) : (
-              "Without it, Sarah uses your browser's robotic TTS for free."
+              "Without it, Sarah uses your browser's robotic TTS."
             )}
           </span>
         </div>
@@ -973,11 +979,10 @@ function PreflightStep(props: {
           <Mic size={16} /> Begin interview
         </button>
         <span className="sim-cost-hint">
-          {realVideo
-            ? `~$0.10–0.20 ${llmLabel} + ~$0.30 ElevenLabs + ~$3–8 D-ID per interview, billed to your accounts`
-            : lifelike
-              ? `~$0.10–0.20 ${llmLabel} + ~$0.30 ElevenLabs per interview, billed to your accounts`
-              : `~$0.10–0.20 per interview against your ${llmLabel} account`}
+          You&apos;re responsible for any usage costs against your{" "}
+          {llmLabel}
+          {lifelike ? " + ElevenLabs" : ""}
+          {realVideo ? " + D-ID" : ""} accounts.
         </span>
       </div>
     </div>
@@ -1002,6 +1007,13 @@ function OptionsStep(props: {
         These choices control which API keys you&apos;ll need. You can change them any time from the
         next screen.
       </p>
+
+      <div className="sim-byo-notice">
+        <strong>BYO keys — your keys never leave your browser.</strong> PrepOS does not store,
+        transmit, or see your API keys. They&apos;re saved in this browser&apos;s localStorage only.
+        You&apos;re responsible for any usage costs incurred against your provider accounts —
+        PrepOS does not bill you.
+      </div>
 
       {!props.speechSupported ? (
         <div className="sim-warn">
@@ -1052,7 +1064,7 @@ function OptionsStep(props: {
           <span className="sim-toggle-card-body">
             <strong>Lifelike real-person voice</strong>
             <span className="sim-toggle-card-hint">
-              ElevenLabs voice instead of the browser&apos;s robotic TTS. ~$0.30 per interview.
+              ElevenLabs voice instead of the browser&apos;s robotic TTS. Requires an ElevenLabs API key.
             </span>
           </span>
         </label>
@@ -1071,7 +1083,7 @@ function OptionsStep(props: {
           <span className="sim-toggle-card-body">
             <strong>Real-video Teams-style simulation</strong>
             <span className="sim-toggle-card-hint">
-              D-ID renders Sarah as a lipsynced video. ~$3–8 per interview.
+              D-ID renders Sarah as a lipsynced video. Requires a D-ID API key.
             </span>
           </span>
         </label>
