@@ -38,8 +38,27 @@ import type {
   ConceptState,
   Evaluation,
   PracticePlanItem,
-  ScaffoldingMode
+  ScaffoldingMode,
+  TargetLevel
 } from "@/lib/types";
+
+const LEVEL_EXPERIENCE_DEFAULTS: Record<TargetLevel, string> = {
+  apm: "Recent grad or first PM role. 0–1 years of product experience.",
+  pm: "PM with 3–5 years of product experience.",
+  senior: "Senior PM with 5–8 years owning a feature area end-to-end.",
+  staff: "Staff or Group PM with 8+ years leading multiple PMs.",
+  "ai-pm": "AI PM with 3–5 years of PM experience and hands-on LLM work.",
+  "pm-t": "Technical PM with 3–5 years, fluent with APIs and engineering trade-offs."
+};
+
+// Old hand-typed defaults from earlier versions — treat these as still the
+// default so switching levels swaps them in for the level-appropriate one.
+const LEGACY_DEFAULT_EXPERIENCES = ["PM with 3-5 years of product experience"];
+
+const KNOWN_DEFAULT_EXPERIENCES = new Set<string>([
+  ...Object.values(LEVEL_EXPERIENCE_DEFAULTS),
+  ...LEGACY_DEFAULT_EXPERIENCES
+]);
 
 const initialCalibration: Calibration = {
   targetLevel: "apm",
@@ -47,7 +66,7 @@ const initialCalibration: Calibration = {
   companyStyle: "General PM loop",
   interviewDate: "",
   weeklyHours: 8,
-  experience: "PM with 3-5 years of product experience",
+  experience: LEVEL_EXPERIENCE_DEFAULTS.apm,
   weakConcepts: []
 };
 
@@ -102,6 +121,17 @@ export default function PrepOSApp() {
 
   function updateCalibration<K extends keyof Calibration>(key: K, value: Calibration[K]) {
     setCalibration((current) => ({ ...current, [key]: value }));
+  }
+
+  function handleTargetLevelChange(next: Calibration["targetLevel"]) {
+    setCalibration((current) => {
+      const isStillDefault = KNOWN_DEFAULT_EXPERIENCES.has(current.experience.trim());
+      return {
+        ...current,
+        targetLevel: next,
+        experience: isStillDefault ? LEVEL_EXPERIENCE_DEFAULTS[next] : current.experience
+      };
+    });
   }
 
   function toggleWeakConcept(conceptId: string) {
@@ -278,7 +308,7 @@ export default function PrepOSApp() {
             <select
               id="target-level"
               value={calibration.targetLevel}
-              onChange={(event) => updateCalibration("targetLevel", event.target.value as Calibration["targetLevel"])}
+              onChange={(event) => handleTargetLevelChange(event.target.value as Calibration["targetLevel"])}
             >
               {targetLevelOptions.map((option) => (
                 <option key={option.value} value={option.value}>
