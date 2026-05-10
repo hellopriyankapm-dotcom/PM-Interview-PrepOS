@@ -77,22 +77,13 @@ export default async function Image() {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M11 23 V9 H17.5 a4.5 4.5 0 0 1 0 9 H13"
-                stroke="#0a4a36"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
+                d="M14 7 C 14 11, 15 14, 22 15 C 15 16, 14 19, 14 23 C 14 19, 13 16, 6 15 C 13 14, 14 11, 14 7 Z"
+                fill="#0a4a36"
               />
               <path
-                d="M21.5 7.5 a8 8 0 0 1 3.2 6.5"
-                stroke="#0a4a36"
-                strokeWidth="2"
-                strokeLinecap="round"
-                fill="none"
-                opacity="0.85"
+                d="M24 17 C 24 19, 24.5 20, 27 20.5 C 24.5 21, 24 22, 24 24 C 24 22, 23.5 21, 21 20.5 C 23.5 20, 24 19, 24 17 Z"
+                fill="#0a4a36"
               />
-              <circle cx="25" cy="14.4" r="1.7" fill="#0a4a36" />
             </svg>
           </div>
           <span style={{ display: "flex" }}>PrepOS</span>
