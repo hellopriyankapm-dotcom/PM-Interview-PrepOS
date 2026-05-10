@@ -31,6 +31,18 @@ export const INITIAL_CALIBRATION: Calibration = {
   weakConcepts: []
 };
 
+// Single source of truth for the Company style dropdown — used by both
+// the wizard and the calibration sidebar in PrepOSApp.
+export const COMPANY_STYLE_OPTIONS = [
+  "General PM loop",
+  "AI lab style",
+  "Large tech style",
+  "Infra / API-first",
+  "Consumer / marketplace",
+  "Enterprise SaaS",
+  "Startup style"
+] as const;
+
 export type QuickStartPreset = {
   label: string;
   hint: string;
@@ -50,21 +62,21 @@ export const QUICK_START_PRESETS: QuickStartPreset[] = [
   },
   {
     label: "Senior PM at FAANG",
-    hint: "5–8 yrs · product-led",
+    hint: "5–8 yrs · large tech",
     calibration: {
       targetLevel: "senior",
       practiceCategory: "all",
-      companyStyle: "FAANG / product-led",
+      companyStyle: "Large tech style",
       experience: LEVEL_EXPERIENCE_DEFAULTS.senior
     }
   },
   {
     label: "AI PM at Anthropic",
-    hint: "AI / LLM-first",
+    hint: "AI lab",
     calibration: {
       targetLevel: "ai-pm",
       practiceCategory: "all",
-      companyStyle: "AI / LLM-first company",
+      companyStyle: "AI lab style",
       experience: LEVEL_EXPERIENCE_DEFAULTS["ai-pm"]
     }
   },
