@@ -64,16 +64,27 @@ export default async function Image() {
               height: 56,
               borderRadius: 14,
               background: "white",
-              color: "#0a4a36",
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
-              fontSize: 24,
-              fontWeight: 900,
-              letterSpacing: "-0.05em"
+              justifyContent: "center"
             }}
           >
-            PD
+            <svg
+              width="56"
+              height="56"
+              viewBox="0 0 32 32"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M14 7 C 14 11, 15 14, 22 15 C 15 16, 14 19, 14 23 C 14 19, 13 16, 6 15 C 13 14, 14 11, 14 7 Z"
+                fill="#0a4a36"
+              />
+              <path
+                d="M24 17 C 24 19, 24.5 20, 27 20.5 C 24.5 21, 24 22, 24 24 C 24 22, 23.5 21, 21 20.5 C 23.5 20, 24 19, 24 17 Z"
+                fill="#0a4a36"
+              />
+            </svg>
           </div>
           <span style={{ display: "flex" }}>PrepOS</span>
         </div>
