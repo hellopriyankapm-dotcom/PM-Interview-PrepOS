@@ -70,20 +70,21 @@ export default async function Image() {
             }}
           >
             <svg
-              width="56"
-              height="56"
-              viewBox="0 0 32 32"
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
               fill="none"
+              stroke="#0a4a36"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path
-                d="M14 7 C 14 11, 15 14, 22 15 C 15 16, 14 19, 14 23 C 14 19, 13 16, 6 15 C 13 14, 14 11, 14 7 Z"
-                fill="#0a4a36"
-              />
-              <path
-                d="M24 17 C 24 19, 24.5 20, 27 20.5 C 24.5 21, 24 22, 24 24 C 24 22, 23.5 21, 21 20.5 C 23.5 20, 24 19, 24 17 Z"
-                fill="#0a4a36"
-              />
+              <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+              <path d="M20 3v4" />
+              <path d="M22 5h-4" />
+              <path d="M4 17v2" />
+              <path d="M5 18H3" />
             </svg>
           </div>
           <span style={{ display: "flex" }}>PrepOS</span>
