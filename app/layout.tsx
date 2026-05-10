@@ -54,11 +54,6 @@ export const metadata: Metadata = {
   creator: "PrepOS",
   publisher: "PrepOS",
   category: "education",
-  icons: {
-    icon: "favicon-48.png",
-    shortcut: "favicon-48.png",
-    apple: "favicon-48.png"
-  },
   openGraph: {
     type: "website",
     title: "PrepOS — Adaptive PM Interview Prep",
