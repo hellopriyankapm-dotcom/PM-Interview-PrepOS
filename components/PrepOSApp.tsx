@@ -27,7 +27,6 @@ import { LearningMemory } from "@/components/LearningMemory";
 import { Logo } from "@/components/Logo";
 import { CalibrationWizard } from "@/components/CalibrationWizard";
 import { PromoEmailForm } from "@/components/PromoEmailForm";
-import { PromoOpenButton } from "@/components/PromoOpenButton";
 import { PromoSlot } from "@/components/PromoSlot";
 import { Simulator } from "@/components/simulator/Simulator";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -955,12 +954,7 @@ function ComingSoonCoachPanel() {
         framework to structure your answer, two analogous real-world product examples a Senior PM
         could cite, and one trap interviewers use to test this concept.
       </p>
-      <p className="help-panel-note">
-        Runs on your own Anthropic API key — stored locally in your browser, never sent to PrepOS.
-        Included with Pro Pack. Same local-first promise: no account, no PrepOS infra, no per-user
-        tracking.
-      </p>
-      <PromoOpenButton />
+      <PromoEmailForm source="prepos-coach" ctaLabel="Notify me" compact />
     </div>
   );
 }
