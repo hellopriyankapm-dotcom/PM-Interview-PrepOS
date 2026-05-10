@@ -24,11 +24,24 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Dashboard, type RepHistoryEntry } from "@/components/Dashboard";
 import { LearningMemory } from "@/components/LearningMemory";
 import { Logo } from "@/components/Logo";
+import { CalibrationWizard } from "@/components/CalibrationWizard";
 import { PromoEmailForm } from "@/components/PromoEmailForm";
 import { PromoSlot } from "@/components/PromoSlot";
 import { Simulator } from "@/components/simulator/Simulator";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { buildPracticeQueue, readiness } from "@/lib/adaptive/engine";
+import {
+  INITIAL_CALIBRATION,
+  KNOWN_DEFAULT_EXPERIENCES,
+  LEVEL_EXPERIENCE_DEFAULTS
+} from "@/lib/calibration-defaults";
+import {
+  isCalibrationCompleted,
+  loadCalibration,
+  markCalibrationCompleted,
+  resetCalibration,
+  saveCalibration
+} from "@/lib/calibration-storage";
 import { conceptsByRound, createInitialConceptStates, levelProfiles, targetLevelOptions } from "@/lib/content";
 import { ROUND_LABEL, ROUND_ORDER } from "@/lib/round-types";
 import { findResourcesForQuestion, type ResourceMatch } from "@/lib/resources";
@@ -39,37 +52,10 @@ import type {
   ConceptState,
   Evaluation,
   PracticePlanItem,
-  ScaffoldingMode,
-  TargetLevel
+  ScaffoldingMode
 } from "@/lib/types";
 
-const LEVEL_EXPERIENCE_DEFAULTS: Record<TargetLevel, string> = {
-  apm: "Recent grad or first PM role. 0–1 years of product experience.",
-  pm: "PM with 3–5 years of product experience.",
-  senior: "Senior PM with 5–8 years owning a feature area end-to-end.",
-  staff: "Staff or Group PM with 8+ years leading multiple PMs.",
-  "ai-pm": "AI PM with 3–5 years of PM experience and hands-on LLM work.",
-  "pm-t": "Technical PM with 3–5 years, fluent with APIs and engineering trade-offs."
-};
-
-// Old hand-typed defaults from earlier versions — treat these as still the
-// default so switching levels swaps them in for the level-appropriate one.
-const LEGACY_DEFAULT_EXPERIENCES = ["PM with 3-5 years of product experience"];
-
-const KNOWN_DEFAULT_EXPERIENCES = new Set<string>([
-  ...Object.values(LEVEL_EXPERIENCE_DEFAULTS),
-  ...LEGACY_DEFAULT_EXPERIENCES
-]);
-
-const initialCalibration: Calibration = {
-  targetLevel: "apm",
-  practiceCategory: "all",
-  companyStyle: "General PM loop",
-  interviewDate: "",
-  weeklyHours: 8,
-  experience: LEVEL_EXPERIENCE_DEFAULTS.apm,
-  weakConcepts: []
-};
+const initialCalibration: Calibration = INITIAL_CALIBRATION;
 
 const practiceCategories: Array<{ value: Calibration["practiceCategory"]; label: string; detail: string }> = [
   { value: "all", label: "All categories", detail: "Let PrepOS choose the best next rep." },
@@ -93,6 +79,11 @@ function prettyMode(mode: string) {
 }
 
 export default function PrepOSApp() {
+  // Default false on the server / initial render; an effect below reads
+  // localStorage on the client and flips this to true if the user has
+  // completed the wizard before. SSR-safe by always rendering the wizard
+  // when this is false (matches the server output).
+  const [calibrationCompleted, setCalibrationCompleted] = useState(false);
   const [calibration, setCalibration] = useState<Calibration>(initialCalibration);
   const [concepts, setConcepts] = useState<ConceptState[]>(() => createInitialConceptStates());
   const [completedQuestionIds, setCompletedQuestionIds] = useState<string[]>([]);
@@ -119,6 +110,31 @@ export default function PrepOSApp() {
   const [answer, setAnswer] = useState("");
   const [lastEvaluation, setLastEvaluation] = useState<Evaluation | null>(null);
   const ready = readiness(concepts, calibration);
+
+  // First-time vs returning visitor — read once on mount.
+  useEffect(() => {
+    if (isCalibrationCompleted()) {
+      const saved = loadCalibration();
+      if (saved) setCalibration(saved);
+      setCalibrationCompleted(true);
+    }
+  }, []);
+
+  // Persist any calibration change once the user is past the wizard.
+  useEffect(() => {
+    if (calibrationCompleted) saveCalibration(calibration);
+  }, [calibration, calibrationCompleted]);
+
+  function handleWizardComplete(next: Calibration) {
+    setCalibration(next);
+    saveCalibration(next);
+    markCalibrationCompleted();
+    setCalibrationCompleted(true);
+  }
+
+  function handleRecalibrate() {
+    setCalibrationCompleted(false);
+  }
 
   function updateCalibration<K extends keyof Calibration>(key: K, value: Calibration[K]) {
     setCalibration((current) => ({ ...current, [key]: value }));
@@ -254,6 +270,18 @@ export default function PrepOSApp() {
     setFocusMode(false);
     setTimerStart(null);
     setHelpPanel("none");
+    setCalibration(initialCalibration);
+    resetCalibration();
+    setCalibrationCompleted(false);
+  }
+
+  if (!calibrationCompleted) {
+    return (
+      <CalibrationWizard
+        initial={loadCalibration() ?? calibration}
+        onComplete={handleWizardComplete}
+      />
+    );
   }
 
   return (
@@ -298,7 +326,12 @@ export default function PrepOSApp() {
       <div className="main">
         <aside className="panel calibration">
           <div className="panel-header">
-            <h2>Calibration</h2>
+            <div className="panel-header-row">
+              <h2>Calibration</h2>
+              <button type="button" className="link-btn" onClick={handleRecalibrate}>
+                Recalibrate
+              </button>
+            </div>
             <p>PrepOS uses this to choose the fastest next rep and decide how much support to provide.</p>
           </div>
 
