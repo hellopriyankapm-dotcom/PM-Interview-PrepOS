@@ -748,11 +748,6 @@ export default function PrepOSApp() {
         </section>
       </div>
 
-      <p className="footer-note">
-        MVP1 runs locally with trusted seed content. The weekly update workflow validates source metadata before adding
-        questions to the bank.
-      </p>
-
       {simulatorOpen && activeItem && effectiveMode ? (
         <Simulator
           question={activeItem.question}
