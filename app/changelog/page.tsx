@@ -16,97 +16,89 @@ type Release = {
 
 const releases: Release[] = [
   {
-    date: "2026-05-06",
-    title: "Legitimacy + mobile pass",
+    date: "2026-05",
+    title: "First-time setup wizard",
     bullets: [
-      "Privacy, Terms, About, and Changelog pages live (you're on it).",
-      "Footer links to legal + about + changelog from every page.",
-      "Mobile pass on /app — calibration sidebar, workspace, drill, and queue all reflow cleanly at narrow viewports."
+      "Click Start practicing on a fresh browser and you're now greeted by a 30-second setup wizard instead of a complex sidebar.",
+      "Quick-start presets — New grad APM, Senior PM at FAANG, AI PM at Anthropic, PM-T at Stripe — pre-fill your level, company style, and experience in one tap.",
+      "Pick your weakest concepts as chips so the practice queue surfaces those reps first.",
+      "Your settings save on this device. Next visit lands you straight in practice with everything restored.",
+      "A Recalibrate link in the practice sidebar lets you re-open the wizard anytime."
     ]
   },
   {
-    date: "2026-05-06",
-    title: "AI PM Pro Pack gate",
+    date: "2026-05",
+    title: "AI PM track is Pro Pack early-access",
     bullets: [
-      "Picking AI PM in the Target level dropdown now surfaces a focused Pro Pack pitch instead of an unrelated drill.",
-      "Inline email capture on the AI PM gate (source: prepos-ai-pm-gate so signups distinguish in Formspree).",
-      "Switched away from a workspace-head split layout that left a void above the pitch."
+      "Pick AI PM as your target level and you'll see a focused pitch for the upcoming AI PM question bank — eval design, hallucination mitigation, cost / latency trade-offs, human-fallback design.",
+      "Drop your email to be first in line when the AI PM bundle ships."
     ]
   },
   {
-    date: "2026-05-06",
+    date: "2026-05",
+    title: "Voice mock simulator: pick Claude or ChatGPT",
+    bullets: [
+      "The voice mock now supports both Anthropic Claude and OpenAI ChatGPT — pick whichever you have a key for.",
+      "Cleaner two-step setup: choose the model + optional add-ons (lifelike voice via ElevenLabs, or real-video Teams-style simulation), then enter just the keys you need.",
+      "Pro Pack option in the simulator lets you sign up for managed keys so you can skip the BYO step entirely when it ships."
+    ]
+  },
+  {
+    date: "2026-05",
+    title: "Pro Pack early-access",
+    bullets: [
+      "Pro Pack — coming soon: AI PM interview questions, extra question banks, an expert-answer library, and premium interviewer personas.",
+      "Sign up via the email cards on the landing page, in the practice sidebar, or inside the voice-mock simulator."
+    ]
+  },
+  {
+    date: "2026-05",
     title: "Calibration polish",
     bullets: [
-      "Experience snapshot now updates automatically when you change Target level.",
-      "Custom text you typed survives a level switch — only the known defaults get replaced.",
-      "Dark-mode answer textarea and form fields now lift visibly above the panel surface (no more black-on-black)."
+      "Experience snapshot now updates automatically when you change your target level — no more 'PM with 3-5 years' showing up for an APM candidate.",
+      "Custom text you've typed in any field survives level switches.",
+      "The Drill Room answer field is now clearly visible in dark mode (used to be black-on-black)."
     ]
   },
   {
-    date: "2026-05-06",
-    title: "Simulator: two-step setup + ChatGPT support",
+    date: "2026-05",
+    title: "Mobile-friendly practice surface",
     bullets: [
-      "New options screen on Run voice mock — pick Anthropic Claude or OpenAI ChatGPT, toggle lifelike voice, toggle real-video.",
-      "Keys screen now only shows the API key fields you actually need.",
-      "Pro Pack early-access card with inline email capture (source: prepos-simulator).",
-      "Dropped per-interview dollar amounts; added explicit BYO-keys disclaimer.",
-      "Removed the optional Custom portrait URL field — the bundled Sarah is now the only portrait."
+      "/app reflows cleanly on phones — calibration sidebar, drill room, and adaptive queue all work without horizontal scrolling.",
+      "No more iOS auto-zoom when you tap a text input."
     ]
   },
   {
-    date: "2026-05-06",
-    title: "SEO Phase 1 + 2 — 286 indexable pages",
+    date: "2026-05",
+    title: "Privacy / Terms / About / Changelog pages",
     bullets: [
-      "Sitemap, robots.txt with explicit GPTBot/ClaudeBot/PerplexityBot allow rules, llms.txt manifest.",
-      "JSON-LD schemas: Organization, WebSite + SearchAction, SoftwareApplication, FAQPage, plus per-page Question / DefinedTerm / Article on the new content routes.",
-      "/questions, /concepts, /rounds, /levels — index + detail pages auto-generated from the data (250 + 18 + 6 + 6 = 280 long-tail pages).",
-      "Real 1200×630 OG image generated at build time via next/og.",
-      "Per-page metadata for /app."
+      "Plain-English Privacy and Terms pages document exactly what PrepOS sees and what it doesn't (almost everything stays in your browser).",
+      "About page tells the founder story honestly.",
+      "Changelog (this page) shows what's shipped recently."
     ]
   },
   {
-    date: "2026-05-06",
-    title: "Privacy-friendly aggregate analytics",
+    date: "2026-05",
+    title: "Custom domain: pmprepos.com",
     bullets: [
-      "GoatCounter wired in (cookie-free, no PII, GDPR-clean).",
-      "Tracked events: Pro Pack Click, Promo Submit Success / Error, Promo Dismiss, Open App.",
-      "Provider-agnostic — Plausible and Umami also supported via env vars."
+      "PrepOS now lives at https://pmprepos.com. The site is HTTPS by default."
     ]
   },
   {
-    date: "2026-05-06",
-    title: "Custom domain pmprepos.com",
+    date: "2026-05",
+    title: "Hero polish + landing redesign",
     bullets: [
-      "Apex DNS at Porkbun (4 A + 4 AAAA records to GitHub Pages).",
-      "Site moved off /PM-Interview-PrepOS subpath; canonical is now https://pmprepos.com.",
-      "TLS via Let's Encrypt, HTTPS enforced."
+      "Animated underline on the words 'next' and 'answer' in the headline.",
+      "Single primary call-to-action — Start practicing — instead of competing buttons.",
+      "Cleaner social-share preview when you paste pmprepos.com into LinkedIn / Slack / X."
     ]
   },
   {
-    date: "2026-05-06",
-    title: "Pro Pack early-access flow",
+    date: "2026-05",
+    title: "Multi-select 'weakest areas' chips",
     bullets: [
-      "PromoSlot card on landing + in-app sidebar with email capture (Formspree).",
-      "Header gradient pill replaces 'Open app / Start practicing' as the primary header CTA.",
-      "Smooth-scroll + auto-focus from the header pill into the promo slot."
-    ]
-  },
-  {
-    date: "2026-05-06",
-    title: "Hero polish",
-    bullets: [
-      "'next' and 'answer' words get an animated gradient underline that draws in on first paint.",
-      "Subtle continuous shimmer through the gradient (gated by prefers-reduced-motion).",
-      "Closing CTA renamed to 'Start practicing' — consistent with the hero CTA."
-    ]
-  },
-  {
-    date: "2026-05-06",
-    title: "Calibration: multi-select concept chips for weakest areas",
-    bullets: [
-      "Free-text 'Current weakest area' input replaced with a multi-select chip group of all 18 concepts grouped by round.",
-      "Adaptive engine bumps queue priority by +4 for each chip that overlaps with a question's concept tags.",
-      "Founder story rewritten in first person — 'aspiring PM, still in active loops.'"
+      "The 'Current weakest area' free-text field is now a multi-select of all 18 PM interview concepts, grouped by round (product sense, execution, AI judgment, behavioral, strategy, technical).",
+      "The adaptive queue gives drills that test your chosen concepts a higher priority."
     ]
   }
 ];
