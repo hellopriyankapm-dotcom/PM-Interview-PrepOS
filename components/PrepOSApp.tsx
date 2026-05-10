@@ -705,17 +705,14 @@ export default function PrepOSApp() {
                 <button className="btn primary" type="button" onClick={submitAnswer} disabled={answer.trim().length < 12}>
                   <Send size={16} /> Score answer <kbd className="btn-kbd">⌘ Enter</kbd>
                 </button>
-              </div>
-
-              {lastEvaluation ? <Scorecard evaluation={lastEvaluation} /> : null}
-
-              {lastEvaluation ? (
-                <div className="action-row flush" style={{ marginTop: "0.75rem" }}>
+                {lastEvaluation ? (
                   <button className="btn primary" type="button" onClick={nextDrill}>
                     Next drill <ArrowRight size={16} />
                   </button>
-                </div>
-              ) : null}
+                ) : null}
+              </div>
+
+              {lastEvaluation ? <Scorecard evaluation={lastEvaluation} /> : null}
             </section>
           ) : null}
 
