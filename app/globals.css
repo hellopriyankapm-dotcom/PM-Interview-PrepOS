@@ -4821,3 +4821,21 @@ kbd {
   justify-content: space-between;
   gap: 12px;
 }
+
+/* Footer contact mailto under the brand tagline */
+.landing-footer-contact {
+  margin: 4px 0 0 !important;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.landing-footer-contact a {
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--line);
+}
+
+.landing-footer-contact a:hover {
+  color: var(--green);
+  border-bottom-color: var(--green);
+}

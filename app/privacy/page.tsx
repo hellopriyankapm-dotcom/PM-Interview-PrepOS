@@ -90,8 +90,9 @@ export default function PrivacyPage() {
           <h2>Your rights</h2>
           <p>
             To delete everything PrepOS stores about you in this browser, open DevTools → Application →
-            Storage → Clear site data. To remove your email from our list, reply to any PrepOS email and
-            ask — we&apos;ll delete it the same day.
+            Storage → Clear site data. To remove your email from our list, email{" "}
+            <a href="mailto:contact@pmprepos.com">contact@pmprepos.com</a> and we&apos;ll delete it the
+            same day.
           </p>
         </div>
 
@@ -106,8 +107,8 @@ export default function PrivacyPage() {
         <div className="content-section">
           <h2>Contact</h2>
           <p>
-            Privacy questions, takedown requests, or anything else — email the address listed on the
-            About page.
+            Privacy questions, takedown requests, or anything else — email{" "}
+            <a href="mailto:contact@pmprepos.com">contact@pmprepos.com</a>.
           </p>
         </div>
       </section>

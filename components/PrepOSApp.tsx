@@ -891,8 +891,8 @@ function ResourcePanel({ matches }: { matches: ResourceMatch[] }) {
     return (
       <div className="help-panel">
         <p className="help-empty">
-          No curated resources matched this prompt yet. Try the AI coach (coming soon) or browse the
-          PrepOS reading list on GitHub.
+          No curated resources matched this prompt yet. Try the AI coach (coming soon) or refresh
+          after a few reps — the resource list grows as you practise.
         </p>
       </div>
     );

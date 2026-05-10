@@ -139,13 +139,10 @@ export default function ChangelogPage() {
         ))}
 
         <div className="content-section">
-          <h2>Want to follow the work?</h2>
+          <h2>Want to suggest what should ship next?</h2>
           <p>
-            All commits are public on{" "}
-            <a href="https://github.com/hellopriyankapm-dotcom/PM-Interview-PrepOS/commits/main" target="_blank" rel="noreferrer">
-              GitHub
-            </a>
-            . Pull requests, issues, and feature requests are welcome.
+            Email <a href="mailto:contact@pmprepos.com">contact@pmprepos.com</a> with feature
+            requests, missing question types, bug reports, or just a hello.
           </p>
         </div>
       </section>

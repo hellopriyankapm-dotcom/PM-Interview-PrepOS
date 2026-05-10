@@ -49,6 +49,9 @@ export function ContentShell({
           <div className="landing-footer-brand">
             <Logo size={24} withWordmark />
             <p>Adaptive PM interview prep. Local-first.</p>
+            <p className="landing-footer-contact">
+              <a href="mailto:contact@pmprepos.com">contact@pmprepos.com</a>
+            </p>
           </div>
           <div className="landing-footer-cols">
             <div>

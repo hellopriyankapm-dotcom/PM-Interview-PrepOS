@@ -5,7 +5,7 @@ import { ContentShell } from "@/components/ContentShell";
 export const metadata: Metadata = {
   title: "Terms — PrepOS",
   description:
-    "PrepOS is a free, MIT-licensed PM interview prep tool provided as-is. Use at your own discretion; you're responsible for any third-party API costs you incur.",
+    "PrepOS is a free PM interview prep tool provided as-is. Use at your own discretion; you're responsible for any third-party API costs you incur.",
   alternates: { canonical: "/terms" }
 };
 
@@ -16,7 +16,7 @@ export default function TermsPage() {
         <span className="eyebrow">Terms of use</span>
         <h1>Plain-English terms</h1>
         <p className="content-lede">
-          PrepOS is free, MIT-licensed, and provided as-is. The full version is short — please read it.
+          PrepOS is free and provided as-is. The full version is short — please read it.
         </p>
       </header>
 
@@ -25,11 +25,6 @@ export default function TermsPage() {
           <h2>What you can do</h2>
           <ul className="bullet-list">
             <li>Use PrepOS for your PM interview practice, individually or as a team.</li>
-            <li>
-              Fork the repository, modify it, host it yourself. The source is{" "}
-              <a href="https://github.com/hellopriyankapm-dotcom/PM-Interview-PrepOS" target="_blank" rel="noreferrer">on GitHub</a>{" "}
-              under the MIT licence.
-            </li>
             <li>Share screenshots, link to it, recommend it to peers.</li>
           </ul>
         </div>
@@ -96,6 +91,14 @@ export default function TermsPage() {
           <p>
             These terms are governed by US law. If something doesn&apos;t hold up in your jurisdiction,
             the rest of the terms still apply.
+          </p>
+        </div>
+
+        <div className="content-section">
+          <h2>Contact</h2>
+          <p>
+            Questions about these terms — email{" "}
+            <a href="mailto:contact@pmprepos.com">contact@pmprepos.com</a>.
           </p>
         </div>
       </section>
