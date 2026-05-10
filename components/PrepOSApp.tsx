@@ -31,6 +31,7 @@ import { Simulator } from "@/components/simulator/Simulator";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { buildPracticeQueue, readiness } from "@/lib/adaptive/engine";
 import {
+  COMPANY_STYLE_OPTIONS,
   INITIAL_CALIBRATION,
   KNOWN_DEFAULT_EXPERIENCES,
   LEVEL_EXPERIENCE_DEFAULTS
@@ -376,13 +377,20 @@ export default function PrepOSApp() {
             <label htmlFor="company-style">Company style</label>
             <select
               id="company-style"
-              value={calibration.companyStyle}
+              value={
+                COMPANY_STYLE_OPTIONS.includes(
+                  calibration.companyStyle as (typeof COMPANY_STYLE_OPTIONS)[number]
+                )
+                  ? calibration.companyStyle
+                  : "General PM loop"
+              }
               onChange={(event) => updateCalibration("companyStyle", event.target.value)}
             >
-              <option>General PM loop</option>
-              <option>AI lab style</option>
-              <option>Large tech style</option>
-              <option>Startup style</option>
+              {COMPANY_STYLE_OPTIONS.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
             </select>
           </div>
 

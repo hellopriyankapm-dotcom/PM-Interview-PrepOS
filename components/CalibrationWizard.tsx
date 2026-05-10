@@ -6,6 +6,7 @@ import { Logo } from "@/components/Logo";
 import { PromoEmailForm } from "@/components/PromoEmailForm";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import {
+  COMPANY_STYLE_OPTIONS,
   INITIAL_CALIBRATION,
   KNOWN_DEFAULT_EXPERIENCES,
   LEVEL_EXPERIENCE_DEFAULTS,
@@ -219,14 +220,29 @@ export function CalibrationWizard({ initial, onComplete }: Props) {
 
             <div className="field">
               <label htmlFor="cal-wizard-company">Company style</label>
-              <input
+              <select
                 id="cal-wizard-company"
-                type="text"
-                value={draft.companyStyle}
+                value={
+                  COMPANY_STYLE_OPTIONS.includes(
+                    draft.companyStyle as (typeof COMPANY_STYLE_OPTIONS)[number]
+                  )
+                    ? draft.companyStyle
+                    : "General PM loop"
+                }
                 onChange={(event) =>
                   setDraft((current) => ({ ...current, companyStyle: event.target.value }))
                 }
-              />
+              >
+                {COMPANY_STYLE_OPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+              <p className="field-hint">
+                Picks the flavour of follow-ups Sarah asks in the voice mock and tunes scoring
+                emphasis (e.g. infra companies weigh reliability trade-offs more).
+              </p>
             </div>
 
             <div className="field">
