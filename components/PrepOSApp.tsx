@@ -114,6 +114,7 @@ export default function PrepOSApp() {
     [activeItem]
   );
   const ready = readiness(concepts, calibration);
+  const isAIPMTrack = calibration.targetLevel === "ai-pm" || calibration.practiceCategory === "ai_product_judgment";
 
   // First-time vs returning visitor — read once on mount.
   useEffect(() => {
@@ -495,7 +496,7 @@ export default function PrepOSApp() {
         </aside>
 
         <section className="workspace">
-          {calibration.targetLevel === "ai-pm" ? (
+          {isAIPMTrack ? (
             <section className="panel section ai-pm-panel" aria-label="AI PM Pro Pack">
               <span className="eyebrow">AI PM track · Pro Pack only</span>
               <h2>AI PM interview questions are coming in Pro Pack</h2>
@@ -509,8 +510,8 @@ export default function PrepOSApp() {
                 ctaLabel="Notify me about AI PM Pro Pack"
               />
               <p className="ai-pm-panel-nudge">
-                Want to keep practising today? Switch Target level to PM, Senior, Staff, or PM-T to
-                use the rest of the bank.
+                Want to keep practising today? Switch Target level (PM, Senior, Staff, or PM-T) or
+                Practice category to use the rest of the bank.
               </p>
             </section>
           ) : (
@@ -577,7 +578,7 @@ export default function PrepOSApp() {
             </>
           )}
 
-          {calibration.targetLevel !== "ai-pm" && activeItem ? (
+          {!isAIPMTrack && activeItem ? (
             <section className="panel section drill" ref={drillRef}>
               <div className="section-title-row">
                 <div>
@@ -716,7 +717,7 @@ export default function PrepOSApp() {
             </section>
           ) : null}
 
-          {calibration.targetLevel !== "ai-pm" && !activeItem ? (
+          {!isAIPMTrack && !activeItem ? (
             <section className="panel section empty-state">
               <span className="eyebrow">No drills found</span>
               <h2>Try another practice category</h2>
@@ -726,7 +727,7 @@ export default function PrepOSApp() {
             </section>
           ) : null}
 
-          {calibration.targetLevel !== "ai-pm" ? (
+          {!isAIPMTrack ? (
           <section className="panel section">
             <div className="section-title-row">
               <div>
@@ -762,7 +763,7 @@ export default function PrepOSApp() {
           </section>
           ) : null}
 
-          {calibration.targetLevel !== "ai-pm" ? (
+          {!isAIPMTrack ? (
             <LearningMemory concepts={concepts} readiness={ready} />
           ) : null}
         </section>
