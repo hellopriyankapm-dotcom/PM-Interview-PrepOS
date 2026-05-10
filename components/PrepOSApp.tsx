@@ -713,14 +713,6 @@ export default function PrepOSApp() {
               </div>
 
               {lastEvaluation ? <Scorecard evaluation={lastEvaluation} /> : null}
-
-              {lastEvaluation ? (
-                <div className="action-row flush" style={{ marginTop: "0.75rem" }}>
-                  <button className="btn primary" type="button" onClick={nextDrill}>
-                    Next drill <ArrowRight size={16} />
-                  </button>
-                </div>
-              ) : null}
             </section>
           ) : null}
 
