@@ -124,22 +124,35 @@ button {
   gap: 9px;
 }
 
-.logo svg {
-  display: block;
-  border-radius: 8px;
+.logo-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--green);
+  color: #ffffff;
   box-shadow: 0 8px 20px rgba(15, 95, 70, 0.18);
+  flex-shrink: 0;
 }
 
-.logo-bg {
-  fill: var(--green);
+.logo-tile svg {
+  display: block;
+  animation: logoSparkle 2.6s ease-in-out infinite;
+  transform-origin: center;
+  will-change: transform, opacity;
 }
 
-.logo-mark {
-  fill: #ffffff;
-}
-
-[data-theme="dark"] .logo svg {
+[data-theme="dark"] .logo-tile {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes logoSparkle {
+  0%, 100% { transform: rotate(0deg) scale(1);    opacity: 1; }
+  35%      { transform: rotate(10deg) scale(1.12); opacity: 0.9; }
+  70%      { transform: rotate(-4deg) scale(0.97); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-tile svg { animation: none; }
 }
 
 .logo-wordmark {
