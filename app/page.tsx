@@ -268,8 +268,7 @@ export default function LandingPage() {
             <p>
               PrepOS started as my own interview lab — built across multiple PM loops when generic prep
               guides and free question dumps stopped earning their keep. Same question bank, rubric, and
-              adaptive queue I still run before every onsite. Open-sourced so the next PM doesn&apos;t
-              start from zero.
+              adaptive queue I still run before every onsite.
             </p>
             <p className="story-lead-quote">
               &ldquo;The tool I wish I&apos;d had the night before my first onsite — honest feedback, no
@@ -334,6 +333,9 @@ export default function LandingPage() {
           <div className="landing-footer-brand">
             <Logo size={24} withWordmark />
             <p>Adaptive PM interview prep. Local-first.</p>
+            <p className="landing-footer-contact">
+              <a href="mailto:contact@pmprepos.com">contact@pmprepos.com</a>
+            </p>
           </div>
           <div className="landing-footer-cols">
             <div>

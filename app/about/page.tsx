@@ -5,7 +5,7 @@ import { ContentShell } from "@/components/ContentShell";
 export const metadata: Metadata = {
   title: "About — PrepOS",
   description:
-    "PrepOS started as one aspiring PM's personal interview lab — built across multiple PM loops, used before every onsite, open-sourced so the next PM doesn't start from zero.",
+    "PrepOS started as one aspiring PM's personal interview lab — built across multiple PM loops and used before every onsite. Adaptive, calibrated, free.",
   alternates: { canonical: "/about" }
 };
 
@@ -60,7 +60,7 @@ export default function AboutPage() {
           <ul className="bullet-list">
             <li>A guarantee of an offer. Practice helps, structure helps, real reps help — but no tool can give you signal you didn&apos;t earn.</li>
             <li>A coaching marketplace. There&apos;s no human PM coach behind the scenes. Just a calibrated rubric and a real conversation with an LLM persona.</li>
-            <li>A blackbox. The rubric is in the open, the question bank is in the open, the source is on GitHub.</li>
+            <li>A blackbox. The rubric is in the open and the question bank is in the open — every prompt names its reviewer and source type.</li>
             <li>A data harvester. We measure aggregate visits to understand demand, never per-user behaviour. See <Link href="/privacy">privacy policy</Link>.</li>
           </ul>
         </div>
@@ -87,18 +87,15 @@ export default function AboutPage() {
           <h2>Get in touch</h2>
           <p>
             Privacy questions, partnership ideas, found a bug, want to recommend a question for the
-            bank, or just want to say hi — open an issue on{" "}
-            <a href="https://github.com/hellopriyankapm-dotcom/PM-Interview-PrepOS/issues" target="_blank" rel="noreferrer">
-              GitHub
-            </a>
-            , or reply to any PrepOS email.
+            bank, or just want to say hi — email{" "}
+            <a href="mailto:contact@pmprepos.com">contact@pmprepos.com</a>.
           </p>
         </div>
 
         <div className="content-section">
           <h2>Trust signals</h2>
           <ul className="bullet-list">
-            <li>Source code: <a href="https://github.com/hellopriyankapm-dotcom/PM-Interview-PrepOS" target="_blank" rel="noreferrer">GitHub</a> · MIT-licensed</li>
+            <li>Email: <a href="mailto:contact@pmprepos.com">contact@pmprepos.com</a></li>
             <li><Link href="/privacy">Privacy policy</Link> · <Link href="/terms">Terms of use</Link></li>
             <li><Link href="/changelog">Changelog</Link> · weekly shipping cadence</li>
             <li><Link href="/questions">All 250 questions</Link> · <Link href="/concepts">All 18 concepts</Link> · <Link href="/rounds">All 6 rounds</Link> · <Link href="/levels">All 6 target levels</Link></li>
