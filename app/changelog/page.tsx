@@ -79,13 +79,6 @@ const releases: Release[] = [
   },
   {
     date: "2026-05",
-    title: "Custom domain: pmprepos.com",
-    bullets: [
-      "PrepOS now lives at https://pmprepos.com. The site is HTTPS by default."
-    ]
-  },
-  {
-    date: "2026-05",
     title: "Hero polish + landing redesign",
     bullets: [
       "Animated underline on the words 'next' and 'answer' in the headline.",
