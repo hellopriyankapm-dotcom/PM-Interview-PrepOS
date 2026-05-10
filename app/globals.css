@@ -2164,6 +2164,14 @@ kbd {
   text-transform: uppercase;
 }
 
+.help-count.pro {
+  background: var(--green-soft);
+  color: var(--green);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .help-panel {
   display: grid;
   gap: 10px;

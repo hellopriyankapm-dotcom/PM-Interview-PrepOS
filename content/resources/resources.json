@@ -1,99 +1,220 @@
 [
   {
-    "id": "res-exp-study-plan",
-    "title": "The Ultimate PM Interview Study Plan",
-    "url": "https://www.tryexponent.com/blog/the-ultimate-pm-interview-study-plan",
-    "source": "Exponent",
+    "id": "res-lennys-newsletter",
+    "title": "Lenny's Newsletter — product, growth, careers",
+    "url": "https://www.lennysnewsletter.com",
+    "source": "Lenny's Newsletter",
     "type": "article",
-    "duration": "20 min read",
-    "description": "Comprehensive multi-week study plan covering product sense, execution, behavioral, and strategy.",
-    "appliesTo": {
-      "categories": ["product_sense", "execution_metrics", "strategy", "behavioral_leadership"]
-    },
-    "reviewer": "PrepOS seed",
-    "addedOn": "2026-04-28"
-  },
-  {
-    "id": "res-exp-decode-isnt-enough",
-    "title": "Why Decode and Conquer is no longer enough",
-    "url": "https://www.tryexponent.com/blog/why-decode-and-conquer-is-no-longer-enough-to-prepare-you-for-product-manager-interviews",
-    "source": "Exponent",
-    "type": "article",
-    "description": "Deep dive on modern product-sense expectations beyond classic frameworks.",
-    "appliesTo": {
-      "concepts": [
-        "product_sense.user_segmentation",
-        "product_sense.pain_point_prioritization",
-        "product_sense.success_metrics"
-      ],
-      "categories": ["product_sense", "strategy"]
-    },
-    "reviewer": "PrepOS seed",
-    "addedOn": "2026-04-28"
-  },
-  {
-    "id": "res-exp-pm-page",
-    "title": "Exponent PM Interview Prep landing page",
-    "url": "https://www.tryexponent.com/pm",
-    "source": "Exponent",
-    "type": "course",
-    "description": "Curriculum overview with sample questions, peer mocks, and AI mocks.",
+    "description": "Lenny Rachitsky (ex-Airbnb) writes the deepest essays on product sense, growth, prioritization, and PM careers. Many free deep-dives across the topics PrepOS drills on.",
     "appliesTo": {
       "categories": [
         "product_sense",
         "execution_metrics",
-        "behavioral_leadership",
-        "ai_product_judgment",
-        "technical_collaboration",
-        "estimation_prioritization",
-        "analytics_experimentation",
-        "strategy"
-      ]
-    },
-    "reviewer": "PrepOS seed",
-    "addedOn": "2026-04-28"
-  },
-  {
-    "id": "res-exp-product-design",
-    "title": "Product Design Questions Course",
-    "url": "https://www.tryexponent.com/courses/pm-product-design",
-    "source": "Exponent",
-    "type": "course",
-    "description": "Course on structuring answers to product design and product sense prompts.",
-    "appliesTo": {
-      "categories": ["product_sense"],
+        "strategy",
+        "behavioral_leadership"
+      ],
       "concepts": [
         "product_sense.user_segmentation",
         "product_sense.pain_point_prioritization",
         "product_sense.success_metrics"
       ]
     },
-    "reviewer": "PrepOS seed",
-    "addedOn": "2026-04-28"
+    "reviewer": "priyanka",
+    "addedOn": "2026-05-10"
   },
   {
-    "id": "res-exp-ai-mock",
-    "title": "AI Mock Interviews",
-    "url": "https://www.tryexponent.com/practice/ai-mock-interviews",
-    "source": "Exponent",
-    "type": "course",
-    "description": "AI-driven practice with rubric-based feedback. Useful complement when you want timed reps with a different evaluator.",
-    "appliesTo": {
-      "categories": ["behavioral_leadership", "ai_product_judgment", "product_sense"]
-    },
-    "reviewer": "PrepOS seed",
-    "addedOn": "2026-04-28"
-  },
-  {
-    "id": "res-exp-microsoft-ai-pm",
-    "title": "Microsoft AI Product Manager Interview Guide",
-    "url": "https://www.tryexponent.com/guides/microsoft-ai-product-manager-interview",
-    "source": "Exponent",
+    "id": "res-svpg-articles",
+    "title": "SVPG — articles by Marty Cagan and team",
+    "url": "https://www.svpg.com/articles/",
+    "source": "Silicon Valley Product Group",
     "type": "article",
-    "duration": "15 min read",
-    "description": "AI PM interview structure and example prompts, applicable across AI PM loops.",
+    "description": "The canonical product-discovery frame. Read these to understand what 'good product' actually looks like — the lens every senior interviewer is implicitly using.",
     "appliesTo": {
-      "categories": ["ai_product_judgment", "behavioral_leadership"],
+      "categories": ["product_sense", "strategy", "execution_metrics"],
+      "concepts": [
+        "product_sense.user_segmentation",
+        "product_sense.pain_point_prioritization"
+      ]
+    },
+    "reviewer": "priyanka",
+    "addedOn": "2026-05-10"
+  },
+  {
+    "id": "res-svpg-product-manager",
+    "title": "Marty Cagan — The Product Manager",
+    "url": "https://www.svpg.com/the-product-manager/",
+    "source": "Silicon Valley Product Group",
+    "type": "framework",
+    "description": "Cagan's definition of the PM role. Useful frame for answering 'what makes a great PM' and similar behavioral / strategy openers.",
+    "appliesTo": {
+      "categories": ["behavioral_leadership", "product_sense"],
+      "concepts": [
+        "behavioral.star_arc_structure",
+        "behavioral.measurable_impact"
+      ]
+    },
+    "reviewer": "priyanka",
+    "addedOn": "2026-05-10"
+  },
+  {
+    "id": "res-firstround-review",
+    "title": "First Round Review — operator essays",
+    "url": "https://review.firstround.com/",
+    "source": "First Round Review",
+    "type": "article",
+    "description": "Long-form operator essays from PMs, founders, and engineering leaders. Strong on metrics, prioritization, and leadership stories — the kind of structured retrospectives that make great behavioral answers.",
+    "appliesTo": {
+      "categories": ["execution_metrics", "behavioral_leadership", "strategy"],
+      "concepts": [
+        "execution.north_star_metrics",
+        "behavioral.measurable_impact",
+        "behavioral.conflict_handling"
+      ]
+    },
+    "reviewer": "priyanka",
+    "addedOn": "2026-05-10"
+  },
+  {
+    "id": "res-reforge-blog",
+    "title": "Reforge — growth, retention, experimentation",
+    "url": "https://www.reforge.com/blog",
+    "source": "Reforge",
+    "type": "article",
+    "description": "Working-PM education on growth loops, retention, and experimentation. Direct fit for execution and analytics rounds.",
+    "appliesTo": {
+      "categories": ["execution_metrics", "analytics_experimentation"],
+      "concepts": [
+        "execution.north_star_metrics",
+        "execution.input_output_metrics",
+        "execution.counter_metrics"
+      ]
+    },
+    "reviewer": "priyanka",
+    "addedOn": "2026-05-10"
+  },
+  {
+    "id": "res-mindtheproduct",
+    "title": "Mind the Product — PM articles and talks",
+    "url": "https://www.mindtheproduct.com/",
+    "source": "Mind the Product",
+    "type": "article",
+    "description": "Community-driven PM articles and conference talks. Strongest on product discovery, PM career, and cross-functional collaboration.",
+    "appliesTo": {
+      "categories": [
+        "product_sense",
+        "behavioral_leadership",
+        "technical_collaboration"
+      ]
+    },
+    "reviewer": "priyanka",
+    "addedOn": "2026-05-10"
+  },
+  {
+    "id": "res-andrewchen",
+    "title": "Andrew Chen — growth, metrics, marketplaces",
+    "url": "https://andrewchen.com/",
+    "source": "Andrew Chen",
+    "type": "article",
+    "description": "a16z general partner; ex-Uber growth lead. Canonical essays on growth loops, network effects, and marketplace metrics — the math behind execution-round questions.",
+    "appliesTo": {
+      "categories": ["execution_metrics", "analytics_experimentation", "strategy"],
+      "concepts": [
+        "execution.north_star_metrics",
+        "execution.input_output_metrics",
+        "strategy.durable_advantage"
+      ]
+    },
+    "reviewer": "priyanka",
+    "addedOn": "2026-05-10"
+  },
+  {
+    "id": "res-sachinrekhi",
+    "title": "Sachin Rekhi — PM frameworks blog",
+    "url": "https://www.sachinrekhi.com/blog",
+    "source": "Sachin Rekhi",
+    "type": "framework",
+    "description": "Ex-LinkedIn group PM. Short, well-named frameworks (e.g., problem statement design, PM-EM disagreement) that map cleanly to interview answers.",
+    "appliesTo": {
+      "categories": [
+        "product_sense",
+        "estimation_prioritization",
+        "technical_collaboration"
+      ],
+      "concepts": [
+        "product_sense.pain_point_prioritization",
+        "technical_collaboration.engineering_alignment"
+      ]
+    },
+    "reviewer": "priyanka",
+    "addedOn": "2026-05-10"
+  },
+  {
+    "id": "res-julie-zhuo",
+    "title": "Julie Zhuo — The Looking Glass",
+    "url": "https://lookingglass.substack.com/",
+    "source": "The Looking Glass",
+    "type": "article",
+    "description": "Ex-Facebook design VP. Leadership, taste, and giving-feedback essays — high-credibility source material for behavioral stories.",
+    "appliesTo": {
+      "categories": ["behavioral_leadership"],
+      "concepts": [
+        "behavioral.star_arc_structure",
+        "behavioral.conflict_handling",
+        "behavioral.measurable_impact"
+      ]
+    },
+    "reviewer": "priyanka",
+    "addedOn": "2026-05-10"
+  },
+  {
+    "id": "res-john-cutler",
+    "title": "John Cutler — The Beautiful Mess",
+    "url": "https://cutlefish.substack.com/",
+    "source": "The Beautiful Mess",
+    "type": "article",
+    "description": "Systems-thinking essays on product orgs, prioritization, and PM-eng collaboration. Useful for technical-collaboration and prioritization rounds.",
+    "appliesTo": {
+      "categories": [
+        "technical_collaboration",
+        "estimation_prioritization",
+        "execution_metrics"
+      ],
+      "concepts": [
+        "technical_collaboration.engineering_alignment",
+        "technical_collaboration.reliability_tradeoffs",
+        "technical_collaboration.api_contracts"
+      ]
+    },
+    "reviewer": "priyanka",
+    "addedOn": "2026-05-10"
+  },
+  {
+    "id": "res-a16z-articles",
+    "title": "a16z — strategy, AI, and market essays",
+    "url": "https://a16z.com/articles/",
+    "source": "Andreessen Horowitz",
+    "type": "article",
+    "description": "Strategy and AI product takes from the a16z partner pool. Useful for strategy-round framing (market timing, durable advantage) and AI PM concept depth.",
+    "appliesTo": {
+      "categories": ["strategy", "ai_product_judgment"],
+      "concepts": [
+        "strategy.market_timing",
+        "strategy.durable_advantage",
+        "ai_product_judgment.cost_latency_tradeoffs"
+      ]
+    },
+    "reviewer": "priyanka",
+    "addedOn": "2026-05-10"
+  },
+  {
+    "id": "res-anthropic-docs",
+    "title": "Anthropic — building with Claude",
+    "url": "https://docs.anthropic.com/en/docs/about-claude/overview",
+    "source": "Anthropic",
+    "type": "framework",
+    "description": "Canonical reference for evals, safety, tool use, and prompt design. The vocabulary an AI PM is expected to use in interviews on AI product judgment.",
+    "appliesTo": {
+      "categories": ["ai_product_judgment"],
       "concepts": [
         "ai_product_judgment.eval_design",
         "ai_product_judgment.hallucination_mitigation",
@@ -101,134 +222,91 @@
         "ai_product_judgment.cost_latency_tradeoffs"
       ]
     },
-    "reviewer": "PrepOS seed",
-    "addedOn": "2026-04-28"
+    "reviewer": "priyanka",
+    "addedOn": "2026-05-10"
   },
   {
-    "id": "res-exp-questions",
-    "title": "PM Interview Question Library",
-    "url": "https://www.tryexponent.com/questions?role=pm",
-    "source": "Exponent",
-    "type": "article",
-    "description": "Verified PM interview questions and answers across multiple companies and rounds. Browse for an analogous example to compare against your answer.",
-    "appliesTo": {
-      "categories": [
-        "product_sense",
-        "execution_metrics",
-        "behavioral_leadership",
-        "strategy",
-        "estimation_prioritization"
-      ]
-    },
-    "reviewer": "PrepOS seed",
-    "addedOn": "2026-04-28"
-  },
-  {
-    "id": "res-igotanoffer-pm-prep",
-    "title": "Product Manager Interview Prep — 5 steps to a FAANG+ offer",
-    "url": "https://igotanoffer.com/blogs/product-manager/pm-interview-prep",
-    "source": "IGotAnOffer",
-    "type": "article",
-    "duration": "25 min read",
-    "description": "Five-step prep methodology with examples from Google, Meta, Amazon loops.",
-    "appliesTo": {
-      "categories": [
-        "product_sense",
-        "execution_metrics",
-        "behavioral_leadership",
-        "strategy"
-      ]
-    },
-    "reviewer": "PrepOS seed",
-    "addedOn": "2026-04-28"
-  },
-  {
-    "id": "res-stellarpeers-home",
-    "title": "StellarPeers — proprietary PM frameworks",
-    "url": "https://stellarpeers.com/",
-    "source": "StellarPeers",
+    "id": "res-openai-cookbook",
+    "title": "OpenAI Cookbook — evals and patterns",
+    "url": "https://cookbook.openai.com",
+    "source": "OpenAI",
     "type": "framework",
-    "description": "60+ proprietary frameworks for product sense, execution, behavioral, and strategy questions.",
+    "description": "Worked examples for evals, retrieval, structured outputs, and latency-cost tradeoffs. Concrete material to reference when an AI PM round asks 'how would you measure this'.",
     "appliesTo": {
-      "categories": [
-        "product_sense",
-        "execution_metrics",
-        "behavioral_leadership",
-        "strategy"
+      "categories": ["ai_product_judgment"],
+      "concepts": [
+        "ai_product_judgment.eval_design",
+        "ai_product_judgment.cost_latency_tradeoffs",
+        "ai_product_judgment.hallucination_mitigation"
       ]
     },
-    "reviewer": "PrepOS seed",
-    "addedOn": "2026-04-28"
+    "reviewer": "priyanka",
+    "addedOn": "2026-05-10"
   },
   {
-    "id": "res-stellarpeers-meta",
-    "title": "Meta PM Interview Process",
-    "url": "https://stellarpeers.com/meta-product-manager-interview-process/",
-    "source": "StellarPeers",
+    "id": "res-hbr-product-management",
+    "title": "Harvard Business Review — strategy and leadership",
+    "url": "https://hbr.org/topic/subject/strategy",
+    "source": "Harvard Business Review",
     "type": "article",
-    "description": "Round-by-round breakdown of the Meta PM loop with example questions and rubrics. Useful for STAR/ARC behavioral structure and product-sense rounds.",
+    "description": "Evergreen strategy and leadership essays (Porter on competition, classic frameworks). Senior interviewers expect candidates to be conversant in this vocabulary.",
     "appliesTo": {
+      "categories": ["strategy", "behavioral_leadership"],
       "concepts": [
-        "behavioral.star_arc_structure",
-        "behavioral.measurable_impact",
-        "product_sense.user_segmentation"
-      ],
-      "categories": ["product_sense", "behavioral_leadership", "strategy", "execution_metrics"]
-    },
-    "reviewer": "PrepOS seed",
-    "addedOn": "2026-04-28"
-  },
-  {
-    "id": "res-stellarpeers-google",
-    "title": "The Ultimate Google PM Interview Questions Guide",
-    "url": "https://stellarpeers.com/google-pm-interview-prep/",
-    "source": "StellarPeers",
-    "type": "article",
-    "description": "Google-specific PM prep across product, analytical, behavioral, and strategy rounds.",
-    "appliesTo": {
-      "categories": ["product_sense", "execution_metrics", "behavioral_leadership", "strategy"]
-    },
-    "reviewer": "PrepOS seed",
-    "addedOn": "2026-04-28"
-  },
-  {
-    "id": "res-stellarpeers-faang-prep",
-    "title": "PM Interview Prep — Meta, Google, Amazon",
-    "url": "https://stellarpeers.com/product-manager-interview-prep-meta-google-amazon/",
-    "source": "StellarPeers",
-    "type": "article",
-    "description": "Cross-company guide comparing rubrics and behavioral story expectations across the FAANG-style PM loops.",
-    "appliesTo": {
-      "concepts": [
-        "behavioral.star_arc_structure",
-        "behavioral.conflict_handling",
+        "strategy.market_timing",
+        "strategy.durable_advantage",
         "behavioral.measurable_impact"
-      ],
-      "categories": ["product_sense", "behavioral_leadership", "strategy"]
+      ]
     },
-    "reviewer": "PrepOS seed",
-    "addedOn": "2026-04-28"
+    "reviewer": "priyanka",
+    "addedOn": "2026-05-10"
   },
   {
-    "id": "res-stellarpeers-coaching",
-    "title": "PM Interview Coaching",
-    "url": "https://stellarpeers.com/coaching/pm-interview-coaching/",
-    "source": "StellarPeers",
-    "type": "course",
-    "description": "Structured PM interview coaching pages with framework summaries.",
+    "id": "res-stratechery",
+    "title": "Stratechery — Ben Thompson on strategy",
+    "url": "https://stratechery.com/",
+    "source": "Stratechery",
+    "type": "article",
+    "description": "Aggregation theory and platform-strategy framing. Most posts are paywalled but the free interviews and concept primers are foundational for strategy-round answers.",
     "appliesTo": {
-      "categories": ["product_sense", "execution_metrics", "behavioral_leadership"]
+      "categories": ["strategy"],
+      "concepts": [
+        "strategy.market_timing",
+        "strategy.durable_advantage"
+      ]
     },
-    "reviewer": "PrepOS seed",
-    "addedOn": "2026-04-28"
+    "reviewer": "priyanka",
+    "addedOn": "2026-05-10"
+  },
+  {
+    "id": "res-shreyas-doshi",
+    "title": "Shreyas Doshi — high-agency PM essays",
+    "url": "https://shreyas.substack.com/",
+    "source": "Shreyas Doshi",
+    "type": "article",
+    "description": "Ex-Stripe / Twitter / Google PM. Sharp, opinionated essays on prioritization, taste, and operating at staff/principal level. Useful for behavioral and prioritization rounds.",
+    "appliesTo": {
+      "categories": [
+        "estimation_prioritization",
+        "behavioral_leadership",
+        "product_sense"
+      ],
+      "concepts": [
+        "behavioral.measurable_impact",
+        "behavioral.conflict_handling",
+        "product_sense.pain_point_prioritization"
+      ]
+    },
+    "reviewer": "priyanka",
+    "addedOn": "2026-05-10"
   },
   {
     "id": "res-pmexercises",
-    "title": "PMExercises — PM Interview Practice",
+    "title": "PMExercises — community answers to PM questions",
     "url": "https://www.productmanagementexercises.com/",
     "source": "PMExercises",
     "type": "article",
-    "description": "Question bank with expert answers and breakdowns. Useful for seeing structured answers next to your own.",
+    "description": "Open question bank with community-written answers. Useful for seeing how others structure responses to canonical PM prompts — compare against your own.",
     "appliesTo": {
       "categories": [
         "product_sense",
@@ -237,12 +315,12 @@
         "behavioral_leadership"
       ]
     },
-    "reviewer": "PrepOS seed",
-    "addedOn": "2026-04-28"
+    "reviewer": "priyanka",
+    "addedOn": "2026-05-10"
   },
   {
     "id": "res-thepminterview",
-    "title": "The PM Interview — questions hub",
+    "title": "The PM Interview — question hub",
     "url": "https://thepminterview.com/",
     "source": "The PM Interview",
     "type": "article",
@@ -255,7 +333,7 @@
         "strategy"
       ]
     },
-    "reviewer": "PrepOS seed",
-    "addedOn": "2026-04-28"
+    "reviewer": "priyanka",
+    "addedOn": "2026-05-10"
   }
 ]

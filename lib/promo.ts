@@ -15,7 +15,7 @@ export const promoConfig: PromoConfig = {
   title: process.env.NEXT_PUBLIC_PROMO_TITLE ?? "Pro Pack — coming soon",
   description:
     process.env.NEXT_PUBLIC_PROMO_DESCRIPTION ??
-    "AI PM interview questions, extra question banks, expert-answer library, premium personas. Get early-access pricing.",
+    "AI PM interview questions, extra question banks, expert-answer library, premium personas, and AI coach hints (Senior-PM framework + analogous examples + trap to avoid, per question). Get early-access pricing.",
   ctaLabel: process.env.NEXT_PUBLIC_PROMO_CTA_LABEL ?? "Notify me",
   successMessage:
     process.env.NEXT_PUBLIC_PROMO_SUCCESS ?? "Thanks — we’ll email you when Pro launches.",

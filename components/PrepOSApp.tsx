@@ -27,6 +27,7 @@ import { LearningMemory } from "@/components/LearningMemory";
 import { Logo } from "@/components/Logo";
 import { CalibrationWizard } from "@/components/CalibrationWizard";
 import { PromoEmailForm } from "@/components/PromoEmailForm";
+import { PromoOpenButton } from "@/components/PromoOpenButton";
 import { PromoSlot } from "@/components/PromoSlot";
 import { Simulator } from "@/components/simulator/Simulator";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -668,7 +669,7 @@ export default function PrepOSApp() {
                     aria-expanded={helpPanel === "coach"}
                   >
                     <Sparkles size={15} /> AI coach
-                    <span className="help-count soon">soon</span>
+                    <span className="help-count pro">Pro</span>
                   </button>
                 </div>
               ) : null}
@@ -948,13 +949,18 @@ function ResourcePanel({ matches }: { matches: ResourceMatch[] }) {
 function ComingSoonCoachPanel() {
   return (
     <div className="help-panel coach">
-      <span className="help-panel-eyebrow">AI coach · coming soon</span>
+      <span className="help-panel-eyebrow">AI coach · Pro Pack</span>
       <p>
-        Senior-PM-coach assistance is on the roadmap. It will run with your own Anthropic API key
-        (stored locally in your browser, never sent to PrepOS) and return a concise framework, two
-        analogous examples, and one trap to avoid for the active question.
+        On the active question, the AI coach returns three things in &lt;10 seconds: a tight
+        framework to structure your answer, two analogous real-world product examples a Senior PM
+        could cite, and one trap interviewers use to test this concept.
       </p>
-      <p className="help-panel-note">No account, no PrepOS infra, no tracking — same local-first promise.</p>
+      <p className="help-panel-note">
+        Runs on your own Anthropic API key — stored locally in your browser, never sent to PrepOS.
+        Included with Pro Pack. Same local-first promise: no account, no PrepOS infra, no per-user
+        tracking.
+      </p>
+      <PromoOpenButton />
     </div>
   );
 }
