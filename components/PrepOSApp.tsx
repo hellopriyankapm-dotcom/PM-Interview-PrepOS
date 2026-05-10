@@ -3,6 +3,7 @@
 import {
   Activity,
   ArrowDown,
+  ArrowRight,
   Brain,
   CheckCircle2,
   ClipboardList,
@@ -95,12 +96,16 @@ export default function PrepOSApp() {
   const [timerStart, setTimerStart] = useState<number | null>(null);
   const [helpPanel, setHelpPanel] = useState<"none" | "resources" | "coach">("none");
   const [simulatorOpen, setSimulatorOpen] = useState(false);
+  const [answer, setAnswer] = useState("");
+  const [lastEvaluation, setLastEvaluation] = useState<Evaluation | null>(null);
+  const [scoredItem, setScoredItem] = useState<PracticePlanItem | null>(null);
   const queue = useMemo(
     () => buildPracticeQueue(calibration, concepts, completedQuestionIds, queueExpanded ? 24 : 4),
     [calibration, concepts, completedQuestionIds, queueExpanded]
   );
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const activeItem = queue.find((item) => item.question.id === selectedId) ?? queue[0];
+  const liveActiveItem = queue.find((item) => item.question.id === selectedId) ?? queue[0];
+  const activeItem = lastEvaluation && scoredItem ? scoredItem : liveActiveItem;
   const effectiveMode: ScaffoldingMode | null = activeItem ? (modeOverride ?? activeItem.mode) : null;
   const effectiveDepth = effectiveMode ? explanationDepthForMode(effectiveMode) : "high";
   const helpAvailable = effectiveMode !== null && effectiveMode !== "interview_mode";
@@ -108,8 +113,6 @@ export default function PrepOSApp() {
     () => (activeItem ? findResourcesForQuestion(activeItem.question) : []),
     [activeItem]
   );
-  const [answer, setAnswer] = useState("");
-  const [lastEvaluation, setLastEvaluation] = useState<Evaluation | null>(null);
   const ready = readiness(concepts, calibration);
 
   // First-time vs returning visitor — read once on mount.
@@ -163,6 +166,7 @@ export default function PrepOSApp() {
 
   function submitAnswer() {
     if (!activeItem || answer.trim().length < 12) return;
+    setScoredItem(activeItem);
     const evaluation = evaluateAnswer(answer, activeItem.question, calibration, concepts);
     setConcepts(evaluation.updatedConcepts);
     setCompletedQuestionIds((current) => Array.from(new Set([...current, activeItem.question.id])));
@@ -180,6 +184,7 @@ export default function PrepOSApp() {
 
   function applySimulatorEvaluation(evaluation: Evaluation) {
     if (!activeItem) return;
+    setScoredItem(activeItem);
     const activeConceptIds = new Set(activeItem.question.concepts);
     const nextConcepts = concepts.map((concept) =>
       activeConceptIds.has(concept.conceptId) ? updateConceptState(concept, evaluation.total) : concept
@@ -196,6 +201,14 @@ export default function PrepOSApp() {
         at: Date.now()
       }
     ]);
+  }
+
+  function nextDrill() {
+    setScoredItem(null);
+    setLastEvaluation(null);
+    setAnswer("");
+    setHelpPanel("none");
+    setSelectedId(null);
   }
 
   function enterFocus() {
@@ -265,6 +278,7 @@ export default function PrepOSApp() {
     setLastEvaluation(null);
     setAnswer("");
     setSelectedId(null);
+    setScoredItem(null);
     setRepHistory([]);
     setModeOverride(null);
     setQueueExpanded(false);
@@ -694,6 +708,14 @@ export default function PrepOSApp() {
               </div>
 
               {lastEvaluation ? <Scorecard evaluation={lastEvaluation} /> : null}
+
+              {lastEvaluation ? (
+                <div className="action-row flush" style={{ marginTop: "0.75rem" }}>
+                  <button className="btn primary" type="button" onClick={nextDrill}>
+                    Next drill <ArrowRight size={16} />
+                  </button>
+                </div>
+              ) : null}
             </section>
           ) : null}
 
@@ -726,6 +748,7 @@ export default function PrepOSApp() {
                     setSelectedId(item.question.id);
                     setAnswer("");
                     setLastEvaluation(null);
+                    setScoredItem(null);
                   }}
                 />
               ))}
