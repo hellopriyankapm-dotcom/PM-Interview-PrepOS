@@ -834,6 +834,14 @@ button {
   .concepts {
     grid-template-columns: 1fr;
   }
+
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-card {
+    order: 2;
+  }
 }
 
 @media (max-width: 640px) {
@@ -4859,4 +4867,74 @@ kbd {
 .landing-footer-contact a:hover {
   color: var(--green);
   border-bottom-color: var(--green);
+}
+
+/* ============================================================
+   Responsive P0 — phone polish
+   - Safe-area-inset for iOS notch / home indicator
+   - Drill metrics + dashboard hidden behind <details> on phone
+   - Sticky Score-answer row when keyboard is open
+   - Larger touch targets for mode-pills + help-count badges
+   ============================================================ */
+
+body {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.topbar {
+  padding-top: max(12px, env(safe-area-inset-top));
+  padding-left: max(14px, env(safe-area-inset-left));
+  padding-right: max(14px, env(safe-area-inset-right));
+}
+
+.metrics-collapse-toggle {
+  display: none;
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.92rem;
+}
+
+.metrics-collapse-toggle:hover {
+  background: var(--surface-2, var(--surface));
+}
+
+@media (max-width: 820px) {
+  .metrics-collapse-toggle {
+    display: block;
+  }
+  .metrics-collapse-content[data-expanded="false"] {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .action-row.flush {
+    position: sticky;
+    bottom: env(safe-area-inset-bottom, 0);
+    background: var(--surface);
+    padding-block: 10px;
+    margin-inline: -14px;
+    padding-inline: 14px;
+    z-index: 5;
+    box-shadow: 0 -8px 12px -8px rgba(0, 0, 0, 0.08);
+  }
+
+  .mode-pill {
+    min-height: 32px;
+    padding: 6px 14px;
+  }
+
+  .help-count {
+    min-width: 26px;
+    height: 26px;
+    padding: 0 6px;
+  }
 }

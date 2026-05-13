@@ -95,6 +95,7 @@ export default function PrepOSApp() {
   const [focusMode, setFocusMode] = useState(false);
   const [timerStart, setTimerStart] = useState<number | null>(null);
   const [helpPanel, setHelpPanel] = useState<"none" | "resources" | "coach">("none");
+  const [metricsExpanded, setMetricsExpanded] = useState(false);
   const [simulatorOpen, setSimulatorOpen] = useState(false);
   const [answer, setAnswer] = useState("");
   const [lastEvaluation, setLastEvaluation] = useState<Evaluation | null>(null);
@@ -553,28 +554,45 @@ export default function PrepOSApp() {
                 </div>
               </section>
 
-              <div className="grid">
-                <MetricCard
-                  icon={<Activity size={18} />}
-                  label="Readiness"
-                  value={ready.score ? `${ready.score}/5` : "New"}
-                  detail={`${ready.label}; target bar ${ready.threshold}/5`}
-                />
-                <MetricCard
-                  icon={<CheckCircle2 size={18} />}
-                  label="Concept mastery"
-                  value={`${ready.masteredCount}/${ready.totalConcepts}`}
-                  detail="PrepOS gives more support where concepts are still developing."
-                />
-                <MetricCard
-                  icon={<SlidersHorizontal size={18} />}
-                  label="Question type"
-                  value={practiceCategories.find((category) => category.value === calibration.practiceCategory)?.label ?? "All categories"}
-                  detail="Candidates can choose the kind of question they want to practice."
-                />
-              </div>
+              <div className="metrics-collapse">
+                <button
+                  type="button"
+                  className="metrics-collapse-toggle"
+                  onClick={() => setMetricsExpanded((v) => !v)}
+                  aria-expanded={metricsExpanded}
+                  aria-controls="metrics-content"
+                >
+                  {metricsExpanded ? "Hide readiness metrics" : "Show readiness metrics"}
+                </button>
+                <div
+                  id="metrics-content"
+                  className="metrics-collapse-content"
+                  data-expanded={metricsExpanded}
+                >
+                  <div className="grid">
+                    <MetricCard
+                      icon={<Activity size={18} />}
+                      label="Readiness"
+                      value={ready.score ? `${ready.score}/5` : "New"}
+                      detail={`${ready.label}; target bar ${ready.threshold}/5`}
+                    />
+                    <MetricCard
+                      icon={<CheckCircle2 size={18} />}
+                      label="Concept mastery"
+                      value={`${ready.masteredCount}/${ready.totalConcepts}`}
+                      detail="PrepOS gives more support where concepts are still developing."
+                    />
+                    <MetricCard
+                      icon={<SlidersHorizontal size={18} />}
+                      label="Question type"
+                      value={practiceCategories.find((category) => category.value === calibration.practiceCategory)?.label ?? "All categories"}
+                      detail="Candidates can choose the kind of question they want to practice."
+                    />
+                  </div>
 
-              <Dashboard calibration={calibration} history={repHistory} />
+                  <Dashboard calibration={calibration} history={repHistory} />
+                </div>
+              </div>
             </>
           )}
 
