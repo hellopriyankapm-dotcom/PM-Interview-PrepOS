@@ -520,16 +520,18 @@ export default function PrepOSApp() {
         <section className="workspace">
           {isAIPMTrack ? (
             <section className="panel section ai-pm-panel" aria-label="AI PM Pro Pack">
-              <span className="eyebrow">AI PM track · Pro Pack only</span>
-              <h2>AI PM interview questions are coming in Pro Pack</h2>
+              <span className="eyebrow">AI PM track · Pro Pack</span>
+              <h2>The AI PM question bank ships with Pro Pack</h2>
               <p>
                 AI PM interviews test a different bundle: eval design, hallucination mitigation,
-                cost / latency trade-offs, and human-fallback design. PrepOS is curating a dedicated
-                AI PM question bank with reviewer notes and expert answers — included in Pro Pack.
+                cost / latency trade-offs, and human-fallback design. Pro Pack adds a dedicated AI PM
+                question bank, an expert-answer library, the AI Coach for live framework + example +
+                trap hints on every question, and managed LLM keys so you can skip BYO setup. Same
+                local-first privacy.
               </p>
               <PromoEmailForm
                 source="prepos-ai-pm-gate"
-                ctaLabel="Notify me about AI PM Pro Pack"
+                ctaLabel="Join the Pro Pack waitlist"
               />
               <p className="ai-pm-panel-nudge">
                 Want to keep practising today? Switch Target level (PM, Senior, Staff, or PM-T) or
@@ -988,13 +990,14 @@ function ResourcePanel({ matches }: { matches: ResourceMatch[] }) {
 function ComingSoonCoachPanel() {
   return (
     <div className="help-panel coach">
-      <span className="help-panel-eyebrow">AI coach · Pro Pack</span>
+      <span className="help-panel-eyebrow">AI Coach · Pro Pack</span>
       <p>
-        On the active question, the AI coach returns three things in &lt;10 seconds: a tight
+        On the active question, the AI Coach returns three things in &lt;10 seconds: a tight
         framework to structure your answer, two analogous real-world product examples a Senior PM
-        could cite, and one trap interviewers use to test this concept.
+        could cite, and one trap interviewers use. Part of Pro Pack alongside managed LLM keys, the
+        AI PM question bank, and the expert-answer library.
       </p>
-      <PromoEmailForm source="prepos-coach" ctaLabel="Notify me" compact />
+      <PromoEmailForm source="prepos-coach" ctaLabel="Join the Pro Pack waitlist" compact />
     </div>
   );
 }

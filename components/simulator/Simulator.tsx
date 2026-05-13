@@ -935,11 +935,12 @@ function PreflightStep(props: {
           <strong>Pro Pack — coming soon</strong>
         </div>
         <p>
-          Skip BYO keys. PrepOS runs the {llmLabel} calls, lifelike voice, and real-video persona on your
-          behalf — and unlocks the <strong>AI PM interview question bank</strong> and expert-answer library —
-          for one monthly price. Drop your email to be first in line:
+          Pro Pack runs the {llmLabel} calls, lifelike voice, and real-video persona on your behalf
+          — no BYO key setup — and unlocks the <strong>AI PM question bank</strong>, the AI Coach for
+          framework + example + trap hints on every question, and the expert-answer library. One
+          monthly price. Same local-first privacy.
         </p>
-        <PromoEmailForm source="prepos-simulator" ctaLabel="Notify me" />
+        <PromoEmailForm source="prepos-simulator" ctaLabel="Join the Pro Pack waitlist" />
       </div>
 
       {props.errorMsg ? <div className="sim-warn">{props.errorMsg}</div> : null}
