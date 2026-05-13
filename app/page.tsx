@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { MobileNav } from "@/components/MobileNav";
 import { OpenAppButton } from "@/components/OpenAppButton";
 import { PromoOpenButton } from "@/components/PromoOpenButton";
 import { PromoSlot } from "@/components/PromoSlot";
@@ -99,6 +100,15 @@ export default function LandingPage() {
         <div className="landing-nav-cta">
           <ThemeToggle />
           <PromoOpenButton />
+          <MobileNav
+            links={[
+              { href: "#how", label: "How it works", external: true },
+              { href: "#features", label: "Features", external: true },
+              { href: "#scorecard", label: "Scorecard", external: true },
+              { href: "#story", label: "Story", external: true },
+              { href: "#faq", label: "FAQ", external: true }
+            ]}
+          />
         </div>
       </header>
 

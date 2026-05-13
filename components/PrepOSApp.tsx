@@ -96,6 +96,7 @@ export default function PrepOSApp() {
   const [timerStart, setTimerStart] = useState<number | null>(null);
   const [helpPanel, setHelpPanel] = useState<"none" | "resources" | "coach">("none");
   const [metricsExpanded, setMetricsExpanded] = useState(false);
+  const [calibrationDrawerOpen, setCalibrationDrawerOpen] = useState(false);
   const [simulatorOpen, setSimulatorOpen] = useState(false);
   const [answer, setAnswer] = useState("");
   const [lastEvaluation, setLastEvaluation] = useState<Evaluation | null>(null);
@@ -341,7 +342,26 @@ export default function PrepOSApp() {
       </header>
 
       <div className="main">
-        <aside className="panel calibration">
+        <div className="calibration-drawer">
+          <button
+            type="button"
+            className="calibration-drawer-summary"
+            onClick={() => setCalibrationDrawerOpen((v) => !v)}
+            aria-expanded={calibrationDrawerOpen}
+            aria-controls="calibration-aside"
+          >
+            <span className="calibration-drawer-chip">
+              {levelProfiles[calibration.targetLevel].label}
+              {" · "}
+              {practiceCategories.find((c) => c.value === calibration.practiceCategory)?.label ?? "All categories"}
+              {" · "}
+              {calibration.weeklyHours} h/wk
+            </span>
+            <span className="calibration-drawer-toggle">
+              {calibrationDrawerOpen ? "Close" : "Edit"}
+            </span>
+          </button>
+        <aside id="calibration-aside" className="panel calibration" data-drawer-open={calibrationDrawerOpen}>
           <div className="panel-header">
             <div className="panel-header-row">
               <h2>Calibration</h2>
@@ -495,6 +515,7 @@ export default function PrepOSApp() {
             </button>
           </div>
         </aside>
+        </div>
 
         <section className="workspace">
           {isAIPMTrack ? (
