@@ -4938,3 +4938,158 @@ body {
     padding: 0 6px;
   }
 }
+
+/* ============================================================
+   Responsive P1 — tablet polish + drill restructure
+   - Tablet (821–1099 px) intermediate breakpoint
+   - Calibration sidebar drawer on phone
+   - Horizontal-scroll side queue on phone
+   - Hamburger / mobile nav for landing + content shells
+   ============================================================ */
+
+@media (min-width: 821px) and (max-width: 1099px) {
+  .main {
+    grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);
+    gap: 20px;
+  }
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .topbar {
+    gap: 16px;
+  }
+  .workspace-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.calibration-drawer {
+  display: contents;
+}
+
+.calibration-drawer-summary {
+  display: none;
+}
+
+@media (max-width: 820px) {
+  .calibration-drawer-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+  }
+
+  .calibration-drawer-chip {
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .calibration-drawer-toggle {
+    flex-shrink: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--green);
+  }
+
+  .calibration[data-drawer-open="false"] {
+    display: none;
+  }
+
+  .queue {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .queue-item {
+    flex: 0 0 78vw;
+    scroll-snap-align: start;
+  }
+
+  .queue-expand {
+    width: 100%;
+  }
+}
+
+.mobile-nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.mobile-nav-toggle:hover {
+  background: var(--surface-2, var(--surface));
+}
+
+.mobile-nav-sheet {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin: 8px 16px 0;
+  padding: 6px 0;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.18);
+  z-index: 50;
+}
+
+.mobile-nav-sheet li {
+  margin: 0;
+}
+
+.mobile-nav-sheet a {
+  display: block;
+  padding: 14px 18px;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.mobile-nav-sheet a:hover {
+  background: var(--surface-2, var(--surface));
+}
+
+@media (max-width: 720px) {
+  .mobile-nav-toggle {
+    display: inline-flex;
+  }
+  .mobile-nav-sheet {
+    display: block;
+  }
+  .landing-nav-links {
+    display: none;
+  }
+  .landing-nav {
+    position: relative;
+  }
+}

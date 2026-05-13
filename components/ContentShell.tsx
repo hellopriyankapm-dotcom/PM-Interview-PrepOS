@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { MobileNav } from "@/components/MobileNav";
 import { PromoOpenButton } from "@/components/PromoOpenButton";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -27,6 +28,14 @@ export function ContentShell({
         <div className="landing-nav-cta">
           <ThemeToggle />
           <PromoOpenButton />
+          <MobileNav
+            links={[
+              { href: "/questions", label: "Questions" },
+              { href: "/concepts", label: "Concepts" },
+              { href: "/rounds", label: "Rounds" },
+              { href: "/levels", label: "Levels" }
+            ]}
+          />
         </div>
       </header>
 
