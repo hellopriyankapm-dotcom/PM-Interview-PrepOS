@@ -351,9 +351,10 @@ export default function LandingPage() {
             <div>
               <strong>Product</strong>
               <Link href="/app">Open app</Link>
-              <a href="#how">How it works</a>
-              <a href="#features">Features</a>
-              <a href="#scorecard">Scorecard</a>
+              <Link href="/questions">All questions</Link>
+              <Link href="/concepts">Concepts</Link>
+              <Link href="/rounds">Round types</Link>
+              <Link href="/levels">Target levels</Link>
             </div>
             <div>
               <strong>Company</strong>
