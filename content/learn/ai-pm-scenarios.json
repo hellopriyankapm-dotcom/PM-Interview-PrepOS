@@ -54,5 +54,61 @@
     "reasoning": "Speed is real but you cannot fix what you don't understand. The first 60 minutes is for evidence, not action. The screenshot might be doctored, might be prompt-injected, might be a known edge case — each implies a different response. A is correct ONLY if D's investigation confirms a model regression. B is fast but reactive; you'll be playing whack-a-mole. C delays without acting. D is the senior-PM move: triage with evidence, then act.",
     "rubric_signals": ["incident response", "evidence before action", "user safety", "communication"],
     "tier": "free"
+  },
+  {
+    "id": "rag-vs-finetune",
+    "setup": "Your B2B customer-support AI scores 30% accuracy on billing-and-permissions edge cases. The eng lead proposes fine-tuning a smaller model on 5,000 labelled past tickets. The marketing PM proposes RAG over your help docs. You have 6 weeks before the next release. Billing policy changed twice in the last quarter.",
+    "choices": [
+      { "key": "A", "label": "Fine-tune — 5k labelled tickets is the highest-quality training signal you'll ever have" },
+      { "key": "B", "label": "RAG over help docs — faster to ship, updatable as policy evolves" },
+      { "key": "C", "label": "Ship RAG first (2 weeks), measure, then decide if fine-tuning adds enough lift to justify retraining every time policy changes" },
+      { "key": "D", "label": "Both in parallel — fine-tune for tone and ticket-structure, RAG for current policy" }
+    ],
+    "best": "C",
+    "reasoning": "Sequencing matters. A bakes stale billing rules into the weights — every policy change triggers a retrain. B is fast but you don't know if it'll be enough. D doubles cost and engineering scope before you've validated either lever. C is the senior move: ship the cheapest, fastest, updatable solution first, measure the gap, then decide whether the marginal gain of fine-tuning is worth the ongoing retraining tax. The 2026 default is 'RAG by default, fine-tune for stable patterns only'.",
+    "rubric_signals": ["RAG vs fine-tune trade-off", "stale-data risk", "sequencing", "cheapest-first"],
+    "tier": "free"
+  },
+  {
+    "id": "precision-recall-moderation",
+    "setup": "You're shipping an AI moderation classifier for a kids' learning app. The model flags content as 'unsafe'. Legal wants zero unsafe content reaching kids (high recall on the unsafe class). Product wants minimal false flags blocking good lessons (high precision). You can ship one classifier threshold. Where do you set it?",
+    "choices": [
+      { "key": "A", "label": "Optimise for recall — block aggressively; better to over-flag than let one unsafe item reach a child" },
+      { "key": "B", "label": "Optimise for precision — false flags destroy teacher trust and the product dies" },
+      { "key": "C", "label": "Two-tier system: high-recall classifier auto-blocks the obvious; borderline items go to human review within 60 seconds" },
+      { "key": "D", "label": "Run two thresholds in shadow for a week and present P/R curves to legal + product before deciding" }
+    ],
+    "best": "C",
+    "reasoning": "Precision vs recall isn't a single dial in safety-critical domains — it's a system-design choice. A alone destroys product utility; B alone is legally untenable. D delays a shippable answer. C resolves the tension: machines handle the obvious cases at high recall (no kid sees unsafe content), humans absorb the ambiguous middle where precision matters most. This is how every serious moderation system (TikTok, Roblox, Khan Academy) is actually built. The PM signal: recognise that the question isn't 'pick one threshold' — it's 'design the workflow around the trade-off'.",
+    "rubric_signals": ["precision/recall trade-off", "human-in-the-loop", "safety-critical product", "system design over single threshold"],
+    "tier": "free"
+  },
+  {
+    "id": "workflow-vs-agent",
+    "setup": "Your AI feature: 'plan and book a 3-day business trip from one prompt.' Eng lead proposes an autonomous agent that plans, books flights via API, books hotel, books cabs, sends calendar invites. The demo wow'd your CEO. Your eval shows 64% end-to-end success on 50 benchmark prompts — failures include wrong dates, double bookings, and one agent that burned $40 in API calls before being killed.",
+    "choices": [
+      { "key": "A", "label": "Ship — 64% with a 'review before confirming' step is good enough for v1" },
+      { "key": "B", "label": "Pivot to a workflow: model proposes a plan, user confirms each step, system executes. Lower wow, much higher reliability" },
+      { "key": "C", "label": "Add a budget cap and a max-step limit to the agent; ship in 2 weeks" },
+      { "key": "D", "label": "Hybrid: workflow for the deterministic booking APIs, agent for the genuinely open-ended itinerary-planning step" }
+    ],
+    "best": "D",
+    "reasoning": "Agents shine where the path is genuinely open-ended (creative planning, research). They fail where the path is well-structured — booking APIs are deterministic, so call them in a known order. D is the architectural answer: use the right tool for each sub-task. A under-weights the cost of double-booking a customer's flight; the trust damage outlasts any 'wow'. B over-corrects — you lose the genuine intelligence in plan-generation. C is a band-aid that doesn't fix the architecture. D is the senior move: decompose the problem, use agents where they earn their keep, use workflows everywhere else.",
+    "rubric_signals": ["agent vs workflow architecture", "decomposition", "trust over wow", "right tool for sub-task"],
+    "tier": "free"
+  },
+  {
+    "id": "cost-latency-routing",
+    "setup": "Your AI feature ships next month. Finance gives you $0.04 per active-user per day max inference budget. Current architecture (GPT-4 + 6k system prompt + 2k RAG context) costs $0.18 per user per day. Quality is great. You have engineering for 3 weeks.",
+    "choices": [
+      { "key": "A", "label": "Switch to GPT-4o-mini for everything — it'll fit the budget" },
+      { "key": "B", "label": "Tier the models: GPT-4o-mini for 80% of queries (classification, simple Q&A), GPT-4 for the 20% flagged complex" },
+      { "key": "C", "label": "Cut the system prompt by 4k tokens, cap RAG context at 1k, keep GPT-4" },
+      { "key": "D", "label": "Cache the top 500 query patterns; route uncached traffic through a smaller model" }
+    ],
+    "best": "B",
+    "reasoning": "Single-model decisions miss the obvious: not all queries need the same compute. A torches quality across the board to hit budget. C breaks quality on the hard queries that justify your differentiation. D helps but won't get you from $0.18 → $0.04 alone unless your traffic is extremely peaked. B (model routing) is the production pattern most serious AI products converge on — cheap model handles the long tail of simple queries, premium model handles the hard ones. C and D become multipliers once B is in place. The PM signal: ask 'do all queries need the same model?' before optimising any single dimension.",
+    "rubric_signals": ["model routing", "unit economics", "tiered architecture", "ask the framing question"],
+    "tier": "free"
   }
 ]
