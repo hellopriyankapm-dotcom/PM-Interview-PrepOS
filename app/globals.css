@@ -5093,6 +5093,23 @@ body {
   .landing-nav {
     position: relative;
   }
+  .landing-nav-cta > .cta-promo {
+    display: none;
+  }
+  .landing-nav-cta {
+    gap: 8px;
+  }
+}
+
+.mobile-nav-promo-item {
+  border-top: 1px solid var(--line);
+  margin-top: 4px;
+  padding: 10px 14px 12px;
+}
+
+.mobile-nav-promo-item .cta-promo {
+  width: 100%;
+  justify-content: center;
 }
 
 /* ============================================================

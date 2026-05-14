@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { PromoOpenButton } from "@/components/PromoOpenButton";
 
 type MobileNavLink = { href: string; label: string; external?: boolean };
 
@@ -36,6 +37,9 @@ export function MobileNav({ links }: { links: MobileNavLink[] }) {
               </li>
             )
           )}
+          <li role="none" className="mobile-nav-promo-item">
+            <PromoOpenButton onActivate={() => setOpen(false)} />
+          </li>
         </ul>
       ) : null}
     </>
