@@ -992,10 +992,10 @@ button {
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 40px;
   align-items: center;
-  max-width: 1200px;
+  max-width: 880px;
   margin: 0 auto;
   padding: clamp(20px, 3vw, 40px) clamp(18px, 4vw, 56px) clamp(20px, 3vw, 36px);
 }
