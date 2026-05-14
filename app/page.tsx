@@ -63,15 +63,6 @@ const features = [
   }
 ];
 
-const sampleScores = [
-  { label: "Structure", value: 4.2 },
-  { label: "User insight", value: 3.8 },
-  { label: "Metrics", value: 4.5 },
-  { label: "Trade-offs", value: 3.4 },
-  { label: "Communication", value: 4.0 },
-  { label: "Level depth", value: 3.6 }
-];
-
 export default function LandingPage() {
   return (
     <div className="landing">
@@ -137,35 +128,6 @@ export default function LandingPage() {
             </div>
           </dl>
         </div>
-        <div className="hero-card" aria-hidden="true">
-          <div className="hero-card-head">
-            <span className="eyebrow">Adaptive queue</span>
-            <span className="hero-card-chip">Senior PM · 7 days out</span>
-          </div>
-          <ul className="hero-card-list">
-            <li className="hero-card-item active">
-              <div>
-                <strong>Improve activation for a personal finance app</strong>
-                <p>Coach mode · close gap on success metrics</p>
-              </div>
-              <span className="hero-card-tag">Coach</span>
-            </li>
-            <li className="hero-card-item">
-              <div>
-                <strong>Choose metrics for a creator marketplace</strong>
-                <p>Guided practice · north star + counter-metrics</p>
-              </div>
-              <span className="hero-card-tag warn">Guided</span>
-            </li>
-            <li className="hero-card-item">
-              <div>
-                <strong>Design evals for an AI support assistant</strong>
-                <p>Interview mode · run timed, no scaffolding</p>
-              </div>
-              <span className="hero-card-tag accent">Interview</span>
-            </li>
-          </ul>
-        </div>
       </section>
 
       <PromoSlot variant="landing" />
@@ -212,39 +174,16 @@ export default function LandingPage() {
       </section>
 
       <section id="scorecard" className="section-block">
-        <div className="scorecard-grid">
-          <div className="section-head left">
-            <span className="eyebrow">Transparent feedback</span>
-            <h2>Six axes, no black box.</h2>
-            <p>
-              Every answer is scored on structure, user insight, metrics, trade-offs, communication, and target-level
-              depth — with a named strength and the single fastest improvement.
-            </p>
-            <Link className="btn-primary" href="/app">
-              Try the scorecard <ArrowRight size={15} />
-            </Link>
-          </div>
-          <article className="scorecard-preview" aria-hidden="true">
-            <div className="scorecard-preview-head">
-              <span className="eyebrow">Sample scorecard</span>
-              <strong className="mono">3.9 / 5</strong>
-            </div>
-            <div className="scorecard-rows">
-              {sampleScores.map((row) => (
-                <div className="scorecard-row" key={row.label}>
-                  <span>{row.label}</span>
-                  <div className="scorecard-bar">
-                    <span style={{ width: `${(row.value / 5) * 100}%` }} />
-                  </div>
-                  <strong className="mono">{row.value.toFixed(1)}</strong>
-                </div>
-              ))}
-            </div>
-            <div className="scorecard-note">
-              <strong>Fastest next improvement</strong>
-              <p>Anchor the answer in a sharper user segment and pain point, then state the trade-off explicitly.</p>
-            </div>
-          </article>
+        <div className="section-head">
+          <span className="eyebrow">Transparent feedback</span>
+          <h2>Six axes, no black box.</h2>
+          <p>
+            Every answer is scored on structure, user insight, metrics, trade-offs, communication, and target-level
+            depth — with a named strength and the single fastest improvement.
+          </p>
+          <Link className="btn-primary" href="/app">
+            Try the scorecard <ArrowRight size={15} />
+          </Link>
         </div>
       </section>
 
@@ -258,11 +197,6 @@ export default function LandingPage() {
               guides and free question dumps stopped earning their keep. Same question bank, rubric, and
               adaptive queue I still run before every onsite.
             </p>
-            <p className="story-lead-quote">
-              &ldquo;The tool I wish I&apos;d had the night before my first onsite — honest feedback, no
-              marketing fluff, and the next rep always the right one. I still use it before every loop.&rdquo;
-            </p>
-            <span className="story-lead-attr">— Built and used by an aspiring PM</span>
           </div>
           <div className="story-cards">
             <article className="story-card">
