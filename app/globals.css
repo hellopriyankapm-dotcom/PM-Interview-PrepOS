@@ -5004,7 +5004,7 @@ body {
     color: var(--green);
   }
 
-  .calibration[data-drawer-open="false"] {
+  .calibration {
     display: none;
   }
 
