@@ -22,7 +22,7 @@ export function TermsDeck() {
           <Flashcard
             key={card.id}
             front={
-              <div className="flashcard-content flashcard-content-front">
+              <div className="flashcard-content flashcard-content-front flashcard-content-front-term">
                 <span className="flashcard-eyebrow">Term</span>
                 <h2 className="flashcard-term">{card.term}</h2>
                 <p className="flashcard-hint">Tap to reveal definition</p>
