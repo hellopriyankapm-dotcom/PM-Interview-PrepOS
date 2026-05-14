@@ -6,8 +6,7 @@ import {
   LineChart,
   RefreshCw,
   Sparkles,
-  Target,
-  Timer
+  Target
 } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
@@ -53,24 +52,14 @@ const features = [
     body: "APM, PM, Senior, Staff, AI PM, and PM-T — each with its own readiness bar and depth expectations."
   },
   {
-    icon: <Sparkles size={18} />,
-    title: "Five-mode coaching ladder",
-    body: "Coach → Guided Practice → Light Feedback → Interview Practice → Maintenance. Support drops as mastery rises."
-  },
-  {
     icon: <CheckCircle2 size={18} />,
-    title: "Concept mastery memory",
-    body: "Every rep updates per-concept confidence so the queue keeps closing the gaps that matter."
+    title: "Adaptive queue",
+    body: "Every rep updates concept confidence so the queue keeps closing the gaps that matter most."
   },
   {
     icon: <RefreshCw size={18} />,
     title: "Source-aware question bank",
     body: "Every prompt carries a reviewer, source type, and citation. No fabricated company claims."
-  },
-  {
-    icon: <Timer size={18} />,
-    title: "Date-aware urgency",
-    body: "Within 10 days of your interview, PrepOS shifts toward harder, timed, interview-mode reps."
   }
 ];
 
@@ -180,20 +169,6 @@ export default function LandingPage() {
       </section>
 
       <PromoSlot variant="landing" />
-
-      <section className="strip">
-        <div className="strip-inner">
-          <span>Built for the loops that matter</span>
-          <div className="strip-tags">
-            <span>APM</span>
-            <span>PM</span>
-            <span>Senior PM</span>
-            <span>Staff PM</span>
-            <span>AI PM</span>
-            <span>PM-T</span>
-          </div>
-        </div>
-      </section>
 
       <section id="how" className="section-block">
         <div className="section-head">
