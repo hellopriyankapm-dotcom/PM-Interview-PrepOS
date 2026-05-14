@@ -5406,6 +5406,11 @@ body {
   min-height: 360px;
 }
 
+.flashcard-content-front-term {
+  align-items: center;
+  text-align: center;
+}
+
 .flashcard-eyebrow {
   font-size: 0.75rem;
   font-weight: 700;
