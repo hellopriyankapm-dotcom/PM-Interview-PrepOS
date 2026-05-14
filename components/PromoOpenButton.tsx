@@ -6,9 +6,16 @@ import { promoConfig } from "@/lib/promo";
 
 const PROMO_OPEN_EVENT = "prepos:promo:open";
 
-export function PromoOpenButton() {
+type Props = {
+  /** Optional callback fired immediately when the user activates the button — useful for closing a parent menu. */
+  onActivate?: () => void;
+};
+
+export function PromoOpenButton({ onActivate }: Props) {
   function handleClick() {
     if (typeof window === "undefined") return;
+
+    if (onActivate) onActivate();
 
     trackEvent("Pro Pack Click");
     window.localStorage.removeItem(promoConfig.dismissKey);
