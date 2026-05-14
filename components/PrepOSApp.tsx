@@ -4,7 +4,6 @@ import {
   Activity,
   ArrowDown,
   ArrowRight,
-  Brain,
   CheckCircle2,
   ClipboardList,
   ExternalLink,
@@ -12,11 +11,9 @@ import {
   Maximize2,
   Mic,
   Minimize2,
-  RefreshCw,
   Send,
   Sparkles,
   SlidersHorizontal,
-  Target,
   Timer,
   TimerReset
 } from "lucide-react";
@@ -330,15 +327,6 @@ export default function PrepOSApp() {
           </div>
         </Link>
         <div className="status-strip" aria-label="PrepOS status">
-          <span className="pill">
-            <RefreshCw size={15} /> weekly question updates
-          </span>
-          <span className="pill">
-            <Brain size={15} /> adaptive learning
-          </span>
-          <span className="pill">
-            <Target size={15} /> {levelProfiles[calibration.targetLevel].label}
-          </span>
           <ThemeToggle />
         </div>
       </header>
