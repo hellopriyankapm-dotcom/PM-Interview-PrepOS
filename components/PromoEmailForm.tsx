@@ -86,7 +86,8 @@ export function PromoEmailForm({ source, compact = false, ctaLabel }: Props) {
       </form>
       {errorMessage ? (
         <p className="promo-error" role="alert">
-          {errorMessage}
+          {errorMessage} Try again, or email{" "}
+          <a href="mailto:contact@pmprepos.com">contact@pmprepos.com</a> directly.
         </p>
       ) : null}
     </>

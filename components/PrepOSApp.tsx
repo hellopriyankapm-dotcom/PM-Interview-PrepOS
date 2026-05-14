@@ -28,6 +28,8 @@ import { Logo } from "@/components/Logo";
 import { CalibrationWizard } from "@/components/CalibrationWizard";
 import { PromoEmailForm } from "@/components/PromoEmailForm";
 import { PromoSlot } from "@/components/PromoSlot";
+import { StorageWarning } from "@/components/StorageWarning";
+import { FirstDrillCoach } from "@/components/FirstDrillCoach";
 import { Simulator } from "@/components/simulator/Simulator";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { buildPracticeQueue, readiness } from "@/lib/adaptive/engine";
@@ -319,6 +321,7 @@ export default function PrepOSApp() {
           </button>
         </div>
       ) : null}
+      <StorageWarning />
       <header className="topbar">
         <Link href="/" className="brand" aria-label="PrepOS home">
           <Logo size={32} />
@@ -618,6 +621,8 @@ export default function PrepOSApp() {
               </div>
             </>
           )}
+
+          {!isAIPMTrack && activeItem ? <FirstDrillCoach /> : null}
 
           {!isAIPMTrack && activeItem ? (
             <section className="panel section drill" ref={drillRef}>
