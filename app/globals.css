@@ -3876,6 +3876,7 @@ kbd {
 
 .content-body {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 28px;
 }
 
@@ -5285,7 +5286,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 100%;
   max-width: 720px;
+  min-width: 0;
   margin: 0 auto;
 }
 
@@ -5384,6 +5387,7 @@ body {
   border-radius: 16px;
   background: var(--surface);
   backface-visibility: hidden;
+  overflow-x: hidden;
   overflow-y: auto;
 }
 
@@ -5423,6 +5427,8 @@ body {
   font-weight: 800;
   margin: 0;
   line-height: 1.2;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .flashcard-hint {
@@ -5435,6 +5441,7 @@ body {
   font-size: 1.05rem;
   line-height: 1.5;
   margin: 0;
+  overflow-wrap: break-word;
 }
 
 .flashcard-section {
@@ -5453,6 +5460,7 @@ body {
 .flashcard-section p {
   margin: 0;
   line-height: 1.5;
+  overflow-wrap: break-word;
 }
 
 .flashcard-related {
@@ -5482,6 +5490,7 @@ body {
   font-size: 1.02rem;
   line-height: 1.5;
   margin: 0;
+  overflow-wrap: break-word;
 }
 
 .flashcard-choices {
