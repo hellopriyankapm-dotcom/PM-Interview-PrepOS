@@ -125,7 +125,7 @@ export default function LandingPage() {
           </p>
           <div className="hero-actions">
             <OpenAppButton source="hero" />
-            <Link href="/learn/ai-pm/terms" className="btn hero-secondary-cta">
+            <Link href="/learn/ai-pm" className="btn hero-secondary-cta">
               <Sparkles size={16} /> Learn AI PM
             </Link>
           </div>
