@@ -5282,6 +5282,59 @@ body {
   }
 }
 
+.learn-promo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  padding: 32px 28px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  scroll-margin-top: 96px;
+}
+
+.learn-promo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(15, 95, 70, 0.08);
+  color: var(--green);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.learn-promo h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.learn-promo p {
+  margin: 0;
+  max-width: 520px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.learn-promo .promo-form {
+  width: 100%;
+  max-width: 480px;
+  margin-top: 4px;
+}
+
+@media (max-width: 640px) {
+  .learn-promo {
+    padding: 24px 20px;
+  }
+}
+
 .deck-shell {
   display: flex;
   flex-direction: column;
