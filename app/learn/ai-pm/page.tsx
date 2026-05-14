@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BookOpen, Sparkles, Target } from "lucide-react";
+import { BookOpen, Target } from "lucide-react";
 import { ContentShell } from "@/components/ContentShell";
-import { PromoEmailForm } from "@/components/PromoEmailForm";
+import { LearnProPackSection } from "@/components/learn/LearnProPackSection";
 import { SITE_URL, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -85,22 +85,7 @@ export default function LearnAiPmHub() {
           </Link>
         </div>
 
-        <section id="early-access" className="learn-promo" aria-label="Pro Pack early access">
-          <span className="learn-promo-badge" aria-hidden="true">
-            <Sparkles size={14} />
-            Pro Pack early access
-          </span>
-          <h2>Want the full AI PM library?</h2>
-          <p>
-            These free decks are the starter set. Pro Pack unlocks the complete AI PM
-            terminologies and judgment scenarios — plus the AI Coach, the question bank, and the
-            simulator.
-          </p>
-          <PromoEmailForm
-            source="prepos-learn-aipm-hub"
-            ctaLabel="Join the Pro Pack waitlist"
-          />
-        </section>
+        <LearnProPackSection source="prepos-learn-aipm-hub" />
       </section>
     </ContentShell>
   );

@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { ContentShell } from "@/components/ContentShell";
+import { LearnProPackSection } from "@/components/learn/LearnProPackSection";
 import { ScenariosDeck } from "@/components/learn/ScenariosDeck";
 import { SITE_URL, absoluteUrl } from "@/lib/seo";
-import scenariosRaw from "@/content/learn/ai-pm-scenarios.json";
-import type { Scenario } from "@/lib/learn/types";
-
-const scenarios = scenariosRaw as Scenario[];
 
 export const metadata: Metadata = {
   title: "AI PM Scenarios — Free Flashcards | PrepOS",
@@ -39,7 +38,7 @@ export default function AiPmScenariosPage() {
     <ContentShell
       crumbs={[
         { label: "Home", href: "/" },
-        { label: "Learn AI PM" },
+        { label: "Learn AI PM", href: "/learn/ai-pm" },
         { label: "Scenarios" }
       ]}
     >
@@ -48,17 +47,23 @@ export default function AiPmScenariosPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
+      <Link href="/learn/ai-pm" className="learn-back-link">
+        <ArrowLeft size={16} aria-hidden="true" />
+        Back to Learn AI PM
+      </Link>
+
       <header className="content-head">
         <span className="eyebrow">Free · AI PM flashcards</span>
         <h1>AI PM Scenarios</h1>
         <p className="content-lede">
-          {scenarios.length} cards. Read the setup, pick what you&apos;d ship, then reveal the
-          senior-PM answer with reasoning.
+          Read the setup, pick what you&apos;d ship, then reveal the senior-PM answer with
+          reasoning.
         </p>
       </header>
 
       <section className="content-body">
         <ScenariosDeck />
+        <LearnProPackSection source="prepos-learn-aipm-scenarios-bottom" />
       </section>
     </ContentShell>
   );

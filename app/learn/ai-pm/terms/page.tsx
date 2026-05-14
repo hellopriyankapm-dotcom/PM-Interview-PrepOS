@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { ContentShell } from "@/components/ContentShell";
+import { LearnProPackSection } from "@/components/learn/LearnProPackSection";
 import { TermsDeck } from "@/components/learn/TermsDeck";
 import { SITE_URL, absoluteUrl } from "@/lib/seo";
 import termsRaw from "@/content/learn/ai-pm-terms.json";
@@ -39,7 +42,7 @@ export default function AiPmTermsPage() {
     <ContentShell
       crumbs={[
         { label: "Home", href: "/" },
-        { label: "Learn AI PM" },
+        { label: "Learn AI PM", href: "/learn/ai-pm" },
         { label: "Terminologies" }
       ]}
     >
@@ -48,17 +51,22 @@ export default function AiPmTermsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
+      <Link href="/learn/ai-pm" className="learn-back-link">
+        <ArrowLeft size={16} aria-hidden="true" />
+        Back to Learn AI PM
+      </Link>
+
       <header className="content-head">
         <span className="eyebrow">Free · AI PM flashcards</span>
         <h1>AI PM Terminologies</h1>
         <p className="content-lede">
-          {terms.length} cards. Tap any card to flip and see the definition, the PM angle, and a
-          real-world example.
+          Tap any card to flip and see the definition, the PM angle, and a real-world example.
         </p>
       </header>
 
       <section className="content-body">
         <TermsDeck />
+        <LearnProPackSection source="prepos-learn-aipm-terms-bottom" />
       </section>
     </ContentShell>
   );
