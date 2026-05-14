@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BookOpen, Target } from "lucide-react";
+import { BookOpen, Sparkles, Target } from "lucide-react";
 import { ContentShell } from "@/components/ContentShell";
+import { PromoEmailForm } from "@/components/PromoEmailForm";
 import { SITE_URL, absoluteUrl } from "@/lib/seo";
-import termsRaw from "@/content/learn/ai-pm-terms.json";
-import scenariosRaw from "@/content/learn/ai-pm-scenarios.json";
-
-const termsCount = (termsRaw as unknown[]).length;
-const scenariosCount = (scenariosRaw as unknown[]).length;
 
 export const metadata: Metadata = {
   title: "Learn AI PM — Free Flashcards | PrepOS",
@@ -73,8 +69,8 @@ export default function LearnAiPmHub() {
             <BookOpen size={28} aria-hidden="true" />
             <h2>AI PM Terminologies</h2>
             <p>
-              {termsCount} cards · LLM, RAG, hallucination, evals, prompt injection, and more — with
-              the PM angle on each.
+              LLM, RAG, hallucination, evals, prompt injection, and more — with the PM angle on
+              each.
             </p>
             <span className="learn-tile-cta">Start learning →</span>
           </Link>
@@ -82,12 +78,29 @@ export default function LearnAiPmHub() {
             <Target size={28} aria-hidden="true" />
             <h2>AI PM Scenarios</h2>
             <p>
-              {scenariosCount} cards · hallucination triage, latency optimisation, model swap calls,
-              safety incident response.
+              Hallucination triage, latency optimisation, model swap calls, safety incident
+              response — and more.
             </p>
             <span className="learn-tile-cta">Start learning →</span>
           </Link>
         </div>
+
+        <section id="early-access" className="learn-promo" aria-label="Pro Pack early access">
+          <span className="learn-promo-badge" aria-hidden="true">
+            <Sparkles size={14} />
+            Pro Pack early access
+          </span>
+          <h2>Want the full AI PM library?</h2>
+          <p>
+            These free decks are the starter set. Pro Pack unlocks the complete AI PM
+            terminologies and judgment scenarios — plus the AI Coach, the question bank, and the
+            simulator.
+          </p>
+          <PromoEmailForm
+            source="prepos-learn-aipm-hub"
+            ctaLabel="Join the Pro Pack waitlist"
+          />
+        </section>
       </section>
     </ContentShell>
   );
