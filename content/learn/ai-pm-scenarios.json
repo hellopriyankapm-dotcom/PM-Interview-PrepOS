@@ -1,0 +1,58 @@
+[
+  {
+    "id": "hallucination-codebot",
+    "setup": "Your AI coding assistant has a 12% hallucination rate on TypeScript questions (verified by your QA team). Your largest enterprise customer's annual review is in 2 weeks. What do you ship first?",
+    "choices": [
+      { "key": "A", "label": "Ship a 'verify before using' warning banner above every answer" },
+      { "key": "B", "label": "Tune the system prompt to add 'be conservative when uncertain'" },
+      { "key": "C", "label": "Add RAG over the official TypeScript docs as grounding" },
+      { "key": "D", "label": "Build an eval pipeline and a rollback gate before changing anything else" }
+    ],
+    "best": "D",
+    "reasoning": "Without an eval you can't know if A, B, or C moved the needle — you'll be flying blind in front of the customer. D is the foundation: define ground truth, score current behaviour, then iterate on B/C with measurement. A is a band-aid that erodes trust; B is unmeasurable; C helps but you can't prove it without D.",
+    "rubric_signals": ["evals", "guardrails", "trust", "measurement before iteration"],
+    "tier": "free"
+  },
+  {
+    "id": "latency-chat",
+    "setup": "Your LLM-powered support chat has 4.2 s p95 latency. Drop-off after the first message is 38%, vs 11% for the legacy keyword-based bot. Engineering says GPT-4 is the floor on quality.",
+    "choices": [
+      { "key": "A", "label": "Stream tokens to the UI so users see characters as they generate" },
+      { "key": "B", "label": "Switch to a smaller model (Haiku / GPT-4o-mini) for the first response" },
+      { "key": "C", "label": "Cache common queries (top 100 intents)" },
+      { "key": "D", "label": "Cut the system prompt from 4k tokens to 800 by trimming examples" }
+    ],
+    "best": "A",
+    "reasoning": "Streaming is the cheapest, lowest-risk perceived-latency win — users see content in under 500 ms and stay engaged even if total response takes 5 s. B/C/D are real improvements but each carries quality risk and shipping cost. A doesn't change the model or prompt; it changes the UX. Ship A this sprint, evaluate B/C/D with an eval pipeline.",
+    "rubric_signals": ["perceived latency vs actual", "cheapest-first", "UX vs infra trade-off"],
+    "tier": "free"
+  },
+  {
+    "id": "model-swap",
+    "setup": "Engineering proposes swapping the primary LLM from GPT-4 to Claude Sonnet to cut inference cost by 38%. Their benchmark on 200 internal prompts shows quality is 'roughly the same'.",
+    "choices": [
+      { "key": "A", "label": "Approve — the cost savings are material and 200 prompts is a decent sample" },
+      { "key": "B", "label": "Reject — you can't risk a model swap on a benchmark of 200" },
+      { "key": "C", "label": "Ship a percentage rollout (5 → 25 → 100) gated on production-eval scores + user-feedback drop" },
+      { "key": "D", "label": "Run both models in shadow for a week and compare on the production traffic distribution" }
+    ],
+    "best": "C",
+    "reasoning": "A is reckless — 200 prompts can't capture the long tail of real production behaviour. B over-indexes on caution and leaves the cost win on the table. D is good for measurement but takes a week of extra compute and doesn't actually ship. C does both: real production data, gated rollout, automatic rollback. Most senior PM answer.",
+    "rubric_signals": ["staged rollout", "automated rollback", "measurement on production traffic"],
+    "tier": "free"
+  },
+  {
+    "id": "safety-incident",
+    "setup": "A user posts a screenshot on Twitter showing your AI cooking-assistant told them to 'use bleach to deglaze the pan'. 200k+ likes in 6 hours. Your CEO is texting. What's your move in the next 60 minutes?",
+    "choices": [
+      { "key": "A", "label": "Roll back the model to the previous version immediately" },
+      { "key": "B", "label": "Add a hardcoded filter blocking 'bleach' as a system-prompt rule, ship in 10 minutes" },
+      { "key": "C", "label": "Public statement, then form a working group to study the issue" },
+      { "key": "D", "label": "Investigate: pull the trace, confirm the screenshot is real, identify whether it's a prompt-injection or model failure, then decide between rollback and a targeted fix" }
+    ],
+    "best": "D",
+    "reasoning": "Speed is real but you cannot fix what you don't understand. The first 60 minutes is for evidence, not action. The screenshot might be doctored, might be prompt-injected, might be a known edge case — each implies a different response. A is correct ONLY if D's investigation confirms a model regression. B is fast but reactive; you'll be playing whack-a-mole. C delays without acting. D is the senior-PM move: triage with evidence, then act.",
+    "rubric_signals": ["incident response", "evidence before action", "user safety", "communication"],
+    "tier": "free"
+  }
+]
